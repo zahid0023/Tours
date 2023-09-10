@@ -30,5 +30,5 @@ public class TourAddRequest {
             description = "Please provide an thumbnail image URL for the tour, " +
                     "It will be displayed alongside the tour details.")
     private String thumbImageUrl;
-    private TourDescriptionData tourDescriptionData;
+    private TourDescriptionData tourDescription;
 }

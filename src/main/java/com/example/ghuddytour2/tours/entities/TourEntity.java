@@ -64,7 +64,7 @@ public class TourEntity {
         this.numberOfNights = tourAddRequest.getNumberOfNights();
         this.shortAddress = tourAddRequest.getShortAddress();
         this.thumbImageUrl = tourAddRequest.getThumbImageUrl();
-        this.description = tourAddRequest.getTourDescriptionData();
+        this.description = tourAddRequest.getTourDescription();
         this.tourTag = StringUtil.tagify(this.tourName, this.shortAddress);
     }
 }

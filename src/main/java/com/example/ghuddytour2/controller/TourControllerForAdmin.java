@@ -2,9 +2,13 @@ package com.example.ghuddytour2.controller;
 
 import com.example.ghuddytour2.enums.ErrorCode;
 import com.example.ghuddytour2.tours.dto.request.TourAddRequest;
+import com.example.ghuddytour2.tours.dto.request.TourAvailabilityRequest;
 import com.example.ghuddytour2.tours.dto.response.ErrorResponse;
-import com.example.ghuddytour2.tours.dto.response.TourAddResponse;
+import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
+import com.example.ghuddytour2.tours.exception.ActivityNotFoundException;
+import com.example.ghuddytour2.tours.exception.EmptyListException;
 import com.example.ghuddytour2.tours.exception.LocationNotFoundException;
+import com.example.ghuddytour2.tours.exception.TourNotFoundException;
 import com.example.ghuddytour2.tours.service.TourService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,18 +31,15 @@ public class TourControllerForAdmin {
         this.tourService = tourService;
     }
 
+    // ADD Tour
     @ApiResponses(
             value = {
                     @ApiResponse(
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TourAddResponse.class),
-                                    examples = @ExampleObject(
-                                            name = "TourAddResponse",
-                                            description = "Tour Added Successfully. You can now associate this tour with activities to create a new tour/make this tour available.",
-                                            value = "{\"status\": \"Successful\", \"statusCode\": \"00000\"}"
-                                    )
+                                    schema = @Schema(implementation = AcknowledgeResponse.class,
+                                            description = "Tour Added Successfully. You can now associate this tour with activities to create a new tour/make this tour available.")
                             )
                     ),
                     @ApiResponse(
@@ -76,6 +77,7 @@ public class TourControllerForAdmin {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityViolationException ex) {
+            ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.TOUR_ALREADY_EXIST), HttpStatus.CONFLICT);
         }
     }
@@ -92,7 +94,12 @@ public class TourControllerForAdmin {
 
     @RequestMapping(path = "/admin/tours/get-all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTours() {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(tourService.getAllTours(), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/admin/tours/get-all-paginated", method = RequestMethod.GET)
@@ -109,4 +116,11 @@ public class TourControllerForAdmin {
     public ResponseEntity<?> getAllToursPaginatedByDestinationLocation(@RequestParam String locationName, @RequestParam int pageSize, @RequestParam int pageNumber) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
+
+    // Create Tour
+    @RequestMapping(path = "/admin/tours/create", method = RequestMethod.POST)
+    public ResponseEntity<?> createTour(@RequestBody TourAvailabilityRequest tourAvailabilityRequest) throws TourNotFoundException, ActivityNotFoundException {
+        return new ResponseEntity<>(tourService.generateTourAvailability(tourAvailabilityRequest), HttpStatus.OK);
+    }
+
 }

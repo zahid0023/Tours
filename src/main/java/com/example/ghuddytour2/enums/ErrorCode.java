@@ -7,14 +7,27 @@ package com.example.ghuddytour2.enums;
  * */
 public enum ErrorCode {
 
-    // Location Errors
+    // Location Exceptions
     // Starts with 0
     LOCATION_NOT_FOUND("00001"),
 
-    // Tour Errors
+    // Tour Exceptions
     // Starts with 1
     TOUR_NOT_FOUND("10001"),
-    TOUR_ALREADY_EXIST("10002");
+    TOUR_ALREADY_EXIST("10002"),
+
+    // Activity Exceptions
+    // Starts with 2
+    ACTIVITY_TYPE_ALREADY_EXISTS("20001"),
+    ACTIVITY_TYPE_NOT_FOUND("20002"),
+    ACTIVITY_ALREADY_EXISTS("20003"),
+    ACTIVITY_NOT_FOUND("2004"),
+
+
+    // Generic Exceptions
+    // Starts with 11
+    LIST_IS_EMPTY("11001"),
+    DATA_SAVE_ERROR("11002");
 
     private final String code;
 
