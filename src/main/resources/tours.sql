@@ -1,5 +1,15 @@
--- Tour Table
-create table if not exists tour
+-- Location Table
+create table if not exists location
+(
+    id   bigserial primary key,
+    name varchar(255)
+    );
+
+
+-- Tour Add Table.
+-- Here we map tour with a destination location and
+-- number of days and number of nights
+create table if not exists tour_location_mapping
 (
     id                      bigserial primary key,
     created_by              varchar(255),
@@ -9,22 +19,12 @@ create table if not exists tour
     updated_at              timestamp,
     version                 integer,
     active                  boolean,
-    tour_name               varchar(255),
-    destination_location_id bigint references location (id),
-    number_of_days          integer,
-    number_of_nights        integer,
+    number_of_days          bigint not null,
+    number_of_nights        bigint not null,
     short_address           varchar(255),
-    thumb_image_url         text,
-    average_rating          numeric(2, 1),
-    total_reviews           integer,
+    tour_name               varchar(255),
     tour_tag                varchar(255),
-    title                   varchar(255),
-    description             jsonb,
-    UNIQUE (
-               destination_location_id,
-               number_of_days,
-               number_of_nights
-           )
+    destination_location_id bigint not null references location (id)
     );
 
 -- Activity Type Table
@@ -38,11 +38,8 @@ create table if not exists activity_type
     updated_at         timestamp,
     version            integer,
     active             boolean,
-    activity_type_name varchar(255) not null ,
-    description        text,
-    UNIQUE (
-    activity_type_name
-           )
+    activity_type_name varchar(255) not null,
+    description        text
     );
 
 -- Activity Table
@@ -57,16 +54,14 @@ create table if not exists activity
     version           integer,
     active            boolean,
     activity_name     varchar(255)                         not null,
-    activity_type_id  bigint references activity_type (id) not null,
-    short_location    varchar(255)                         not null,
     average_rating    numeric(2, 1),
-    number_of_reviews int,
-    UNIQUE (activity_name, short_location)
+    number_of_reviews bigint,
+    short_location    varchar(255)                         not null,
+    activity_type_id  bigint references activity_type (id) not null
     );
 
--- This is the table where all the available tours will be stored.
--- A tour can not happen without any activities assigned to it so this table is the point of truth.
-create table if not exists tour_availability
+-- Activity Image Table
+create table if not exists activity_images
 (
     id               bigserial primary key,
     created_by       varchar(255),
@@ -76,19 +71,56 @@ create table if not exists tour_availability
     updated_at       timestamp,
     version          integer,
     active           boolean,
-    tour_id          bigint references tour (id),
-    activity_id      bigint references activity (id),
-    day_number       integer,
-    start_time       time,
-    end_time         time,
-    itinerary_number integer,
-    UNIQUE (tour_id, activity_id, day_number)
+    caption          text,
+    file_name        varchar(255)                    not null,
+    image_url        text                            not null,
+    is_display_image boolean default false,
+    rejection_reason text,
+    update_request   boolean,
+    activity_id      bigint references activity (id) not null
     );
 
 
+-- Tour Table
+-- When we assign activities to added tour then the tour is created
+create table if not exists tour
+(
+    id               bigserial primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    description      jsonb                                        not null,
+    thumb_image_url  text,
+    title            varchar(255)                                 not null,
+    tour_location_id bigint references tour_location_mapping (id) not null
+    );
+
+
+-- Tour Itinerary Table
+-- mapping between tour and activity
+create table if not exists tour_itinerary
+(
+    id               bigserial primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    day_number       integer                         not null,
+    end_time         time                            not null,
+    start_time       time                            not null,
+    activity_id      bigint references activity (id) not null,
+    tour_id          bigint references tour (id)     not null
+    );
 
 -- Tour Speciality Table
--- Many Tour Specialities can belong to 1 Tour
+-- Belongs to created Tour
 create table if not exists tour_speciality
 (
     id               bigserial primary key,
@@ -99,29 +131,9 @@ create table if not exists tour_speciality
     updated_at       timestamp,
     version          integer,
     active           boolean,
-    title            varchar(255),
-    description      text,
-    icon_url         text,
-    update_request   boolean,
-    rejection_reason text,
-    tour_id          bigint references tour (id)
+    description      text                        not null,
+    icon_url         text                        not null,
+    title            varchar(255)                not null,
+    update_request   boolean default false,
+    tour_id          bigint references tour (id) not null
     );
-
--- Tour Images Table
-create table tour_images
-(
-    id               bigserial primary key,
-    created_by       varchar(255),
-    created_at       timestamp,
-    deleted          boolean,
-    last_modified_by varchar(255),
-    updated_at       timestamp,
-    version          integer,
-    active           boolean,
-    file_name        varchar(255),
-    image_url        text,
-    update_request   boolean,
-    rejection_reason text,
-    tour_id          bigint references tour (id)
-);
-

@@ -13,8 +13,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_speciality")
-public class TourSpecialityEntity {
+@Table(name = "activity_images")
+public class ActivityImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,30 +22,35 @@ public class TourSpecialityEntity {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
 
     @NotNull
-    @Column(name = "description", nullable = false, columnDefinition = "text")
-    private String description;
+    @Column(name = "image_url", nullable = false, columnDefinition = "text")
+    private String imageUrl;
+
+    @Column(name = "caption", columnDefinition = "text")
+    private String caption;
 
     @NotNull
-    @Column(name = "icon_url", nullable = false, columnDefinition = "text")
-    private String iconUrl;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "activity_id", nullable = false)
+    private ActivityEntity activityEntity;
 
     @Column(name = "update_request")
     private Boolean updateRequest;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private TourEntity tourEntity;
+    @Column(name = "rejection_reason", columnDefinition = "text")
+    private String rejectionReason;
+
+    @Column(name = "is_display_image")
+    private Boolean isDisplayImage;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        TourSpecialityEntity that = (TourSpecialityEntity) o;
+        ActivityImageEntity that = (ActivityImageEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

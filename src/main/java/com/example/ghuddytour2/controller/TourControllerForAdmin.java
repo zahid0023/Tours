@@ -2,11 +2,10 @@ package com.example.ghuddytour2.controller;
 
 import com.example.ghuddytour2.enums.ErrorCode;
 import com.example.ghuddytour2.tours.dto.request.TourAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourAvailabilityRequest;
+import com.example.ghuddytour2.tours.dto.request.TourCreateRequest;
 import com.example.ghuddytour2.tours.dto.response.ErrorResponse;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
 import com.example.ghuddytour2.tours.exception.ActivityNotFoundException;
-import com.example.ghuddytour2.tours.exception.EmptyListException;
 import com.example.ghuddytour2.tours.exception.LocationNotFoundException;
 import com.example.ghuddytour2.tours.exception.TourNotFoundException;
 import com.example.ghuddytour2.tours.service.TourService;
@@ -94,12 +93,7 @@ public class TourControllerForAdmin {
 
     @RequestMapping(path = "/admin/tours/get-all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTours() {
-        try {
-            return new ResponseEntity<>(tourService.getAllTours(), HttpStatus.OK);
-        } catch (EmptyListException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
-        }
+        return null;
     }
 
     @RequestMapping(path = "/admin/tours/get-all-paginated", method = RequestMethod.GET)
@@ -119,8 +113,8 @@ public class TourControllerForAdmin {
 
     // Create Tour
     @RequestMapping(path = "/admin/tours/create", method = RequestMethod.POST)
-    public ResponseEntity<?> createTour(@RequestBody TourAvailabilityRequest tourAvailabilityRequest) throws TourNotFoundException, ActivityNotFoundException {
-        return new ResponseEntity<>(tourService.generateTourAvailability(tourAvailabilityRequest), HttpStatus.OK);
+    public ResponseEntity<?> createTour(@RequestBody TourCreateRequest tourCreateRequest) throws TourNotFoundException, ActivityNotFoundException {
+        return new ResponseEntity<>(tourService.createTour(tourCreateRequest), HttpStatus.CREATED);
     }
 
 }

@@ -1,71 +1,41 @@
 package com.example.ghuddytour2.tours.entities;
 
-import com.example.ghuddytour2.tours.dto.data.TourDescriptionData;
-import com.example.ghuddytour2.tours.dto.request.TourAddRequest;
-import com.example.ghuddytour2.tours.utils.StringUtil;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-@Table(name = "tour")
 @Getter
 @Setter
-@NoArgsConstructor
-@TypeDefs({
-        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-})
+@Entity
+@Table(name = "tour")
 public class TourEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "tour_name")
-    private String tourName;
-
-    @ManyToOne
-    @JoinColumn(name = "destination_location_id", referencedColumnName = "id")
-    private LocationEntity destinationLocation;
-
-    @Column(name = "number_of_days")
-    private Integer numberOfDays;
-
-    @Column(name = "number_of_nights")
-    private Integer numberOfNights;
-
-    @Column(name = "short_address")
-    private String shortAddress;
-
-    @Column(name = "thumb_image_url")
+    @Column(name = "thumb_image_url", columnDefinition = "text")
     private String thumbImageUrl;
 
-    @Column(name = "average_rating")
-    private Double averageRating;
+    @Size(max = 255)
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "total_reviews")
-    private Integer totalReviews;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "tour_tag")
-    private String tourTag;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tour_location_id")
+    private TourLocationEntity tourLocation;
 
-    @Type(type = "jsonb")
-    @Column(name = "description", columnDefinition = "jsonb")
-    private TourDescriptionData description;
+    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourItineraryEntity> tourItineraryEntities = new ArrayList<>();
 
-    public TourEntity(TourAddRequest tourAddRequest) {
-        this.tourName = tourAddRequest.getTourName();
-        this.numberOfDays = tourAddRequest.getNumberOfDays();
-        this.numberOfNights = tourAddRequest.getNumberOfNights();
-        this.shortAddress = tourAddRequest.getShortAddress();
-        this.thumbImageUrl = tourAddRequest.getThumbImageUrl();
-        this.description = tourAddRequest.getTourDescription();
-        this.tourTag = StringUtil.tagify(this.tourName, this.shortAddress);
-    }
+    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourSpecialityEntity> tourSpecialityEntities = new ArrayList<>();
+
 }
-

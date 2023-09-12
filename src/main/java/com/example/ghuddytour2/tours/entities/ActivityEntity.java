@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,19 +16,14 @@ import java.math.BigDecimal;
 @Table(name = "activity")
 public class ActivityEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 255)
     @NotNull
     @Column(name = "activity_name", nullable = false)
     private String activityName;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "activity_type_id", nullable = false)
-    private ActivityTypeEntity activityType;
 
     @Size(max = 255)
     @NotNull
@@ -38,5 +35,12 @@ public class ActivityEntity {
 
     @Column(name = "number_of_reviews")
     private Integer numberOfReviews;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_type_id")
+    private ActivityTypeEntity activityTypeEntity;
+
+    @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActivityImageEntity> activityImageEntities = new ArrayList<>();
 
 }

@@ -10,5 +10,7 @@ public class ImageData {
 
     @Schema(description = "The URL of the image.", example = "https://example.com/images/image1.jpg")
     private String imageURL;
+
+    private String imageCaption;
 }
 
