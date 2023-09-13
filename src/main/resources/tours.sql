@@ -93,7 +93,8 @@ create table if not exists tour
     updated_at       timestamp,
     version          integer,
     active           boolean,
-    description      jsonb                                        not null,
+    tour_name        varchar(255)                                 not null,
+    description      text                                         not null,
     thumb_image_url  text,
     title            varchar(255)                                 not null,
     tour_location_id bigint references tour_location_mapping (id) not null
@@ -137,3 +138,100 @@ create table if not exists tour_speciality
     update_request   boolean default false,
     tour_id          bigint references tour (id) not null
     );
+
+-- Tour Package Table
+-- It holds the tour package type
+-- ex : Solo Package, Couple Package, Family Package, Group Package 1 - 12 Persons, Group Package 2 - 20 Persons
+create table if not exists tour_package_type
+(
+    id                bigserial primary key,
+    created_by        varchar(255),
+    created_at        timestamp,
+    deleted           boolean,
+    last_modified_by  varchar(255),
+    updated_at        timestamp,
+    version           integer,
+    active            boolean,
+    package_type_name varchar(255) not null,
+    description       text         not null,
+    suitable_for      integer      not null
+    );
+
+
+-- Tour Package table
+-- In this table we will store all the package belonging to a tour
+-- This table is the point of truth for the rest of the components
+create table tour_package
+(
+    id                   bigserial primary key,
+    created_by           varchar(255),
+    created_at           timestamp,
+    deleted              boolean,
+    last_modified_by     varchar(255),
+    updated_at           timestamp,
+    version              integer,
+    active               boolean,
+    tour_package_name    varchar(255)                             not null,
+    tour_id              bigint references tour (id)              not null,
+    tour_package_type_id bigint references tour_package_type (id) not null,
+    description          text                                     not null
+);
+
+-- Food Item Table
+-- This table stores all the food items.
+create table if not exists food_item
+(
+    id               bigserial primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    food_item_name   varchar(255) not null
+    );
+
+-- Meal Type Table
+-- Meal type means Breakfast or Lunch or Dinner
+create table meal_type
+(
+    id               bigserial primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    meal_type_name   varchar(255) not null unique
+);
+
+-- Meal Package Table
+-- Each meal package belongs to a tour package.
+-- A tour package may have many meal packages
+create table meal_package
+(
+    id                bigserial primary key,
+    created_by        varchar(255),
+    created_at        timestamp,
+    deleted           boolean,
+    last_modified_by  varchar(255),
+    updated_at        timestamp,
+    version           integer,
+    active            boolean,
+    meal_package_name varchar(255)                        not null,
+    meal_type_id      bigint references meal_type (id)    not null,
+    tour_package_id   bigint references tour_package (id) not null
+    -- merchant_id as different merchant can provide different meal package for a specific tour package
+    -- meal type combination
+);
+
+-- Meal Package Contents
+-- This table maps between meal package and food items
+create table meal_package_food_item_mapping
+(
+    meal_package_id bigint references meal_package (id),
+    food_item_id    bigint references food_item (id),
+    primary key (meal_package_id, food_item_id)
+);

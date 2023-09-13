@@ -1,5 +1,7 @@
 package com.example.ghuddytour2.tours.utils;
 
+import org.springframework.util.StringUtils;
+
 public class StringUtil {
     public static String tagify(String str1, String str2) {
         // Remove special characters and spaces, and convert to lowercase
@@ -10,6 +12,10 @@ public class StringUtil {
         String tag = formattedStr1 + "-" + formattedStr2;
 
         return tag;
+    }
+
+    public static String tourPackageName(String tourName, String packageTypeName) {
+        return tourName + " - " + packageTypeName;
     }
 }
 

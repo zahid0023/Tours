@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +31,8 @@ public class TourPackageTypeEntity {
     @NotNull
     @Column(name = "suitable_for", nullable = false)
     private Integer suitableFor;
+
+    @OneToMany(mappedBy = "tourPackageType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourPackageEntity> tourPackageEntities = new ArrayList<>();
 
 }

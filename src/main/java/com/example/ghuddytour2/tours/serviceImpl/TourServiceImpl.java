@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 @Service
@@ -38,7 +39,6 @@ public class TourServiceImpl implements TourService {
         this.tourRepository = tourRepository;
         this.tourItineraryService = tourItineraryService;
     }
-
 
     private final LocationService locationService;
     private final TourRepository tourRepository;
@@ -76,4 +76,8 @@ public class TourServiceImpl implements TourService {
         return new AcknowledgeResponse();
     }
 
+    @Override
+    public TourEntity getTourByTourID(Long tourID) {
+        return tourRepository.findById(tourID).orElseThrow(() -> new EntityNotFoundException("TourEntity Not Found"));
+    }
 }

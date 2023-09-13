@@ -18,6 +18,10 @@ public class TourEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Size(max = 255)
+    @Column(name = "tour_name")
+    private String tourName;
+
     @Column(name = "thumb_image_url", columnDefinition = "text")
     private String thumbImageUrl;
 
@@ -25,7 +29,7 @@ public class TourEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,5 +41,8 @@ public class TourEntity {
 
     @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourSpecialityEntity> tourSpecialityEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourPackageEntity> tourPackageEntities = new ArrayList<>();
 
 }
