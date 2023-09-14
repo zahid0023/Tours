@@ -36,10 +36,10 @@ public class TourEntity {
     @JoinColumn(name = "tour_location_id")
     private TourLocationEntity tourLocation;
 
-    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tourEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<TourItineraryEntity> tourItineraryEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tourEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<TourSpecialityEntity> tourSpecialityEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)

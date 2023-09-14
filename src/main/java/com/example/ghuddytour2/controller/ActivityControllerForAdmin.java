@@ -1,8 +1,9 @@
 package com.example.ghuddytour2.controller;
 
-import com.example.ghuddytour2.tours.dto.request.ActivityAddRequest;
-import com.example.ghuddytour2.tours.dto.request.ActivityListAddRequest;
-import com.example.ghuddytour2.tours.dto.request.ActivityTypeAddRequest;
+import com.example.ghuddytour2.tours.dto.request.activity.ActivityAddRequest;
+import com.example.ghuddytour2.tours.dto.request.activity.ActivityListAddRequest;
+import com.example.ghuddytour2.tours.dto.request.activity.ActivityTypeAddRequest;
+import com.example.ghuddytour2.tours.dto.request.activity.ActivityTypeListAddRequest;
 import com.example.ghuddytour2.tours.service.ActivityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,12 @@ public class ActivityControllerForAdmin {
     // Activity Type
     @RequestMapping(path = "/activity/type/add", method = RequestMethod.POST)
     public ResponseEntity<?> addActivityType(@RequestBody ActivityTypeAddRequest activityTypeAddRequest) {
-        return new ResponseEntity<>(activityService.addActivityTypes(activityTypeAddRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(activityService.addActivityType(activityTypeAddRequest), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(path = "/activity/type/list/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addActivityTypes(@RequestBody ActivityTypeListAddRequest activityTypeListAddRequest) {
+        return new ResponseEntity<>(activityService.addActivityTypes(activityTypeListAddRequest), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/activity/type/get/{activityTypeID}", method = RequestMethod.GET)

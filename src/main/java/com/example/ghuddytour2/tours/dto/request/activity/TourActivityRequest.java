@@ -1,4 +1,4 @@
-package com.example.ghuddytour2.tours.dto.data;
+package com.example.ghuddytour2.tours.dto.request.activity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalTime;
 
 @Data
-public class TourActivityData {
+public class TourActivityRequest {
     @Schema(description = "The unique identifier of the activity related to the tour.", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long activityID;
 

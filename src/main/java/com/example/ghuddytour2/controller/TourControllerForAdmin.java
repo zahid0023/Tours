@@ -1,11 +1,13 @@
 package com.example.ghuddytour2.controller;
 
 import com.example.ghuddytour2.enums.ErrorCode;
-import com.example.ghuddytour2.tours.dto.request.TourAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourCreateRequest;
+import com.example.ghuddytour2.tours.dto.request.tour.TourAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tour.TourCreateRequest;
 import com.example.ghuddytour2.tours.dto.response.ErrorResponse;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
+import com.example.ghuddytour2.tours.dto.response.TourResponseList;
 import com.example.ghuddytour2.tours.exception.ActivityNotFoundException;
+import com.example.ghuddytour2.tours.exception.EmptyListException;
 import com.example.ghuddytour2.tours.exception.LocationNotFoundException;
 import com.example.ghuddytour2.tours.exception.TourNotFoundException;
 import com.example.ghuddytour2.tours.service.TourService;
@@ -66,8 +68,11 @@ public class TourControllerForAdmin {
                             ))
             }
     )
-    @Operation(summary = "This API is used to add a Tour", description = "Ensure all essential tour fields are included; " +
-            "those marked with an asterisk are mandatory.")
+    @Operation(summary = "This API is used to add a Tour", description = "This API is used to add a tour. " +
+            "Adding tour just means that you are adding a tour in a place with " +
+            "number of days and number of nights! " +
+            "It will be a real tour when you create itineraries for the added tour i.e. " +
+            "you map activities to a added tour")
     @RequestMapping(path = "/admin/tours/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTour(@RequestBody TourAddRequest tourAddRequest) {
         try {
@@ -91,14 +96,81 @@ public class TourControllerForAdmin {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = TourResponseList.class,
+                                            description = "A list of all the tours in the database is returned")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(
+                                            name = "EmptyTourList",
+                                            description = "When there are no tours in the database. In this scenario you have to add a tour first.",
+                                            value = "{\"status\": \"LIST_IS_EMPTY\", \"statusCode\": \"11001\"}"
+                                    )
+                            )
+                    )
+            }
+    )
+    @Operation(summary = "This API is used to get all the Added Tours in the database",
+            description = "This API does not return the created tours but the added tours. " +
+                    "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
+                    "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
     @RequestMapping(path = "/admin/tours/get-all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTours() {
-        return null;
+        try {
+            return new ResponseEntity<>(tourService.getAllTours(), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+        }
     }
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = TourResponseList.class,
+                                            description = "A paginated list of all the tours in the database is returned")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(
+                                            name = "EmptyTourList",
+                                            description = "When there are no tours in the database. In this scenario you have to add a tour first.",
+                                            value = "{\"status\": \"LIST_IS_EMPTY\", \"statusCode\": \"11001\"}"
+                                    )
+                            )
+                    )
+            }
+    )
+    @Operation(summary = "This API is used to get all the Added Tours in the database in a paginated way",
+            description = "This API does not return the created tours but the added tours. " +
+                    "You have to provide pageSize and pageNumber to get the paginated tours. " +
+                    "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
+                    "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
     @RequestMapping(path = "/admin/tours/get-all-paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllToursPaginated(@RequestParam int pageSize, @RequestParam int pageNumber) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(tourService.getAllToursPaginated(pageSize, pageNumber), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/admin/tours/get-all-by-destination-location", method = RequestMethod.GET)
@@ -112,6 +184,10 @@ public class TourControllerForAdmin {
     }
 
     // Create Tour
+    @Operation(summary = "This API is used to create a tour. ",
+            description = "When you added the tour you did not assign any activity to the tour. " +
+                    "A tour will be a real tour when you assign activities to the tour. " +
+                    "This is the API where you assign activities to a previously added tour creating itinerary for the tour.")
     @RequestMapping(path = "/admin/tours/create", method = RequestMethod.POST)
     public ResponseEntity<?> createTour(@RequestBody TourCreateRequest tourCreateRequest) throws TourNotFoundException, ActivityNotFoundException {
         return new ResponseEntity<>(tourService.createTour(tourCreateRequest), HttpStatus.CREATED);

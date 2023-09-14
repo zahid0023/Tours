@@ -1,6 +1,6 @@
 package com.example.ghuddytour2.controller;
 
-import com.example.ghuddytour2.tours.dto.request.*;
+import com.example.ghuddytour2.tours.dto.request.food.*;
 import com.example.ghuddytour2.tours.service.FoodService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

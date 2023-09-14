@@ -3,7 +3,7 @@ package com.example.ghuddytour2.tours.daoImpl;
 import com.example.ghuddytour2.enums.ErrorCode;
 import com.example.ghuddytour2.tours.dao.ActivityDAO;
 import com.example.ghuddytour2.tours.dto.data.ActivityData;
-import com.example.ghuddytour2.tours.dto.data.ActivityTypeData;
+import com.example.ghuddytour2.tours.dto.request.activity.ActivityTypeRequest;
 import com.example.ghuddytour2.tours.dto.response.ActivityResponseList;
 import com.example.ghuddytour2.tours.dto.response.ActivityTypeResponseList;
 import com.example.ghuddytour2.tours.exception.EmptyListException;
@@ -28,7 +28,7 @@ public class ActivityDAOImpl implements ActivityDAO {
                        description as description
                 FROM activity_type;""";
 
-        List<ActivityTypeData> activityTypes = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(ActivityTypeData.class));
+        List<ActivityTypeRequest> activityTypes = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(ActivityTypeRequest.class));
 
         if (activityTypes.isEmpty()) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);

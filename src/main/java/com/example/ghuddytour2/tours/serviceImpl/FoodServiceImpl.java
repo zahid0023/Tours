@@ -1,6 +1,6 @@
 package com.example.ghuddytour2.tours.serviceImpl;
 
-import com.example.ghuddytour2.tours.dto.request.*;
+import com.example.ghuddytour2.tours.dto.request.food.*;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
 import com.example.ghuddytour2.tours.entities.FoodItemEntity;
 import com.example.ghuddytour2.tours.entities.MealPackageEntity;
@@ -17,7 +17,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class FoodServiceImpl implements FoodService {

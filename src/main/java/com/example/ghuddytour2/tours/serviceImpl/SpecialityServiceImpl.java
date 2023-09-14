@@ -1,6 +1,6 @@
 package com.example.ghuddytour2.tours.serviceImpl;
 
-import com.example.ghuddytour2.tours.dto.data.TourSpecialityData;
+import com.example.ghuddytour2.tours.dto.request.tour.TourSpecialityRequest;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
 import com.example.ghuddytour2.tours.entities.TourEntity;
 import com.example.ghuddytour2.tours.entities.TourSpecialityEntity;
@@ -20,7 +20,7 @@ public class SpecialityServiceImpl implements SpecialityService {
     }
 
     @Override
-    public AcknowledgeResponse setTourSpecialities(TourEntity tourEntity, List<TourSpecialityData> specialities) {
+    public List<TourSpecialityEntity> setTourSpecialities(TourEntity tourEntity, List<TourSpecialityRequest> specialities) {
         List<TourSpecialityEntity> tourSpecialityEntities = specialities.stream()
                 .map(specialityData -> {
                     TourSpecialityEntity tourSpecialityEntity = new TourSpecialityEntity();
@@ -31,8 +31,7 @@ public class SpecialityServiceImpl implements SpecialityService {
                     return tourSpecialityEntity;
                 })
                 .collect(Collectors.toList());
-        tourSpecialityRepository.saveAll(tourSpecialityEntities);
 
-        return new AcknowledgeResponse();
+        return tourSpecialityEntities;
     }
 }

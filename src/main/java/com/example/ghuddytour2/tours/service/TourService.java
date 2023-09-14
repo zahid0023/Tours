@@ -1,9 +1,11 @@
 package com.example.ghuddytour2.tours.service;
 
-import com.example.ghuddytour2.tours.dto.request.TourAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourCreateRequest;
+import com.example.ghuddytour2.tours.dto.request.tour.TourAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tour.TourCreateRequest;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
+import com.example.ghuddytour2.tours.dto.response.TourResponseList;
 import com.example.ghuddytour2.tours.entities.TourEntity;
+import com.example.ghuddytour2.tours.exception.EmptyListException;
 import com.example.ghuddytour2.tours.exception.LocationNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -13,4 +15,8 @@ public interface TourService {
     AcknowledgeResponse createTour(TourCreateRequest tourCreateRequest);
 
     TourEntity getTourByTourID(Long tourID);
+
+    TourResponseList getAllTours() throws EmptyListException;
+
+    TourResponseList getAllToursPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 }

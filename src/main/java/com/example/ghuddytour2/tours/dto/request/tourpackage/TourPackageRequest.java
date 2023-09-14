@@ -1,4 +1,4 @@
-package com.example.ghuddytour2.tours.dto.request;
+package com.example.ghuddytour2.tours.dto.request.tourpackage;
 
 import lombok.Data;
 

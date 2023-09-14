@@ -1,7 +1,6 @@
 package com.example.ghuddytour2.tours.dto.response;
 
 import com.example.ghuddytour2.tours.dto.data.ActivityData;
-import com.example.ghuddytour2.tours.dto.data.ActivityTypeData;
 import lombok.Data;
 
 import java.util.LinkedList;

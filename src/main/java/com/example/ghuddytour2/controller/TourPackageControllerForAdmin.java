@@ -1,9 +1,9 @@
 package com.example.ghuddytour2.controller;
 
-import com.example.ghuddytour2.tours.dto.request.TourPackageAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourPackageListAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourPackageTypeAddRequest;
-import com.example.ghuddytour2.tours.dto.request.TourPackageTypeListAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tourpackage.TourPackageAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tourpackage.TourPackageListAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
+import com.example.ghuddytour2.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.example.ghuddytour2.tours.service.TourPackageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

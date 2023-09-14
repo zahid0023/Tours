@@ -1,6 +1,6 @@
 package com.example.ghuddytour2.tours.serviceImpl;
 
-import com.example.ghuddytour2.tours.dto.request.*;
+import com.example.ghuddytour2.tours.dto.request.tourpackage.*;
 import com.example.ghuddytour2.tours.dto.response.AcknowledgeResponse;
 import com.example.ghuddytour2.tours.entities.TourEntity;
 import com.example.ghuddytour2.tours.entities.TourPackageEntity;
