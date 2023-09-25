@@ -2,18 +2,38 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
-import com.ghuddy.backendapp.tours.entities.*;
+import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
+import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
+import com.ghuddy.backendapp.tours.entities.FoodItemEntity;
+import com.ghuddy.backendapp.tours.entities.MealPackageEntity;
+import com.ghuddy.backendapp.tours.entities.MealTypeEntity;
+import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;
 
 public interface FoodService {
+    // food item
     AcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest);
 
     AcknowledgeResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest);
 
+    FoodItemEntity getFoodItemEntityByID(Long foodItemID);
+
+    FoodItemListResponse getAllFoodItems() throws EmptyListException;
+
+    FoodItemListResponse getAllFoodItemsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+
+    // meal type
     AcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest);
 
     AcknowledgeResponse addMealTypes(MealTypeListAddRequest mealTypeListAddRequest);
+
+    MealTypeEntity getMealTypeEntityByID(Long mealTypeID);
+
+    MealTypeListResponse getAllMealTypes() throws EmptyListException;
+
+    MealTypeListResponse getAllMealTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     AcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest);
 
@@ -21,7 +41,5 @@ public interface FoodService {
 
     List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages);
 
-    MealTypeEntity getMealTypeEntityByID(Long mealTypeID);
 
-    FoodItemEntity getFoodItemEntityByID(Long foodItemID);
 }

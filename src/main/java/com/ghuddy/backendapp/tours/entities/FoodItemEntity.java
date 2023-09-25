@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "food_item")
-public class FoodItemEntity {
+public class FoodItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

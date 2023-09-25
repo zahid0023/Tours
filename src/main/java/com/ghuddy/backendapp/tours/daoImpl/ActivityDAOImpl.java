@@ -1,13 +1,12 @@
 package com.ghuddy.backendapp.tours.daoImpl;
 
-import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.dao.ActivityDAO;
 import com.ghuddy.backendapp.tours.dto.data.ActivityData;
-import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeRequest;
-import com.ghuddy.backendapp.tours.dto.response.ActivityResponseList;
-import com.ghuddy.backendapp.tours.dto.response.ActivityTypeResponseList;
+import com.ghuddy.backendapp.tours.dto.data.ActivityTypeData;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import com.ghuddy.backendapp.tours.utils.EntityUtil;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,36 +20,38 @@ public class ActivityDAOImpl implements ActivityDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ActivityTypeResponseList getAllActivityTypes() throws EmptyListException {
-        String query = """
-                SELECT id as activityTypeID,
-                       activity_type_name as activityTypeName,
-                       description as description
-                FROM activity_type;""";
-
-        List<ActivityTypeRequest> activityTypes = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(ActivityTypeRequest.class));
-
-        if (activityTypes.isEmpty()) {
+    // used both for paginated and non paginated
+    public List<ActivityTypeData> getAllActivityTypes(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        String sql = """
+                      select id as activity_type_id,
+                             activity_type_name as activity_type_name,
+                             description as description
+                      from activity_type
+                """;
+        try {
+            List<ActivityTypeData> activityTypes = EntityUtil.getAllEntitiesPaginated(sql, pageSize, pageNumber, ActivityTypeData.class, jdbcTemplate);
+            return activityTypes;
+        } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
         }
-
-        return new ActivityTypeResponseList(activityTypes);
     }
 
+    // used both for paginated and non paginated
     @Override
-    public ActivityResponseList getAllActivities() throws EmptyListException {
+    public List<ActivityData> getAllActivities(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
-                select a.id                  as activityID,
-                       a.activity_name       as activityName,
-                       a.short_location      as shortLocation,
-                       at.activity_type_name as activityType
+                select a.id                  as activity_id,
+                       a.activity_name       as activity_name,
+                       a.short_location      as short_location,
+                       at.activity_type_name as activity_type
                 from activity a
-                         inner join activity_type at on at.id = a.activity_type_id;
+                         inner join activity_type at on at.id = a.activity_type_id
                 """;
-        List<ActivityData> activities = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(ActivityData.class));
-        if (activities.isEmpty()) {
+        try {
+            List<ActivityData> activities = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, ActivityData.class, jdbcTemplate);
+            return activities;
+        } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
         }
-        return new ActivityResponseList(activities);
     }
 }

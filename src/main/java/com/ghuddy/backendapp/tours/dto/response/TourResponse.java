@@ -1,4 +1,6 @@
 package com.ghuddy.backendapp.tours.dto.response;
 
-public class TourResponse {
+import com.ghuddy.backendapp.dto.response.BaseResponse;
+
+public class TourResponse extends BaseResponse {
 }

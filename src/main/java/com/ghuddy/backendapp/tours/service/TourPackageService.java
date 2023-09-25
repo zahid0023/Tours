@@ -5,8 +5,10 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddReq
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.entities.TourPackageTypeEntity;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +17,10 @@ public interface TourPackageService {
     AcknowledgeResponse addTourPackageType(TourPackageTypeAddRequest tourPackageTypeAddRequest);
 
     AcknowledgeResponse addTourPackageTypes(TourPackageTypeListAddRequest tourPackageTypeListAddRequest);
+
+    TourPackageTypeListResponse getAllTourPackageTypes() throws EmptyListException;
+
+    TourPackageTypeListResponse getAllTourPackageTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest);
 

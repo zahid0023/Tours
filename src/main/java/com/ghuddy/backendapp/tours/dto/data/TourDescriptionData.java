@@ -6,11 +6,11 @@ import lombok.Data;
 @Data
 @Schema(description = "tour description data")
 public class TourDescriptionData {
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+    @Schema(required = true,
             description = "The title of the tour",
             example = "Bandarban Adventure: Immersing in Nature's Majestic Beauty")
     private String title;
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+    @Schema(required = true,
             description = "Provide a description outlining the tour experience.")
     private String description;
 }

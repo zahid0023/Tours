@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -15,11 +16,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "tour_package")
-public class TourPackageEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class TourPackageEntity extends BaseEntity {
 
     @Size(max = 255)
     @NotNull
@@ -45,6 +42,9 @@ public class TourPackageEntity {
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourPackageTransportationEntity> tourPackageTransportationEntities = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

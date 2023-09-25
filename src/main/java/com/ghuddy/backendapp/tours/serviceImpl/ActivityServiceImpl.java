@@ -1,12 +1,20 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dao.ActivityDAO;
+import com.ghuddy.backendapp.tours.dto.data.ActivityData;
+import com.ghuddy.backendapp.tours.dto.data.ActivityTypeData;
 import com.ghuddy.backendapp.tours.dto.request.activity.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.ActivityListResponse;
+import com.ghuddy.backendapp.tours.dto.response.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.ActivityEntity;
 import com.ghuddy.backendapp.tours.entities.ActivityImageEntity;
 import com.ghuddy.backendapp.tours.entities.ActivityTypeEntity;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.ActivityRepository;
 import com.ghuddy.backendapp.tours.repository.ActivityTypeRepository;
+import com.ghuddy.backendapp.tours.repository.TransportationRouteRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
 import com.ghuddy.backendapp.tours.service.ImageService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
@@ -25,16 +33,22 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class ActivityServiceImpl implements ActivityService {
+    private final TransportationRouteRepository transportationRouteRepository;
     private final ActivityTypeRepository activityTypeRepository;
     private final ActivityRepository activityRepository;
+    private final ActivityDAO activityDAO;
     private final ImageService imageService;
 
     public ActivityServiceImpl(ActivityTypeRepository activityTypeRepository,
                                ActivityRepository activityRepository,
-                               ImageService imageService) {
+                               ActivityDAO activityDAO,
+                               ImageService imageService,
+                               TransportationRouteRepository transportationRouteRepository) {
         this.activityTypeRepository = activityTypeRepository;
         this.activityRepository = activityRepository;
+        this.activityDAO = activityDAO;
         this.imageService = imageService;
+        this.transportationRouteRepository = transportationRouteRepository;
     }
 
     @Override
@@ -63,6 +77,20 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityTypeEntity getActivityType(Long activityTypeID) {
         return activityTypeRepository.findById(activityTypeID).orElseThrow(() -> new EntityNotFoundException("ActivityTypeEntity Not Found"));
+    }
+
+    @Override
+    public ActivityTypeListResponse getAllActivityTypes() throws EmptyListException {
+        List<ActivityTypeData> activityTypeDataList = activityDAO.getAllActivityTypes(0, 0);
+        if (activityTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new ActivityTypeListResponse(activityTypeDataList);
+    }
+
+    @Override
+    public ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<ActivityTypeData> activityTypeDataList = activityDAO.getAllActivityTypes(pageSize, pageNumber);
+        if (activityTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new ActivityTypeListResponse(activityTypeDataList);
     }
 
     @Override
@@ -117,6 +145,20 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityEntity getActivity(Long activityID) {
         return activityRepository.findById(activityID).orElseThrow(() -> new EntityNotFoundException("ActivityEntity not found"));
+    }
+
+    @Override
+    public ActivityListResponse getAllActivities() throws EmptyListException {
+        List<ActivityData> activities = activityDAO.getAllActivities(0, 0);
+        if (activities.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new ActivityListResponse(activities);
+    }
+
+    @Override
+    public ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber) throws EmptyListException {
+        List<ActivityData> activities = activityDAO.getAllActivities(pageSize, pageNumber);
+        if (activities.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new ActivityListResponse(activities);
     }
 
     @Override

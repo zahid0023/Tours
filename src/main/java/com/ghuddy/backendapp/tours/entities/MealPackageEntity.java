@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -15,11 +16,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "meal_package")
-public class MealPackageEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class MealPackageEntity extends BaseEntity {
+
 
     @Size(max = 255)
     @NotNull

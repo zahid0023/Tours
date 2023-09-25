@@ -1,8 +1,19 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dao.AccommodationDao;
+import com.ghuddy.backendapp.tours.dto.data.TourAccommodationData;
+import com.ghuddy.backendapp.tours.dto.data.TourAccommodationTypeData;
+import com.ghuddy.backendapp.tours.dto.data.TourRoomCategoryData;
+import com.ghuddy.backendapp.tours.dto.data.TourRoomTypeData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;
+import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationTypeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
+import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.*;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
@@ -20,19 +31,23 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final TourAccommodationTypeRepository tourAccommodationTypeRepository;
     private final TourAccommodationRepository tourAccommodationRepository;
     private final TourPackageAccommodationRepository tourPackageAccommodationRepository;
+    private final AccommodationDao accommodationDao;
 
     public AccommodationServiceImpl(TourRoomTypeRepository tourRoomTypeRepository,
                                     TourRoomCategoryRepository tourRoomCategoryRepository,
                                     TourAccommodationTypeRepository tourAccommodationTypeRepository,
                                     TourAccommodationRepository tourAccommodationRepository,
-                                    TourPackageAccommodationRepository tourPackageAccommodationRepository) {
+                                    TourPackageAccommodationRepository tourPackageAccommodationRepository,
+                                    AccommodationDao accommodationDao) {
         this.tourRoomTypeRepository = tourRoomTypeRepository;
         this.tourRoomCategoryRepository = tourRoomCategoryRepository;
         this.tourAccommodationTypeRepository = tourAccommodationTypeRepository;
         this.tourAccommodationRepository = tourAccommodationRepository;
         this.tourPackageAccommodationRepository = tourPackageAccommodationRepository;
+        this.accommodationDao = accommodationDao;
     }
 
+    // room type
     @Override
     public AcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
         return addRoomTypes(List.of(roomTypeAddRequest.getRoomType()));
@@ -58,6 +73,21 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
+    public TourRoomTypeListResponse getAllTourRoomTypes() throws EmptyListException {
+        List<TourRoomTypeData> tourRoomTypeDataList = accommodationDao.getTourRoomTypes(0, 0);
+        if (tourRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomTypeListResponse(tourRoomTypeDataList);
+    }
+
+    @Override
+    public TourRoomTypeListResponse getAllTourRoomTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TourRoomTypeData> tourRoomTypeDataList = accommodationDao.getTourRoomTypes(pageSize, pageNumber);
+        if (tourRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomTypeListResponse(tourRoomTypeDataList);
+    }
+
+    // room category
+    @Override
     public AcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest) {
         return addRoomCategories(List.of(roomCategoryAddRequest.getRoomCategoryRequest()));
     }
@@ -82,6 +112,21 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
+    public TourRoomCategoryListResponse getAllTourRoomCategories() throws EmptyListException {
+        List<TourRoomCategoryData> tourRoomCategoryDataList = accommodationDao.getTourRoomCategories(0, 0);
+        if (tourRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomCategoryListResponse(tourRoomCategoryDataList);
+    }
+
+    @Override
+    public TourRoomCategoryListResponse getAllTourRoomCategoriesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TourRoomCategoryData> tourRoomCategoryDataList = accommodationDao.getTourRoomCategories(pageSize, pageNumber);
+        if (tourRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomCategoryListResponse(tourRoomCategoryDataList);
+    }
+
+    // accommodation type
+    @Override
     public AcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest) {
         return addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest()));
     }
@@ -104,6 +149,8 @@ public class AccommodationServiceImpl implements AccommodationService {
         return new AcknowledgeResponse();
     }
 
+
+    // accommodation
     @Override
     public AcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest) {
         return addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest()));
@@ -112,6 +159,20 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     public AcknowledgeResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest) {
         return addAccommodations(accommodationListAddRequest.getAccommodationRequestList());
+    }
+
+    @Override
+    public TourAccommodationTypeListResponse getAllTourAccommodationTypes() throws EmptyListException {
+        List<TourAccommodationTypeData> tourAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(0, 0);
+        if (tourAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(tourAccommodationTypeDataList);
+    }
+
+    @Override
+    public TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TourAccommodationTypeData> tourAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(pageSize, pageNumber);
+        if (tourAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(tourAccommodationTypeDataList);
     }
 
     @Transactional
@@ -132,6 +193,20 @@ public class AccommodationServiceImpl implements AccommodationService {
                 .collect(Collectors.toList());
         tourAccommodationRepository.saveAll(tourAccommodationEntities);
         return new AcknowledgeResponse();
+    }
+
+    @Override
+    public TourAccommodationListResponse getAllTourAccommodations() throws EmptyListException {
+        List<TourAccommodationData> tourAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (tourAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(tourAccommodationDataList);
+    }
+
+    @Override
+    public TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TourAccommodationData> tourAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (tourAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(tourAccommodationDataList);
     }
 
     @Override

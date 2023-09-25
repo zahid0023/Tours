@@ -1,11 +1,11 @@
-package com.ghuddy.backendapp.controller;
+package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
-import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.dto.response.TourResponseList;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.ActivityNotFoundException;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;

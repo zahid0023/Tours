@@ -5,8 +5,11 @@ import com.ghuddy.backendapp.tours.dto.request.activity.ActivityListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.ActivityListResponse;
+import com.ghuddy.backendapp.tours.dto.response.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.ActivityEntity;
 import com.ghuddy.backendapp.tours.entities.ActivityTypeEntity;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +23,10 @@ public interface ActivityService {
 
     ActivityTypeEntity getActivityType(Long activityTypeID);
 
+    ActivityTypeListResponse getAllActivityTypes() throws EmptyListException;
+
+    ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+
     // Activity
     AcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest);
 
@@ -29,4 +36,7 @@ public interface ActivityService {
 
     Map<Long, ActivityEntity> getActivityEntityMapByIDs(Set<Long> activityIDs);
 
+    ActivityListResponse getAllActivities() throws EmptyListException;
+
+    ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber) throws EmptyListException;
 }

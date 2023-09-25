@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -13,11 +14,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "tour_package_accommodation")
-public class TourPackageAccommodationEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class TourPackageAccommodationEntity extends BaseEntity {
 
     @Column(name = "is_shareable")
     private Boolean isShareable;

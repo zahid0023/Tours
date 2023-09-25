@@ -1,5 +1,7 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.DestinationLocationEntity;
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @Table(name = "tour_location_mapping")
-public class TourLocationEntity {
+public class TourLocationEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

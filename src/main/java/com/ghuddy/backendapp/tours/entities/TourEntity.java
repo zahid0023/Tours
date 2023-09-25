@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.entities;
 
+import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,11 +13,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "tour")
-public class TourEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class TourEntity extends BaseEntity {
 
     @Size(max = 255)
     @Column(name = "tour_name")

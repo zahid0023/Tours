@@ -1,10 +1,15 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dao.TourPackageDao;
+import com.ghuddy.backendapp.tours.dto.data.TourPackageTypeData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.TourEntity;
 import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.entities.TourPackageTypeEntity;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.TourPackageRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageTypeRepository;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
@@ -28,17 +33,20 @@ public class TourPackageServiceImpl implements TourPackageService {
     private final TourService tourService;
     private final FoodService foodService;
     private final AccommodationService accommodationService;
+    private final TourPackageDao tourPackageDao;
 
     public TourPackageServiceImpl(TourPackageTypeRepository tourPackageTypeRepository,
                                   TourPackageRepository tourPackageRepository,
                                   TourService tourService,
                                   FoodService foodService,
-                                  AccommodationService accommodationService) {
+                                  AccommodationService accommodationService,
+                                  TourPackageDao tourPackageDao) {
         this.tourPackageTypeRepository = tourPackageTypeRepository;
         this.tourPackageRepository = tourPackageRepository;
         this.tourService = tourService;
         this.foodService = foodService;
         this.accommodationService = accommodationService;
+        this.tourPackageDao = tourPackageDao;
     }
 
     @Override
@@ -63,6 +71,20 @@ public class TourPackageServiceImpl implements TourPackageService {
                 .collect(Collectors.toList());
         tourPackageTypeRepository.saveAll(tourPackageTypeEntities);
         return new AcknowledgeResponse();
+    }
+
+    @Override
+    public TourPackageTypeListResponse getAllTourPackageTypes() throws EmptyListException {
+        List<TourPackageTypeData> tourPackageTypeDataList = tourPackageDao.getTourPackageTypes(0, 0);
+        if (tourPackageTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourPackageTypeListResponse(tourPackageTypeDataList);
+    }
+
+    @Override
+    public TourPackageTypeListResponse getAllTourPackageTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TourPackageTypeData> tourPackageTypeDataList = tourPackageDao.getTourPackageTypes(pageSize, pageNumber);
+        if (tourPackageTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourPackageTypeListResponse(tourPackageTypeDataList);
     }
 
     @Override

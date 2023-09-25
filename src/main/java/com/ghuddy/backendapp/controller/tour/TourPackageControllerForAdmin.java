@@ -1,4 +1,4 @@
-package com.ghuddy.backendapp.controller;
+package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
@@ -29,15 +29,5 @@ public class TourPackageControllerForAdmin {
     @RequestMapping(path = "/tour-package/type/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTypes(@RequestBody TourPackageTypeListAddRequest tourPackageTypeListAddRequest) {
         return new ResponseEntity<>(tourPackageService.addTourPackageTypes(tourPackageTypeListAddRequest), HttpStatus.CREATED);
-    }
-
-    @RequestMapping(path = "/tour-package/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageAddRequest tourPackageAddRequest) {
-        return new ResponseEntity<>(tourPackageService.addTourPackage(tourPackageAddRequest), HttpStatus.CREATED);
-    }
-
-    @RequestMapping(path = "/tour-package/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageListAddRequest tourPackageListAddRequest) {
-        return new ResponseEntity<>(tourPackageService.addTourPackages(tourPackageListAddRequest), HttpStatus.CREATED);
     }
 }

@@ -1,16 +1,24 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.model.DestinationLocationEntity;
+import com.ghuddy.backendapp.service.DestinationLocationService;
 import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.TourResponseList;
-import com.ghuddy.backendapp.tours.entities.*;
+import com.ghuddy.backendapp.tours.entities.TourEntity;
+import com.ghuddy.backendapp.tours.entities.TourItineraryEntity;
+import com.ghuddy.backendapp.tours.entities.TourLocationEntity;
+import com.ghuddy.backendapp.tours.entities.TourSpecialityEntity;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
 import com.ghuddy.backendapp.tours.repository.TourLocationRepository;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
-import com.ghuddy.backendapp.tours.service.*;
+import com.ghuddy.backendapp.tours.service.SpecialityService;
+import com.ghuddy.backendapp.tours.service.TourItineraryService;
+import com.ghuddy.backendapp.tours.service.TourLocationService;
+import com.ghuddy.backendapp.tours.service.TourService;
 import com.ghuddy.backendapp.tours.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,41 +37,38 @@ public class TourServiceImpl implements TourService {
     private final SpecialityService specialityService;
     private final TourItineraryService tourItineraryService;
     private final TourDAO tourDAO;
-
+    private final DestinationLocationService destinationLocationService;
+    private final TourRepository tourRepository;
 
     public TourServiceImpl(TourLocationRepository tourLocationRepository,
                            TourLocationService tourLocationService,
                            SpecialityService specialityService,
-                           LocationService locationService,
+                           DestinationLocationService destinationLocationService,
                            TourRepository tourRepository,
                            TourItineraryService tourItineraryService,
                            TourDAO tourDAO) {
         this.tourLocationRepository = tourLocationRepository;
         this.tourLocationService = tourLocationService;
         this.specialityService = specialityService;
-        this.locationService = locationService;
+        this.destinationLocationService = destinationLocationService;
         this.tourRepository = tourRepository;
         this.tourItineraryService = tourItineraryService;
         this.tourDAO = tourDAO;
     }
 
-    private final LocationService locationService;
-    private final TourRepository tourRepository;
-
     @Override
     public AcknowledgeResponse addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException, DataIntegrityViolationException {
-        DestinationLocationEntity destinationLocationEntity = locationService.findLocationEntityByID(tourAddRequest.getLocationID());
+        DestinationLocationEntity destinationLocationEntity = destinationLocationService.getDestinationLocationEntityById(tourAddRequest.getLocationID());
         TourLocationEntity tourLocationEntity = new TourLocationEntity();
-        tourLocationEntity.setTourName(destinationLocationEntity.getName() + " " + "Tour");
+        tourLocationEntity.setTourName(destinationLocationEntity.getPlaceName() + " " + "Tour");
         tourLocationEntity.setDestinationLocationEntity(destinationLocationEntity);
         tourLocationEntity.setNumberOfDays(tourAddRequest.getNumberOfDays());
         tourLocationEntity.setNumberOfNights(tourAddRequest.getNumberOfNights());
         tourLocationEntity.setShortAddress(tourAddRequest.getShortAddress());
-        tourLocationEntity.setTourTag(StringUtil.tagify(destinationLocationEntity.getName(), tourAddRequest.getShortAddress()));
+        tourLocationEntity.setTourTag(StringUtil.tagify(destinationLocationEntity.getPlaceName(), tourAddRequest.getShortAddress()));
         tourLocationRepository.save(tourLocationEntity); // tour is added!!
         return new AcknowledgeResponse();
     }
-
 
     @Transactional
     @Override

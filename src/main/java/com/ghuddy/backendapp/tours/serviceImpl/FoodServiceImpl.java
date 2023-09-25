@@ -1,16 +1,22 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dao.FoodDao;
+import com.ghuddy.backendapp.tours.dto.data.FoodItemData;
+import com.ghuddy.backendapp.tours.dto.data.MealTypeData;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
+import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.entities.FoodItemEntity;
 import com.ghuddy.backendapp.tours.entities.MealPackageEntity;
 import com.ghuddy.backendapp.tours.entities.MealTypeEntity;
 import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.FoodItemRepository;
 import com.ghuddy.backendapp.tours.repository.MealPackageRepository;
 import com.ghuddy.backendapp.tours.repository.MealTypeRepository;
 import com.ghuddy.backendapp.tours.service.FoodService;
-import com.ghuddy.backendapp.tours.service.TourPackageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +30,19 @@ public class FoodServiceImpl implements FoodService {
     private final FoodItemRepository foodItemRepository;
     private final MealTypeRepository mealTypeRepository;
     private final MealPackageRepository mealPackageRepository;
+    private final FoodDao foodDao;
 
     public FoodServiceImpl(FoodItemRepository foodItemRepository,
                            MealTypeRepository mealTypeRepository,
-                           MealPackageRepository mealPackageRepository) {
+                           MealPackageRepository mealPackageRepository,
+                           FoodDao foodDao) {
         this.foodItemRepository = foodItemRepository;
         this.mealTypeRepository = mealTypeRepository;
         this.mealPackageRepository = mealPackageRepository;
+        this.foodDao = foodDao;
     }
 
+    // food items
     @Override
     public AcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest) {
         return addFoodItems(List.of(foodItemAddRequest.getFoodItem()));
@@ -56,6 +66,22 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public FoodItemListResponse getAllFoodItems() throws EmptyListException {
+        List<FoodItemData> foodItemDataList = foodDao.getAllFoodItems(0, 0);
+        if (foodItemDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new FoodItemListResponse(foodItemDataList);
+    }
+
+    @Override
+    public FoodItemListResponse getAllFoodItemsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<FoodItemData> foodItemDataList = foodDao.getAllFoodItems(pageSize, pageNumber);
+        if (foodItemDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new FoodItemListResponse(foodItemDataList);
+    }
+
+
+    // meal type
+    @Override
     public AcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest) {
         return addMealTypes(List.of(mealTypeAddRequest.getMealType()));
     }
@@ -75,6 +101,20 @@ public class FoodServiceImpl implements FoodService {
                 .collect(Collectors.toList());
         mealTypeRepository.saveAll(mealTypeEntities);
         return new AcknowledgeResponse();
+    }
+
+    @Override
+    public MealTypeListResponse getAllMealTypes() throws EmptyListException {
+        List<MealTypeData> mealTypeDataList = foodDao.getAllMealTypes(0, 0);
+        if (mealTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new MealTypeListResponse(mealTypeDataList);
+    }
+
+    @Override
+    public MealTypeListResponse getAllMealTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<MealTypeData> mealTypeDataList = foodDao.getAllMealTypes(pageSize, pageNumber);
+        if (mealTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new MealTypeListResponse(mealTypeDataList);
     }
 
     @Transactional
