@@ -7,14 +7,14 @@ import lombok.Data;
 
 @Data
 public class AcknowledgeResponse extends BaseResponse {
-
-    @Schema(required = true,
+    @Schema(
             description = "The action was successful",
+            required = true,
             example = "Successful")
     @JsonProperty("status")
     private final String status;
-    @Schema(required = true,
-            description = "the status code of the action performed",
+    @Schema(description = "the status code of the action performed",
+            required = true,
             example = "00000")
     @JsonProperty("status_code")
     private final String statusCode;

@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.daoImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.data.TourAddData;
-import com.ghuddy.backendapp.tours.dto.response.TourResponseList;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourResponseList;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class TourDAOImpl implements TourDAO {
         StringBuilder sql = new StringBuilder("""
                 SELECT tlm.id AS tour_id,
                        tlm.tour_name AS tour_name,
-                       l.name AS destination_location,
+                       l.place_name AS destination_location,
                        tlm.number_of_days AS number_of_days,
                        tlm.number_of_nights AS number_of_nights,
                        tlm.short_address AS short_address,

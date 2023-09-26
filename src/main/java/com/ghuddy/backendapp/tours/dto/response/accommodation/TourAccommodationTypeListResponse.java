@@ -1,6 +1,6 @@
 package com.ghuddy.backendapp.tours.dto.response.accommodation;
 
-import com.ghuddy.backendapp.tours.dto.data.TourAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
 import lombok.Data;
 
 import java.util.List;

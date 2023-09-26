@@ -4,10 +4,10 @@ import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.FoodItemEntity;
-import com.ghuddy.backendapp.tours.entities.MealPackageEntity;
-import com.ghuddy.backendapp.tours.entities.MealTypeEntity;
-import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;

@@ -1,16 +1,16 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.FoodDao;
-import com.ghuddy.backendapp.tours.dto.data.FoodItemData;
-import com.ghuddy.backendapp.tours.dto.data.MealTypeData;
+import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
+import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.FoodItemEntity;
-import com.ghuddy.backendapp.tours.entities.MealPackageEntity;
-import com.ghuddy.backendapp.tours.entities.MealTypeEntity;
-import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.FoodItemRepository;

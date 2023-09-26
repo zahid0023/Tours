@@ -1,9 +1,9 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.activity.TourActivityRequest;
-import com.ghuddy.backendapp.tours.entities.ActivityEntity;
-import com.ghuddy.backendapp.tours.entities.TourEntity;
-import com.ghuddy.backendapp.tours.entities.TourItineraryEntity;
+import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
 import com.ghuddy.backendapp.tours.repository.TourItineraryRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
 import com.ghuddy.backendapp.tours.service.TourItineraryService;

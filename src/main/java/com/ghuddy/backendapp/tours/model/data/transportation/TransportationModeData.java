@@ -1,0 +1,21 @@
+package com.ghuddy.backendapp.tours.model.data.transportation;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+@Data
+public class TransportationModeData {
+    @Schema(description = "The id of the transportation mode", example = "1")
+    @JsonProperty("transportation_mode_id")
+    private Long transportationModeId;
+    @Schema(description = "The name of the transportation mode", example = "Car")
+    @JsonProperty("transportation_mode_name")
+    private String transportationModeName;
+    @Schema(description = "The description of the transportation mode")
+    @JsonProperty("transportation_mode_description")
+    private String transportationModeDescription;
+    @Schema(description = "The icon url of the transportation mode")
+    @JsonProperty("transportation_mode_icon_url")
+    private String transportationModeIconUrl;
+}

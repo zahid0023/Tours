@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.transporation.*;
-import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/")
+//@Api(tags = "Tour - Tour Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
 public class TransportationControllerForAdmin {
     private final TransportationService transportationService;
     private final TourPackageService tourPackageService;
@@ -34,10 +34,7 @@ public class TransportationControllerForAdmin {
         return new ResponseEntity<>(transportationService.addTransportationBrands(transportationBrandListAddRequest), HttpStatus.CREATED);
     }
 
-
-
     // transportation mode
-
     @RequestMapping(path = "/admin/transportation/mode/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTransportationMode(@RequestBody TransportationModeAddRequest transportationModeAddRequest) {
         return new ResponseEntity<>(transportationService.addTransportationMode(transportationModeAddRequest), HttpStatus.CREATED);
@@ -69,20 +66,4 @@ public class TransportationControllerForAdmin {
     public ResponseEntity<?> addTransportationRoutes(@RequestBody TransportationRouteListAddRequest transportationRouteListAddRequest) {
         return new ResponseEntity<>(transportationService.addTransportationRoutes(transportationRouteListAddRequest), HttpStatus.CREATED);
     }
-
-    // trip type
-
-    // tour package transportation
-    @RequestMapping(path = "/admin/tour-package/transportation/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageTransportation(@RequestBody TourPackageTransportationAddRequest tourPackageTransportationAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(tourPackageTransportationAddRequest.getTourPackageID());
-        return new ResponseEntity<>(transportationService.addTourPackageTransportation(tourPackageEntity, tourPackageTransportationAddRequest.getTourPackageTransportation()), HttpStatus.CREATED);
-    }
-
-    @RequestMapping(path = "/admin/tour-package/transportation/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageTransportation(@RequestBody TourPackageTransportationListAddRequest tourPackageTransportationListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(tourPackageTransportationListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(transportationService.addTourPackageTransportations(tourPackageEntity, tourPackageTransportationListAddRequest), HttpStatus.CREATED);
-    }
-
 }

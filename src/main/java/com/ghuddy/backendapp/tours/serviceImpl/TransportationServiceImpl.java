@@ -3,13 +3,19 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.model.DestinationLocationEntity;
 import com.ghuddy.backendapp.service.DestinationLocationService;
 import com.ghuddy.backendapp.tours.dao.TransportationDao;
-import com.ghuddy.backendapp.tours.dto.data.TransportationRouteData;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationBrandListResponse;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationModeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationProviderListResponse;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationBrandData;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationModeData;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationProviderData;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationRouteData;
 import com.ghuddy.backendapp.tours.dto.request.transporation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationRouteResponseList;
-import com.ghuddy.backendapp.tours.entities.*;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.TransportationService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
@@ -57,6 +63,7 @@ public class TransportationServiceImpl implements TransportationService {
         return addTransportationBrands(transportationBrandListAddRequest.getTransportationBrands());
     }
 
+
     private AcknowledgeResponse addTransportationBrands(List<TransportationBrandRequest> transportationBrands) {
         List<TransportationBrandEntity> transportationBrandEntities = transportationBrands.stream()
                 .map(transportationBrandRequest -> {
@@ -67,6 +74,30 @@ public class TransportationServiceImpl implements TransportationService {
                 .collect(Collectors.toList());
         transportationBrandRepository.saveAll(transportationBrandEntities);
         return new AcknowledgeResponse();
+    }
+
+    /**
+     * @return TransportationBrandListResponse
+     * @throws EmptyListException
+     */
+    @Override
+    public TransportationBrandListResponse getAllTransportationBrands() throws EmptyListException {
+        List<TransportationBrandData> transportationBrandDataList = transportationDao.getAllTransportationBrands(0, 0);
+        if (transportationBrandDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationBrandListResponse(transportationBrandDataList);
+    }
+
+    /**
+     * @param pageSize
+     * @param pageNumber
+     * @return TransportationBrandListResponse
+     * @throws EmptyListException
+     */
+    @Override
+    public TransportationBrandListResponse getAllTransportationBrandsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TransportationBrandData> transportationBrandDataList = transportationDao.getAllTransportationBrands(pageSize, pageNumber);
+        if (transportationBrandDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationBrandListResponse(transportationBrandDataList);
     }
 
     // transportation mode
@@ -94,6 +125,20 @@ public class TransportationServiceImpl implements TransportationService {
         return new AcknowledgeResponse();
     }
 
+    @Override
+    public TransportationModeListResponse getAllTransportationModes() throws EmptyListException {
+        List<TransportationModeData> transportationModeDataList = transportationDao.getAllTransportationModes(0, 0);
+        if (transportationModeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationModeListResponse(transportationModeDataList);
+    }
+
+    @Override
+    public TransportationModeListResponse getAllTransportationModesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TransportationModeData> transportationModeDataList = transportationDao.getAllTransportationModes(0, 0);
+        if (transportationModeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationModeListResponse(transportationModeDataList);
+    }
+
     // transportation providers
     @Override
     public AcknowledgeResponse addTransportationProvider(TransportationProviderAddRequest transportationProviderAddRequest) {
@@ -116,6 +161,20 @@ public class TransportationServiceImpl implements TransportationService {
                 .collect(Collectors.toList());
         transportationProviderRepository.saveAll(transportationProviderEntities);
         return new AcknowledgeResponse();
+    }
+
+    @Override
+    public TransportationProviderListResponse getAllTransportationProviders() throws EmptyListException {
+        List<TransportationProviderData> transportationProviderDataList = transportationDao.getAllTransportationProviders(0, 0);
+        if (transportationProviderDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationProviderListResponse(transportationProviderDataList);
+    }
+
+    @Override
+    public TransportationProviderListResponse getAllTransportationProvidersPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+        List<TransportationProviderData> transportationProviderDataList = transportationDao.getAllTransportationProviders(pageSize, pageNumber);
+        if (transportationProviderDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TransportationProviderListResponse(transportationProviderDataList);
     }
 
     // transportation routes

@@ -1,19 +1,19 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
-import com.ghuddy.backendapp.tours.dto.data.TourAccommodationData;
-import com.ghuddy.backendapp.tours.dto.data.TourAccommodationTypeData;
-import com.ghuddy.backendapp.tours.dto.data.TourRoomCategoryData;
-import com.ghuddy.backendapp.tours.dto.data.TourRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomTypeData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationTypeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.*;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;

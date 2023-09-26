@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.dto.response.food;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.dto.data.MealTypeData;
+import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import lombok.Data;
 
 import java.util.List;

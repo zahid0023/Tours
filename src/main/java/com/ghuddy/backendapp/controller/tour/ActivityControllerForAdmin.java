@@ -4,9 +4,8 @@ import com.ghuddy.backendapp.tours.dto.request.activity.ActivityAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeListAddRequest;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
+import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.service.ActivityService;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping(path = "/api/v1/admin")
+//@Api(tags = "Tour - Activity Controller For Admin", description = "This controller is used to manage tour activities(itineraries) by admins.")
 public class ActivityControllerForAdmin {
     private final ActivityService activityService;
 
@@ -100,7 +100,7 @@ public class ActivityControllerForAdmin {
     }
 
     @RequestMapping(path = "/activity/type/search/paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllActivityTypeByKeywordPaginated(@RequestParam String keyword, @RequestParam int pageSize, @RequestParam int pageNumber, @RequestParam String requestId) {
+    public ResponseEntity<?> getAllActivityTypeByKeywordPaginated(@RequestParam String keyword, @RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
@@ -139,7 +139,7 @@ public class ActivityControllerForAdmin {
 
     @Operation(summary = "This API is used to get all the activities in a paginated way.")
     @RequestMapping(path = "/activity/get/all-paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllActivitiesPaginated(@RequestParam int pageSize, @RequestParam int pageNumber, @RequestParam String requestId) {
+    public ResponseEntity<?> getAllActivitiesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(activityService.getAllActivitiesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
@@ -154,7 +154,7 @@ public class ActivityControllerForAdmin {
     }
 
     @RequestMapping(path = "/activity/search/paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllActivitiesByKeywordPaginated(@RequestParam String keyword, @RequestParam int pageSize, @RequestParam int pageNumber, @RequestParam String requestId) {
+    public ResponseEntity<?> getAllActivitiesByKeywordPaginated(@RequestParam String keyword, @RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 

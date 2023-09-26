@@ -2,9 +2,12 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.transporation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationBrandListResponse;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationModeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationProviderListResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationRouteResponseList;
-import com.ghuddy.backendapp.tours.entities.*;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.entities.*;
 
 import java.util.List;
 import java.util.Map;
@@ -14,14 +17,25 @@ public interface TransportationService {
     AcknowledgeResponse addTransportationBrand(TransportationBrandAddRequest transportationBrand);
 
     AcknowledgeResponse addTransportationBrands(TransportationBrandListAddRequest transportationBrandListAddRequest);
+    TransportationBrandListResponse getAllTransportationBrands() throws EmptyListException;
+
+    TransportationBrandListResponse getAllTransportationBrandsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     AcknowledgeResponse addTransportationMode(TransportationModeAddRequest transportationModeAddRequest);
 
     AcknowledgeResponse addTransportationModes(TransportationModeListAddRequest transportationModeListAddRequest);
 
+    TransportationModeListResponse getAllTransportationModes() throws EmptyListException;
+
+    TransportationModeListResponse getAllTransportationModesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+
     AcknowledgeResponse addTransportationProvider(TransportationProviderAddRequest transportationProviderAddRequest);
 
     AcknowledgeResponse addTransportationProviders(TransportationProviderListAddRequest transportationProviderListAddRequest);
+
+    TransportationProviderListResponse getAllTransportationProviders() throws EmptyListException;
+
+    TransportationProviderListResponse getAllTransportationProvidersPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     AcknowledgeResponse addTransportationRoute(TransportationRouteAddRequest transportationRouteAddRequest);
 

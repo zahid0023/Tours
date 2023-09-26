@@ -1,13 +1,13 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
-import com.ghuddy.backendapp.tours.dto.data.TourPackageTypeData;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.TourEntity;
-import com.ghuddy.backendapp.tours.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.entities.TourPackageTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.TourPackageRepository;
@@ -49,9 +49,10 @@ public class TourPackageServiceImpl implements TourPackageService {
         this.tourPackageDao = tourPackageDao;
     }
 
+    // tour package type
     @Override
     public AcknowledgeResponse addTourPackageType(TourPackageTypeAddRequest tourPackageTypeAddRequest) {
-        return addTourPackageTypes(List.of(tourPackageTypeAddRequest));
+        return addTourPackageTypes(List.of(tourPackageTypeAddRequest.getTourPackageTypeRequest()));
     }
 
     @Override
@@ -59,7 +60,7 @@ public class TourPackageServiceImpl implements TourPackageService {
         return addTourPackageTypes(tourPackageTypeListAddRequest.getTourPackageTypes());
     }
 
-    private AcknowledgeResponse addTourPackageTypes(List<TourPackageTypeAddRequest> tourPackages) {
+    private AcknowledgeResponse addTourPackageTypes(List<TourPackageTypeRequest> tourPackages) {
         List<TourPackageTypeEntity> tourPackageTypeEntities = tourPackages.stream()
                 .map(tourPackageTypeAddRequest -> {
                     TourPackageTypeEntity tourPackageTypeEntity = new TourPackageTypeEntity();
@@ -93,6 +94,7 @@ public class TourPackageServiceImpl implements TourPackageService {
         return addTourPackages(tourEntity, List.of(tourPackageAddRequest.getTourPackageRequest()));
     }
 
+    // tour package
     @Override
     public AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) {
         TourEntity tourEntity = tourService.getTourByTourID(tourPackageListAddRequest.getTourID());

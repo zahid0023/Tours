@@ -4,7 +4,7 @@ import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
-import com.ghuddy.backendapp.tours.dto.response.TourResponseList;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourResponseList;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.ActivityNotFoundException;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1")
+//@Api(tags = "Tour - Tour Controller For Admin", description = "This controller is used to manage tours by admins.")
 public class TourControllerForAdmin {
     private final TourService tourService;
 
@@ -87,12 +88,12 @@ public class TourControllerForAdmin {
     }
 
     @RequestMapping(path = "/admin/tours/delete/{tourID}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteTour(@PathVariable Long tourID) {
+    public ResponseEntity<?> deleteTour(@PathVariable Long tourID, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/admin/tours/get-by-id/{tourID}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTour(@PathVariable Long tourID) {
+    public ResponseEntity<?> getTour(@PathVariable Long tourID, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
@@ -125,7 +126,7 @@ public class TourControllerForAdmin {
                     "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
                     "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
     @RequestMapping(path = "/admin/tours/get-all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllTours() {
+    public ResponseEntity<?> getAllTours(@RequestParam String requestId) {
         try {
             return new ResponseEntity<>(tourService.getAllTours(), HttpStatus.OK);
         } catch (EmptyListException ex) {
@@ -164,7 +165,7 @@ public class TourControllerForAdmin {
                     "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
                     "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
     @RequestMapping(path = "/admin/tours/get-all/paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllToursPaginated(@RequestParam Integer pageSize, @RequestParam Integer pageNumber) {
+    public ResponseEntity<?> getAllToursPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(tourService.getAllToursPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
@@ -173,13 +174,13 @@ public class TourControllerForAdmin {
         }
     }
 
-    @RequestMapping(path = "/admin/tours/get-all-by-destination-location", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllToursByDestinationLocation(String locationName) {
+    @RequestMapping(path = "/admin/tours/get-all-by-destination-location/{location-name}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllToursByDestinationLocation(@PathVariable("location-name") String locationName, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/admin/tours/get-all-by-destination-location/paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllToursPaginatedByDestinationLocation(@RequestParam String locationName, @RequestParam int pageSize, @RequestParam int pageNumber) {
+    @RequestMapping(path = "/admin/tours/get-all-by-destination-location/paginated/{location-name}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllToursPaginatedByDestinationLocation(@PathVariable("location-name") String locationName, @RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 

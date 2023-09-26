@@ -1,14 +1,12 @@
 package com.ghuddy.backendapp.tours.dto.request.transporation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.dto.request.BaseRequest;
-import com.ghuddy.backendapp.exception.AbstractException;
 import com.ghuddy.backendapp.tours.enums.TripType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class TourPackageTransportationRequest extends BaseRequest {
+public class TourPackageTransportationRequest {
     @Schema(description = "The id of the transportation route", required = true, example = "1")
     @JsonProperty("transportation_id")
     private Long transportationRouteID;
@@ -27,9 +25,4 @@ public class TourPackageTransportationRequest extends BaseRequest {
     @Schema(description = "Where the transportation has ac or not", example = "true")
     @JsonProperty("is_ac")
     private Boolean isAC;
-
-    @Override
-    public void validate() throws AbstractException {
-
-    }
 }

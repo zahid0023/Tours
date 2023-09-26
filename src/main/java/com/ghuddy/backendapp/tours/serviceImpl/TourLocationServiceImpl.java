@@ -1,6 +1,6 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
-import com.ghuddy.backendapp.tours.entities.TourLocationEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
 import com.ghuddy.backendapp.tours.repository.TourLocationRepository;
 import com.ghuddy.backendapp.tours.service.TourLocationService;
 import org.springframework.stereotype.Service;

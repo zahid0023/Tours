@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ActivityRequest extends BaseRequest {
+public class ActivityRequest{
     @Schema(description = "The ID of the Activity Type", example = "1", required = true)
     @JsonProperty("activity_type_id")
     private final Long activityTypeID;
@@ -27,8 +27,4 @@ public class ActivityRequest extends BaseRequest {
     @JsonProperty("activity_images")
     List<ImageRequest> activityImages;
 
-    @Override
-    public void validate() throws AbstractException {
-
-    }
 }

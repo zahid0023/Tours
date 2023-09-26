@@ -1,7 +1,5 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/admin")
+//@Api(tags = "Tour - Tour Package Controller For Admin", description = "This controller is used to manage tour packages by admins.")
 public class TourPackageControllerForAdmin {
     private final TourPackageService tourPackageService;
 

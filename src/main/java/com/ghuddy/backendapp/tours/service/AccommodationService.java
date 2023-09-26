@@ -6,8 +6,8 @@ import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationL
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationTypeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.*;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.entities.*;
 
 import java.util.List;
 import java.util.Map;

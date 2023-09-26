@@ -1,8 +1,8 @@
 package com.ghuddy.backendapp.model;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.entities.TourLocationEntity;
-import com.ghuddy.backendapp.tours.entities.TransportationRouteEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
+import com.ghuddy.backendapp.tours.model.entities.TransportationRouteEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "location")
+@Table(name = "place_near_by")
 public class DestinationLocationEntity extends BaseEntity {
     @Column(name = "place_name", nullable = false, unique = true)
     private String placeName;

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class TourSpecialityRequest extends BaseRequest {
+public class TourSpecialityRequest {
     @Schema(description = "The title of the tour speciality.", example = "Adventure")
     @JsonProperty("tour_speciality_title")
     private String tourSpecialityTitle;
@@ -19,11 +19,6 @@ public class TourSpecialityRequest extends BaseRequest {
     @Schema(description = "The URL of the icon representing the tour speciality.", example = "https://example.com/icons/adventure.png")
     @JsonProperty("tour_speciality_icon_url")
     private String tourSpecialityIconURL;
-
-    @Override
-    public void validate() throws AbstractException {
-
-    }
 }
 
 

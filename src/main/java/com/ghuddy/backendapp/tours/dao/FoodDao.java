@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.dao;
 
-import com.ghuddy.backendapp.tours.dto.data.FoodItemData;
-import com.ghuddy.backendapp.tours.dto.data.MealTypeData;
+import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
+import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;

@@ -11,7 +11,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TourPackageRequest extends BaseRequest {
+public class TourPackageRequest {
     @Schema(description = "The ID of the tourPackageType.", required = true, example = "1")
     @JsonProperty("tour_package_type_id")
     private Long tourPackageTypeID;
@@ -24,9 +24,4 @@ public class TourPackageRequest extends BaseRequest {
     @Schema(description = "The list of the accommodations belonging to this tour package.")
     @JsonProperty("accommodations")
     private List<TourPackageAccommodationRequest> accommodations;
-
-    @Override
-    public void validate() throws AbstractException {
-
-    }
 }

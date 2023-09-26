@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.image.ImageRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
-import com.ghuddy.backendapp.tours.entities.ActivityEntity;
+import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
 import com.ghuddy.backendapp.tours.repository.ActivityImageRepository;
 import com.ghuddy.backendapp.tours.service.ImageService;
 import org.springframework.stereotype.Service;

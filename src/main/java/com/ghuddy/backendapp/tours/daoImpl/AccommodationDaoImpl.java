@@ -1,10 +1,10 @@
 package com.ghuddy.backendapp.tours.daoImpl;
 
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
-import com.ghuddy.backendapp.tours.dto.data.TourAccommodationData;
-import com.ghuddy.backendapp.tours.dto.data.TourAccommodationTypeData;
-import com.ghuddy.backendapp.tours.dto.data.TourRoomCategoryData;
-import com.ghuddy.backendapp.tours.dto.data.TourRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomTypeData;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;

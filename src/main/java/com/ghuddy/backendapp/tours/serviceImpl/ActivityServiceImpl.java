@@ -1,15 +1,15 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.ActivityDAO;
-import com.ghuddy.backendapp.tours.dto.data.ActivityData;
-import com.ghuddy.backendapp.tours.dto.data.ActivityTypeData;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
 import com.ghuddy.backendapp.tours.dto.request.activity.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.ActivityListResponse;
-import com.ghuddy.backendapp.tours.dto.response.ActivityTypeListResponse;
-import com.ghuddy.backendapp.tours.entities.ActivityEntity;
-import com.ghuddy.backendapp.tours.entities.ActivityImageEntity;
-import com.ghuddy.backendapp.tours.entities.ActivityTypeEntity;
+import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
+import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
+import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
+import com.ghuddy.backendapp.tours.model.entities.ActivityImageEntity;
+import com.ghuddy.backendapp.tours.model.entities.ActivityTypeEntity;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.ActivityRepository;

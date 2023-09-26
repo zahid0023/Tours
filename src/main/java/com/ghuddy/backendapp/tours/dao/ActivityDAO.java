@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.dao;
 
-import com.ghuddy.backendapp.tours.dto.data.ActivityData;
-import com.ghuddy.backendapp.tours.dto.data.ActivityTypeData;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;

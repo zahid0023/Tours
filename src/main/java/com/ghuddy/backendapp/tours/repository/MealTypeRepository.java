@@ -1,6 +1,6 @@
 package com.ghuddy.backendapp.tours.repository;
 
-import com.ghuddy.backendapp.tours.entities.MealTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
