@@ -6,6 +6,7 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddReq
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
+import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
@@ -22,9 +23,9 @@ public interface TourPackageService {
 
     TourPackageTypeListResponse getAllTourPackageTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest);
+    AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException;
 
-    AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest);
+    AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException;
 
     TourPackageEntity getTourPackageByPackageID(Long tourPackageID);
 

@@ -4,6 +4,7 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class TourPackageControllerForMerchant {
             return new ResponseEntity<>(tourPackageService.getAllTourPackageTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -37,17 +38,17 @@ public class TourPackageControllerForMerchant {
             return new ResponseEntity<>(tourPackageService.getAllTourPackageTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(path = "/tour-package/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageAddRequest tourPackageAddRequest) {
+    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException {
         return new ResponseEntity<>(tourPackageService.addTourPackage(tourPackageAddRequest), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/tour-package/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageListAddRequest tourPackageListAddRequest) {
+    public ResponseEntity<?> addTourPackage(@RequestBody TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException {
         return new ResponseEntity<>(tourPackageService.addTourPackages(tourPackageListAddRequest), HttpStatus.CREATED);
     }
 }

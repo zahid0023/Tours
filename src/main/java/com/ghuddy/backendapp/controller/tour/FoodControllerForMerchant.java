@@ -34,7 +34,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllFoodItems(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,7 +44,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllFoodItemsPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -55,7 +55,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllMealTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -65,7 +65,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllMealTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 

@@ -46,7 +46,7 @@ public class EntityUtil {
         return new LimitOffsetData(" limit ? offset ?", offset);
     }
 
-    // for getting all entities without any pagination call this method with pageSize = 0 and pageNumber = 0
+    // for getting all entities(data classes) without any pagination call this method with pageSize = 0 and pageNumber = 0
     public static <T> List<T> getAllEntitiesPaginated(String query, Integer pageSize, Integer pageNumber, Class<T> entityClass, JdbcTemplate jdbcTemplate) throws EmptyListException {
         try {
             if (pageNumber == 0 && pageSize == 0) {

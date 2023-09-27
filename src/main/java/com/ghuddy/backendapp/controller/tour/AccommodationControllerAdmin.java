@@ -37,7 +37,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourRoomCategories(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -47,7 +47,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourRoomCategoriesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -68,7 +68,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourRoomTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -78,7 +78,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourRoomTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -99,7 +99,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourAccommodationTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -109,7 +109,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourAccommodationTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -130,7 +130,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourAccommodations(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -140,7 +140,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(accommodationService.getAllTourAccommodationsPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), "11111"), HttpStatus.INTERNAL_SERVER_ERROR);

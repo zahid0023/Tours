@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
+import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
@@ -89,15 +90,15 @@ public class TourPackageServiceImpl implements TourPackageService {
     }
 
     @Override
-    public AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) {
-        TourEntity tourEntity = tourService.getTourByTourID(tourPackageAddRequest.getTourID());
+    public AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException {
+        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourPackageAddRequest.getTourID());
         return addTourPackages(tourEntity, List.of(tourPackageAddRequest.getTourPackageRequest()));
     }
 
     // tour package
     @Override
-    public AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) {
-        TourEntity tourEntity = tourService.getTourByTourID(tourPackageListAddRequest.getTourID());
+    public AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException {
+        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourPackageListAddRequest.getTourID());
         return addTourPackages(tourEntity, tourPackageListAddRequest.getTourPackages());
     }
 

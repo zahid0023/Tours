@@ -1,83 +1,48 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
-import com.ghuddy.backendapp.model.DestinationLocationEntity;
-import com.ghuddy.backendapp.service.DestinationLocationService;
-import com.ghuddy.backendapp.tours.dao.TourDAO;
-import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tour.TourResponseList;
-import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.CreatedTourData;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourSpecialityEntity;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
-import com.ghuddy.backendapp.tours.repository.TourLocationRepository;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
 import com.ghuddy.backendapp.tours.service.SpecialityService;
 import com.ghuddy.backendapp.tours.service.TourItineraryService;
 import com.ghuddy.backendapp.tours.service.TourLocationService;
 import com.ghuddy.backendapp.tours.service.TourService;
-import com.ghuddy.backendapp.tours.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @Slf4j
 public class TourServiceImpl implements TourService {
-
-    private final TourLocationRepository tourLocationRepository;
-    private final TourLocationService tourLocationService;
     private final SpecialityService specialityService;
     private final TourItineraryService tourItineraryService;
-    private final TourDAO tourDAO;
-    private final DestinationLocationService destinationLocationService;
     private final TourRepository tourRepository;
+    private final TourLocationService tourLocationService;
 
-    public TourServiceImpl(TourLocationRepository tourLocationRepository,
-                           TourLocationService tourLocationService,
-                           SpecialityService specialityService,
-                           DestinationLocationService destinationLocationService,
-                           TourRepository tourRepository,
+    public TourServiceImpl(SpecialityService specialityService,
                            TourItineraryService tourItineraryService,
-                           TourDAO tourDAO) {
-        this.tourLocationRepository = tourLocationRepository;
-        this.tourLocationService = tourLocationService;
+                           TourRepository tourRepository,
+                           TourLocationService tourLocationService) {
         this.specialityService = specialityService;
-        this.destinationLocationService = destinationLocationService;
-        this.tourRepository = tourRepository;
         this.tourItineraryService = tourItineraryService;
-        this.tourDAO = tourDAO;
+        this.tourRepository = tourRepository;
+        this.tourLocationService = tourLocationService;
     }
 
-    @Override
-    public InsertAcknowledgeResponse addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException {
-        DestinationLocationEntity destinationLocationEntity = destinationLocationService.getDestinationLocationEntityById(tourAddRequest.getLocationID());
-        TourLocationEntity tourLocationEntity = new TourLocationEntity();
-        tourLocationEntity.setTourName(StringUtil.tourName(destinationLocationEntity.getPlaceName(), tourAddRequest.getNumberOfDays(), tourAddRequest.getNumberOfNights()));
-        tourLocationEntity.setDestinationLocationEntity(destinationLocationEntity);
-        tourLocationEntity.setNumberOfDays(tourAddRequest.getNumberOfDays());
-        tourLocationEntity.setNumberOfNights(tourAddRequest.getNumberOfNights());
-        tourLocationEntity.setShortAddress(tourAddRequest.getShortAddress());
-        tourLocationEntity.setTourTag(StringUtil.tagify(destinationLocationEntity.getPlaceName(), tourAddRequest.getShortAddress()));
-        tourLocationEntity = tourLocationRepository.save(tourLocationEntity); // tour is added!!
-        return new InsertAcknowledgeResponse(new AddedTourDataOptimized(tourLocationEntity), tourAddRequest.getRequestId());
-    }
-
+    // created tour
     @Transactional
     @Override
-    public InsertAcknowledgeResponse createTour(TourCreateRequest tourCreateRequest) {
-        TourLocationEntity tourLocationEntity = tourLocationService.getAddedTourByID(tourCreateRequest.getAddedTourID());
+    public InsertAcknowledgeResponse<CreatedTourData> createTour(TourCreateRequest tourCreateRequest) throws TourNotFoundException {
+        TourLocationEntity tourLocationEntity = tourLocationService.getAddedTourEntityById(tourCreateRequest.getAddedTourID());
 
         TourEntity tourEntity = new TourEntity();
         tourEntity.setTitle(tourCreateRequest.getTitle());
@@ -92,21 +57,26 @@ public class TourServiceImpl implements TourService {
         tourEntity.setTourSpecialityEntities(tourSpecialityEntities);
 
         tourEntity = tourRepository.save(tourEntity);
-        return new InsertAcknowledgeResponse(new CreatedTourData(tourEntity), tourCreateRequest.getRequestId());
+        return new InsertAcknowledgeResponse<>(new CreatedTourData(tourEntity), tourCreateRequest.getRequestId());
     }
 
+    /**
+     * @param createdTourId the of the created tour entity
+     * @return TourEntity
+     * @throws TourNotFoundException when the created tour entity by this id is not found
+     */
     @Override
-    public TourEntity getTourByTourID(Long tourID) {
-        return tourRepository.findById(tourID).orElseThrow(() -> new EntityNotFoundException("TourEntity Not Found"));
+    public TourEntity getCreatedTourEntityById(Long createdTourId) throws TourNotFoundException {
+        return tourRepository.findById(createdTourId).orElseThrow(() -> new TourNotFoundException(ErrorCode.TOUR_NOT_FOUND));
     }
 
+    /**
+     * @param createdTourEntityId the id of the created tour
+     * @return CreatedTourData
+     * @throws TourNotFoundException when the created tour by this id is not found
+     */
     @Override
-    public TourResponseList getAllTours() throws EmptyListException {
-        return tourDAO.getAllTours();
-    }
-
-    @Override
-    public TourResponseList getAllToursPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        return tourDAO.getAllToursPaginated(pageSize, pageNumber);
+    public CreatedTourData getCreatedTourByCreatedTourId(Long createdTourEntityId) throws TourNotFoundException {
+        return new CreatedTourData(getCreatedTourEntityById(createdTourEntityId));
     }
 }

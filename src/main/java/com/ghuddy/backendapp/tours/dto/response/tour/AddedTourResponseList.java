@@ -8,10 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Data
-public class TourResponseList extends BaseResponse {
+public class AddedTourResponseList extends BaseResponse {
     private List<TourAddData> tours = new LinkedList<>();
 
-    public TourResponseList(List<TourAddData> tours) {
+    public AddedTourResponseList(List<TourAddData> tours, String requestId) {
         this.tours = tours;
+        this.setRequestId(requestId);
     }
 }

@@ -15,20 +15,15 @@ public class ErrorResponse extends BaseResponse {
     @JsonProperty("status_code")
     private String statusCode;
 
-    public ErrorResponse(ErrorCode statusCode) {
+    public ErrorResponse(ErrorCode statusCode, String requestId) {
         this.status = statusCode.toString();
         this.statusCode = statusCode.getCode();
+        this.setRequestId(requestId);
     }
 
     public ErrorResponse(String status, String statusCode) {
         this.status = status;
         this.statusCode = statusCode;
     }
-
-    public ErrorResponse(String message, int statusCode) {
-        this.status = message;
-        this.statusCode = String.valueOf(statusCode);
-    }
-
 }
 

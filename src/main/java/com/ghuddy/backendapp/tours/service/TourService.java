@@ -1,23 +1,16 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tour.TourResponseList;
+import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.model.data.tour.CreatedTourData;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 public interface TourService {
-    InsertAcknowledgeResponse addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException;
+    InsertAcknowledgeResponse<CreatedTourData> createTour(TourCreateRequest tourCreateRequest) throws TourNotFoundException;
 
-    InsertAcknowledgeResponse createTour(TourCreateRequest tourCreateRequest);
+    TourEntity getCreatedTourEntityById(Long createdTourId) throws TourNotFoundException;
 
-    TourEntity getTourByTourID(Long tourID);
+    CreatedTourData getCreatedTourByCreatedTourId(Long createdTourEntityId) throws TourNotFoundException;
 
-    TourResponseList getAllTours() throws EmptyListException;
-
-    TourResponseList getAllToursPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 }

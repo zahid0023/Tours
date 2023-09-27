@@ -56,7 +56,7 @@ public class ActivityControllerForAdmin {
             return new ResponseEntity<>(activityService.getAllActivityTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -67,7 +67,7 @@ public class ActivityControllerForAdmin {
             return new ResponseEntity<>(activityService.getAllActivityTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -109,7 +109,7 @@ public class ActivityControllerForAdmin {
             return new ResponseEntity<>(activityService.getAllActivities(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -120,7 +120,7 @@ public class ActivityControllerForAdmin {
             return new ResponseEntity<>(activityService.getAllActivitiesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
         }
     }
 

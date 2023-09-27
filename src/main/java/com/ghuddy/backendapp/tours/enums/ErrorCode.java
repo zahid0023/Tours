@@ -29,7 +29,8 @@ public enum ErrorCode {
     // Starts with 11
     LIST_IS_EMPTY("11001"),
     DATA_SAVE_ERROR("11002"),
-    ONE_OR_MORE_ENTITIES_NOT_FOUND("11003");
+    ONE_OR_MORE_ENTITIES_NOT_FOUND("11003"),
+    ENTITY_NOT_FOUND("11005");
 
     private final String code;
 

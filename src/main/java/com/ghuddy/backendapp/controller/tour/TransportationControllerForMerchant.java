@@ -33,7 +33,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationRoutes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -43,7 +43,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationRoutesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -54,7 +54,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationModes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -64,7 +64,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationModesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -75,7 +75,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationBrands(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.info(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -85,7 +85,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationBrandsPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.info(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -96,7 +96,7 @@ public class TransportationControllerForMerchant {
             return new ResponseEntity<>(transportationService.getAllTransportationProviders(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -107,7 +107,7 @@ public class TransportationControllerForMerchant {
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             log.error("Error:" + ex);
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
         }
     }
 
