@@ -49,32 +49,9 @@ public class ActivityControllerForAdmin {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ActivityTypeListResponse.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class),
-                                    examples = @ExampleObject(
-                                            name = "No Activity Type Found",
-                                            description = "When there are no activity types in the database i.e. the list of activity type is empty",
-                                            value = "{\"status\": \"LIST_IS_EMPTY\", \"statusCode\": \"11001\"}"
-                                    )
-                            )
-                    )
-            }
-    )
-    @Operation(summary = "This controller is used to get all the tour type", description = "Call this controller when you need to show all the activity types.")
+    @Operation(summary = "This controller is used to get all the activity type", description = "Call this controller when you need to show all the activity types.")
     @RequestMapping(path = "/activity/type/get/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllActivityType(@RequestParam String requestId) {
+    public ResponseEntity<?> getAllActivityTypes(@RequestParam String requestId) {
         try {
             return new ResponseEntity<>(activityService.getAllActivityTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
@@ -84,8 +61,8 @@ public class ActivityControllerForAdmin {
     }
 
     @Operation(summary = "This API is used to get all the tour types in a paginated way.")
-    @RequestMapping(path = "/activity/type/get/all-paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllActivityTypePaginated(@RequestParam int pageSize, @RequestParam int pageNumber, @RequestParam String requestId) {
+    @RequestMapping(path = "/activity/type/get/all/paginated", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllActivityTypesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(activityService.getAllActivityTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
@@ -103,7 +80,6 @@ public class ActivityControllerForAdmin {
     public ResponseEntity<?> getAllActivityTypeByKeywordPaginated(@RequestParam String keyword, @RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-
 
     @RequestMapping(path = "/activity/type/delete/{activity-id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteActivityType(@PathVariable("activity-id") Long activityID, @RequestParam String requestId) {

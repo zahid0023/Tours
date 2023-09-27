@@ -12,7 +12,7 @@ import java.util.List;
 public class AccommodationListAddRequest extends BaseRequest {
     @Schema(description = "The list of accommodation that will be stored in the database",required = true)
     @JsonProperty("accommodations")
-    private List<AccommodationRequest> accommodationRequestList;
+    private List<AccommodationRequest> accommodationList;
 
     @Override
     public void validate() throws AbstractException {

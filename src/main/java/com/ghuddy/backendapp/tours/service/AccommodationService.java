@@ -2,6 +2,8 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationTypeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
@@ -16,9 +18,9 @@ import java.util.Set;
 public interface AccommodationService {
 
     // room type
-    AcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest);
+    InsertAcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest);
 
-    AcknowledgeResponse addRoomTypes(RoomTypeListAddRequest roomTypeListAddRequest);
+    InsertAcknowledgeListResponse addRoomTypes(RoomTypeListAddRequest roomTypeListAddRequest);
 
     Map<Long, TourRoomTypeEntity> getTourRoomTypeEntitiesByIDs(Set<Long> roomTypeIDs);
 
@@ -29,9 +31,9 @@ public interface AccommodationService {
 
     // room category
 
-    AcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest);
+    InsertAcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest);
 
-    AcknowledgeResponse addRoomCategories(RoomCategoryListAddRequest roomCategoryListAddRequest);
+    InsertAcknowledgeListResponse addRoomCategories(RoomCategoryListAddRequest roomCategoryListAddRequest);
 
     Map<Long, TourRoomCategoryEntity> getTourRoomCategoryEntitiesByIDs(Set<Long> roomCategoryIDs);
 
@@ -41,9 +43,9 @@ public interface AccommodationService {
 
     // accommodation type
 
-    AcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest);
+    InsertAcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest);
 
-    AcknowledgeResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest);
+    InsertAcknowledgeListResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest);
 
     TourAccommodationTypeEntity getAccommodationTypeByID(Long accommodationTypeID);
 
@@ -55,9 +57,9 @@ public interface AccommodationService {
 
     // accommodation
 
-    AcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest);
+    InsertAcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest);
 
-    AcknowledgeResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest);
+    InsertAcknowledgeListResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest);
 
     Map<Long, TourAccommodationEntity> getAccommodationEntitiesByIDs(Set<Long> accommodationIDs);
 

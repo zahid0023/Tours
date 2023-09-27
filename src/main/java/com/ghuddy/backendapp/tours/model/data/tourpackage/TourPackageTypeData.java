@@ -3,8 +3,10 @@ package com.ghuddy.backendapp.tours.model.data.tourpackage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class TourPackageTypeData {
     @Schema(description = "The id of the tour package type",example = "1")
     @JsonProperty("tour_package_type_id")

@@ -12,18 +12,18 @@ import java.util.List;
 
 @Data
 public class TourCreateRequest extends BaseRequest {
-    @Schema(description = "The unique identifier of the tour.", example = "1", required = true)
-    @JsonProperty("tour_id")
-    private Long tourID; // basically tourLocationID
+    @Schema(description = "The unique identifier of the tour.", example = "10", required = true)
+    @JsonProperty("added_tour_id")
+    private Long addedTourID; // basically tourLocationID
 
     @Schema(description = "A title that goes with the tour", example = "Relaxing Tour For All age in Bandarban", required = true)
     @JsonProperty("tour_title")
     private String title;
-    @Schema(description = "A description of the tour", example = "", required = true)
+    @Schema(description = "A description of the tour", example = "A short description", required = true)
     @JsonProperty("tour_description")
     private String description;
 
-    @Schema(description = "The url of the thumb image")
+    @Schema(description = "The url of the thumb image",example = "www.image.com")
     @JsonProperty("thumb_image_url")
     private String thumbImageURL;
 

@@ -1,10 +1,15 @@
 package com.ghuddy.backendapp.tours.model.data.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.TourAccommodationEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 public class TourAccommodationData {
     @Schema(description = "The id of the accommodation", example = "1")
     @JsonProperty("tour_accommodation_id")
@@ -20,8 +25,16 @@ public class TourAccommodationData {
     private String tourAccommodationAddress;
     @Schema(description = "The average rating of the accommodation", example = "4.7")
     @JsonProperty("tour_accommodation_average_rating")
-    private Double tourAccommodationAverageRating;
+    private BigDecimal tourAccommodationAverageRating;
     @Schema(description = "The total number of reviews")
     @JsonProperty("tour_accommodation_total_reviews")
     private Integer tourAccommodationTotalReviews;
+
+    public TourAccommodationData(TourAccommodationEntity tourAccommodationEntity) {
+        this.tourAccommodationId = tourAccommodationEntity.getId();
+        this.tourAccommodationName = tourAccommodationEntity.getAccommodationName();
+        this.tourAccommodationType = tourAccommodationEntity.getTourAccommodationTypeEntity().getAccommodationTypeName();
+        this.tourAccommodationAverageRating = tourAccommodationEntity.getAverageRating();
+        this.tourAccommodationTotalReviews = tourAccommodationEntity.getTotalReviews();
+    }
 }

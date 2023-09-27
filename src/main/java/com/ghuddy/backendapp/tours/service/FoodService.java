@@ -2,6 +2,8 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
@@ -14,9 +16,9 @@ import java.util.List;
 
 public interface FoodService {
     // food item
-    AcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest);
+    InsertAcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest);
 
-    AcknowledgeResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest);
+    InsertAcknowledgeListResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest);
 
     FoodItemEntity getFoodItemEntityByID(Long foodItemID);
 
@@ -25,15 +27,17 @@ public interface FoodService {
     FoodItemListResponse getAllFoodItemsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     // meal type
-    AcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest);
+    InsertAcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest);
 
-    AcknowledgeResponse addMealTypes(MealTypeListAddRequest mealTypeListAddRequest);
+    InsertAcknowledgeListResponse addMealTypes(MealTypeListAddRequest mealTypeListAddRequest);
 
     MealTypeEntity getMealTypeEntityByID(Long mealTypeID);
 
     MealTypeListResponse getAllMealTypes() throws EmptyListException;
 
     MealTypeListResponse getAllMealTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+
+    // meal package
 
     AcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest);
 

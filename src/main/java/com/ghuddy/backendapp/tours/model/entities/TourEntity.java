@@ -13,10 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "tour")
 public class TourEntity extends BaseEntity {
-
-    @Column(name = "tour_name")
-    private String tourName;
-
     @Column(name = "thumb_image_url", columnDefinition = "text")
     private String thumbImageUrl;
 

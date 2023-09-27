@@ -3,6 +3,8 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.model.DestinationLocationEntity;
 import com.ghuddy.backendapp.service.DestinationLocationService;
 import com.ghuddy.backendapp.tours.dao.TransportationDao;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationBrandListResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationModeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationProviderListResponse;
@@ -54,17 +56,20 @@ public class TransportationServiceImpl implements TransportationService {
 
     // transportation brand
     @Override
-    public AcknowledgeResponse addTransportationBrand(TransportationBrandAddRequest transportationBrand) {
-        return addTransportationBrands(List.of(transportationBrand.getTransportationBrand()));
+    public InsertAcknowledgeResponse addTransportationBrand(TransportationBrandAddRequest transportationBrandAddRequest) {
+        TransportationBrandData transportationBrandData = addTransportationBrands(List.of(transportationBrandAddRequest.getTransportationBrand())).get(0);
+        return new InsertAcknowledgeResponse(transportationBrandData, transportationBrandAddRequest.getRequestId());
+
     }
 
     @Override
-    public AcknowledgeResponse addTransportationBrands(TransportationBrandListAddRequest transportationBrandListAddRequest) {
-        return addTransportationBrands(transportationBrandListAddRequest.getTransportationBrands());
+    public InsertAcknowledgeListResponse addTransportationBrands(TransportationBrandListAddRequest transportationBrandListAddRequest) {
+        List<TransportationBrandData> transportationBrandDataList = addTransportationBrands(transportationBrandListAddRequest.getTransportationBrands());
+        return new InsertAcknowledgeListResponse(transportationBrandDataList, transportationBrandListAddRequest.getRequestId());
     }
 
 
-    private AcknowledgeResponse addTransportationBrands(List<TransportationBrandRequest> transportationBrands) {
+    private List<TransportationBrandData> addTransportationBrands(List<TransportationBrandRequest> transportationBrands) {
         List<TransportationBrandEntity> transportationBrandEntities = transportationBrands.stream()
                 .map(transportationBrandRequest -> {
                     TransportationBrandEntity transportationBrandEntity = new TransportationBrandEntity();
@@ -72,8 +77,9 @@ public class TransportationServiceImpl implements TransportationService {
                     return transportationBrandEntity;
                 })
                 .collect(Collectors.toList());
-        transportationBrandRepository.saveAll(transportationBrandEntities);
-        return new AcknowledgeResponse();
+        return transportationBrandRepository.saveAll(transportationBrandEntities).stream()
+                .map(transportationBrandEntity -> new TransportationBrandData(transportationBrandEntity))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -88,10 +94,10 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @return TransportationBrandListResponse
-     * @throws EmptyListException
+     * @param pageSize the page size
+     * @param pageNumber the page number
+     * @return TransportationBrandListResponse the response
+     * @throws EmptyListException when there are no elements in the list
      */
     @Override
     public TransportationBrandListResponse getAllTransportationBrandsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
@@ -102,16 +108,18 @@ public class TransportationServiceImpl implements TransportationService {
 
     // transportation mode
     @Override
-    public AcknowledgeResponse addTransportationMode(TransportationModeAddRequest transportationModeAddRequest) {
-        return addTransportationModes(List.of(transportationModeAddRequest.getTransportationMode()));
+    public InsertAcknowledgeResponse addTransportationMode(TransportationModeAddRequest transportationModeAddRequest) {
+        TransportationModeData transportationModeData = addTransportationModes(List.of(transportationModeAddRequest.getTransportationMode())).get(0);
+        return new InsertAcknowledgeResponse(transportationModeData, transportationModeAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addTransportationModes(TransportationModeListAddRequest transportationModeListAddRequest) {
-        return addTransportationModes(transportationModeListAddRequest.getTransportationModes());
+    public InsertAcknowledgeListResponse addTransportationModes(TransportationModeListAddRequest transportationModeListAddRequest) {
+        List<TransportationModeData> transportationModeDataList = addTransportationModes(transportationModeListAddRequest.getTransportationModes());
+        return new InsertAcknowledgeListResponse(transportationModeDataList, transportationModeListAddRequest.getRequestId());
     }
 
-    private AcknowledgeResponse addTransportationModes(List<TransportationModeRequest> transportationModes) {
+    private List<TransportationModeData> addTransportationModes(List<TransportationModeRequest> transportationModes) {
         List<TransportationModeEntity> transportationModeEntities = transportationModes.stream()
                 .map(transportationModeRequest -> {
                     TransportationModeEntity transportationModeEntity = new TransportationModeEntity();
@@ -121,8 +129,9 @@ public class TransportationServiceImpl implements TransportationService {
                     return transportationModeEntity;
                 })
                 .collect(Collectors.toList());
-        transportationModeRepository.saveAll(transportationModeEntities);
-        return new AcknowledgeResponse();
+        return transportationModeRepository.saveAll(transportationModeEntities).stream()
+                .map(transportationModeEntity -> new TransportationModeData(transportationModeEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -141,16 +150,18 @@ public class TransportationServiceImpl implements TransportationService {
 
     // transportation providers
     @Override
-    public AcknowledgeResponse addTransportationProvider(TransportationProviderAddRequest transportationProviderAddRequest) {
-        return addTransportationProviders(List.of(transportationProviderAddRequest.getTransportationProvider()));
+    public InsertAcknowledgeResponse addTransportationProvider(TransportationProviderAddRequest transportationProviderAddRequest) {
+        TransportationProviderData transportationProviderData = addTransportationProviders(List.of(transportationProviderAddRequest.getTransportationProvider())).get(0);
+        return new InsertAcknowledgeResponse(transportationProviderData, transportationProviderAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addTransportationProviders(TransportationProviderListAddRequest transportationProviderListAddRequest) {
-        return addTransportationProviders(transportationProviderListAddRequest.getTransportationProviders());
+    public InsertAcknowledgeListResponse addTransportationProviders(TransportationProviderListAddRequest transportationProviderListAddRequest) {
+        List<TransportationProviderData> transportationProviderDataList = addTransportationProviders(transportationProviderListAddRequest.getTransportationProviders());
+        return new InsertAcknowledgeListResponse(transportationProviderDataList, transportationProviderListAddRequest.getRequestId());
     }
 
-    private AcknowledgeResponse addTransportationProviders(List<TransportationProviderRequest> transportationProviders) {
+    private List<TransportationProviderData> addTransportationProviders(List<TransportationProviderRequest> transportationProviders) {
         List<TransportationProviderEntity> transportationProviderEntities = transportationProviders.stream()
                 .map(transportationProviderRequest -> {
                     TransportationProviderEntity transportationProviderEntity = new TransportationProviderEntity();
@@ -159,8 +170,9 @@ public class TransportationServiceImpl implements TransportationService {
                     return transportationProviderEntity;
                 })
                 .collect(Collectors.toList());
-        transportationProviderRepository.saveAll(transportationProviderEntities);
-        return new AcknowledgeResponse();
+        return transportationProviderRepository.saveAll(transportationProviderEntities).stream()
+                .map(transportationProviderEntity -> new TransportationProviderData(transportationProviderEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -179,13 +191,33 @@ public class TransportationServiceImpl implements TransportationService {
 
     // transportation routes
     @Override
-    public AcknowledgeResponse addTransportationRoute(TransportationRouteAddRequest transportationRouteAddRequest) {
-        return addTransportationRoutes(List.of(transportationRouteAddRequest.getTransportationRoute()));
+    public InsertAcknowledgeResponse addTransportationRoute(TransportationRouteAddRequest transportationRouteAddRequest) {
+        TransportationRouteData transportationRouteData = addTransportationRoutes(List.of(transportationRouteAddRequest.getTransportationRoute())).get(0);
+        return new InsertAcknowledgeResponse(transportationRouteData, transportationRouteAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addTransportationRoutes(TransportationRouteListAddRequest transportationRouteListAddRequest) {
-        return addTransportationRoutes(transportationRouteListAddRequest.getTransportationRoutes());
+    public InsertAcknowledgeListResponse addTransportationRoutes(TransportationRouteListAddRequest transportationRouteListAddRequest) {
+        List<TransportationRouteData> transportationRouteDataList = addTransportationRoutes(transportationRouteListAddRequest.getTransportationRoutes());
+        return new InsertAcknowledgeListResponse(transportationRouteDataList, transportationRouteListAddRequest.getRequestId());
+    }
+
+    private List<TransportationRouteData> addTransportationRoutes(List<TransportationRouteRequest> transportationRoutes) {
+        Set<Long> locationIDs = transportationRoutes.stream()
+                .flatMap(route -> Stream.of(route.getSourceLocationID(), route.getDestinationLocationID()))
+                .collect(Collectors.toSet());
+        Map<Long, DestinationLocationEntity> destinationLocationEntityMap = destinationLocationService.getDestinationLocationByIDs(locationIDs);
+        List<TransportationRouteEntity> transportationRouteEntities = transportationRoutes.stream()
+                .map(transportationRouteRequest -> {
+                    TransportationRouteEntity transportationRouteEntity = new TransportationRouteEntity();
+                    transportationRouteEntity.setSourceLocation(destinationLocationEntityMap.get(transportationRouteRequest.getSourceLocationID()));
+                    transportationRouteEntity.setDestinationLocation(destinationLocationEntityMap.get(transportationRouteRequest.getDestinationLocationID()));
+                    return transportationRouteEntity;
+                })
+                .collect(Collectors.toList());
+        return transportationRouteRepository.saveAll(transportationRouteEntities).stream()
+                .map(transportationRouteEntity -> new TransportationRouteData(transportationRouteEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -202,23 +234,8 @@ public class TransportationServiceImpl implements TransportationService {
         return new TransportationRouteResponseList(transportationRouteDataList);
     }
 
-    private AcknowledgeResponse addTransportationRoutes(List<TransportationRouteRequest> transportationRoutes) {
-        Set<Long> locationIDs = transportationRoutes.stream()
-                .flatMap(route -> Stream.of(route.getSourceLocationID(), route.getDestinationLocationID()))
-                .collect(Collectors.toSet());
-        Map<Long, DestinationLocationEntity> destinationLocationEntityMap = destinationLocationService.getDestinationLocationByIDs(locationIDs);
-        List<TransportationRouteEntity> transportationRouteEntities = transportationRoutes.stream()
-                .map(transportationRouteRequest -> {
-                    TransportationRouteEntity transportationRouteEntity = new TransportationRouteEntity();
-                    transportationRouteEntity.setSourceLocation(destinationLocationEntityMap.get(transportationRouteRequest.getSourceLocationID()));
-                    transportationRouteEntity.setDestinationLocation(destinationLocationEntityMap.get(transportationRouteRequest.getDestinationLocationID()));
-                    return transportationRouteEntity;
-                })
-                .collect(Collectors.toList());
-        transportationRouteRepository.saveAll(transportationRouteEntities);
-        return new AcknowledgeResponse();
-    }
 
+    // tour package transportation
     @Transactional
     @Override
     public AcknowledgeResponse addTourPackageTransportation(TourPackageEntity tourPackageEntity, TourPackageTransportationRequest tourPackageTransportationRequest) {

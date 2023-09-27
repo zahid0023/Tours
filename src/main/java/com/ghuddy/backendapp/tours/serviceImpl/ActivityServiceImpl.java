@@ -1,6 +1,8 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.ActivityDAO;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
 import com.ghuddy.backendapp.tours.dto.request.activity.*;
@@ -52,16 +54,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public AcknowledgeResponse addActivityType(ActivityTypeAddRequest activityTypeAddRequest) {
-        return addActivityTypes(List.of(activityTypeAddRequest.getActivityType()));
+    public InsertAcknowledgeResponse addActivityType(ActivityTypeAddRequest activityTypeAddRequest) {
+        ActivityTypeData activityTypeData = addActivityTypes(List.of(activityTypeAddRequest.getActivityType())).get(0);
+        return new InsertAcknowledgeResponse(activityTypeData, activityTypeAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addActivityTypes(ActivityTypeListAddRequest activityTypeListAddRequest) {
-        return addActivityTypes(activityTypeListAddRequest.getActivityTypes());
+    public InsertAcknowledgeListResponse addActivityTypes(ActivityTypeListAddRequest activityTypeListAddRequest) {
+        List<ActivityTypeData> activityTypeDataList = addActivityTypes(activityTypeListAddRequest.getActivityTypes());
+        return new InsertAcknowledgeListResponse(activityTypeDataList, activityTypeListAddRequest.getRequestId());
     }
 
-    private AcknowledgeResponse addActivityTypes(List<ActivityTypeRequest> activities) {
+    private List<ActivityTypeData> addActivityTypes(List<ActivityTypeRequest> activities) {
         List<ActivityTypeEntity> activityTypeEntities = activities.stream()
                 .map(activityTypeRequest -> {
                     ActivityTypeEntity activityTypeEntity = new ActivityTypeEntity();
@@ -70,8 +74,9 @@ public class ActivityServiceImpl implements ActivityService {
                     return activityTypeEntity;
                 })
                 .collect(Collectors.toList());
-        activityTypeRepository.saveAll(activityTypeEntities);
-        return new AcknowledgeResponse();
+        return activityTypeRepository.saveAll(activityTypeEntities).stream()
+                .map(activityTypeEntity -> new ActivityTypeData(activityTypeEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -94,17 +99,19 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public AcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest) {
-        return addActivities(List.of(activityAddRequest.getActivity()));
+    public InsertAcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest) {
+        ActivityData activityData = addActivities(List.of(activityAddRequest.getActivity())).get(0);
+        return new InsertAcknowledgeResponse(activityData, activityAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addActivities(ActivityListAddRequest activityListAddRequest) {
-        return addActivities(activityListAddRequest.getActivities());
+    public InsertAcknowledgeListResponse addActivities(ActivityListAddRequest activityListAddRequest) {
+        List<ActivityData> activityDataList = addActivities(activityListAddRequest.getActivities());
+        return new InsertAcknowledgeListResponse(activityDataList, activityListAddRequest.getRequestId());
     }
 
     @Transactional
-    public AcknowledgeResponse addActivities(List<ActivityRequest> activities) {
+    public List<ActivityData> addActivities(List<ActivityRequest> activities) {
         Set<Long> activityTypeIDs = activities.stream()
                 .map(ActivityRequest::getActivityTypeID)
                 .collect(Collectors.toSet());
@@ -130,16 +137,9 @@ public class ActivityServiceImpl implements ActivityService {
                     return activityEntity;
                 })
                 .collect(Collectors.toList());
-        List<ActivityEntity> successfullySavedActivities = new LinkedList<>();
-        List<ActivityEntity> couldNotSaveActivities = new LinkedList<>();
-        try {
-            List<ActivityEntity> savedActivities = activityRepository.saveAll(activityEntities);
-            successfullySavedActivities.addAll(savedActivities);
-            return new AcknowledgeResponse();
-        } catch (DataIntegrityViolationException ex) {
-            ex.printStackTrace();
-        }
-        return new AcknowledgeResponse();
+        return activityRepository.saveAll(activityEntities).stream()
+                .map(activityEntity -> new ActivityData(activityEntity))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -112,7 +112,7 @@ public class TourPackageServiceImpl implements TourPackageService {
                     tourPackageEntity.setTourEntity(tourEntity);
                     TourPackageTypeEntity tourPackageTypeEntity = tourPackageTypeEntityMap.get(tourPackageRequest.getTourPackageTypeID());
                     tourPackageEntity.setTourPackageType(tourPackageTypeEntity);
-                    tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(tourEntity.getTourName(), tourPackageTypeEntity.getPackageTypeName()));
+                    tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(tourEntity.getTourLocation().getTourName(), tourPackageTypeEntity.getPackageTypeName()));
                     tourPackageEntity.setDescription(tourPackageRequest.getDescription());
                     tourPackageEntity.setMealPackageEntities(foodService.setTourPackageMealPackages(tourPackageEntity, tourPackageRequest.getMealPackages()));
                     tourPackageEntity.setTourPackageAccommodationEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodations()));

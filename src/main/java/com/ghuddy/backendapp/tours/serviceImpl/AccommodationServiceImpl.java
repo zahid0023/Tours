@@ -1,6 +1,8 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
 import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
 import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
@@ -49,17 +51,19 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // room type
     @Override
-    public AcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
-        return addRoomTypes(List.of(roomTypeAddRequest.getRoomType()));
+    public InsertAcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
+        TourRoomTypeData tourRoomTypeData = addRoomTypes(List.of(roomTypeAddRequest.getRoomType())).get(0);
+        return new InsertAcknowledgeResponse(tourRoomTypeData, roomTypeAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addRoomTypes(RoomTypeListAddRequest roomTypeListAddRequest) {
-        return addRoomTypes(roomTypeListAddRequest.getRoomTypes());
+    public InsertAcknowledgeListResponse addRoomTypes(RoomTypeListAddRequest roomTypeListAddRequest) {
+        List<TourRoomTypeData> tourRoomTypeDataList = addRoomTypes(roomTypeListAddRequest.getRoomTypes());
+        return new InsertAcknowledgeListResponse<>(tourRoomTypeDataList, roomTypeListAddRequest.getRequestId());
     }
 
     @Transactional
-    public AcknowledgeResponse addRoomTypes(List<RoomTypeRequest> roomTypes) {
+    public List<TourRoomTypeData> addRoomTypes(List<RoomTypeRequest> roomTypes) {
         List<TourRoomTypeEntity> tourRoomTypeEntities = roomTypes.stream()
                 .map(roomTypeRequest -> {
                     TourRoomTypeEntity tourRoomTypeEntity = new TourRoomTypeEntity();
@@ -68,8 +72,16 @@ public class AccommodationServiceImpl implements AccommodationService {
                     return tourRoomTypeEntity;
                 })
                 .collect(Collectors.toList());
-        tourRoomTypeRepository.saveAll(tourRoomTypeEntities);
-        return new AcknowledgeResponse();
+
+        List<TourRoomTypeEntity> tourRoomTypeEntityList = tourRoomTypeRepository.saveAll(tourRoomTypeEntities);
+
+        List<TourRoomTypeData> tourRoomTypeDataList = tourRoomTypeEntityList.stream()
+                .map(tourRoomTypeEntity -> {
+                    TourRoomTypeData tourRoomTypeData = new TourRoomTypeData(tourRoomTypeEntity);
+                    return tourRoomTypeData;
+                })
+                .collect(Collectors.toList());
+        return tourRoomTypeDataList;
     }
 
     @Override
@@ -88,17 +100,19 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // room category
     @Override
-    public AcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest) {
-        return addRoomCategories(List.of(roomCategoryAddRequest.getRoomCategoryRequest()));
+    public InsertAcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest) {
+        TourRoomCategoryData tourRoomCategoryData = addRoomCategories(List.of(roomCategoryAddRequest.getRoomCategoryRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourRoomCategoryData, roomCategoryAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addRoomCategories(RoomCategoryListAddRequest roomCategoryListAddRequest) {
-        return addRoomCategories(roomCategoryListAddRequest.getRoomCategoryRequestList());
+    public InsertAcknowledgeListResponse addRoomCategories(RoomCategoryListAddRequest roomCategoryListAddRequest) {
+        List<TourRoomCategoryData> tourRoomCategoryDataList = addRoomCategories(roomCategoryListAddRequest.getRoomCategoryRequestList());
+        return new InsertAcknowledgeListResponse(tourRoomCategoryDataList, roomCategoryListAddRequest.getRequestId());
     }
 
     @Transactional
-    public AcknowledgeResponse addRoomCategories(List<RoomCategoryRequest> roomCategories) {
+    public List<TourRoomCategoryData> addRoomCategories(List<RoomCategoryRequest> roomCategories) {
         List<TourRoomCategoryEntity> tourRoomCategoryEntities = roomCategories.stream()
                 .map(roomCategoryRequest -> {
                     TourRoomCategoryEntity tourRoomCategoryEntity = new TourRoomCategoryEntity();
@@ -107,8 +121,11 @@ public class AccommodationServiceImpl implements AccommodationService {
                     return tourRoomCategoryEntity;
                 })
                 .collect(Collectors.toList());
-        tourRoomCategoryRepository.saveAll(tourRoomCategoryEntities);
-        return new AcknowledgeResponse();
+        List<TourRoomCategoryEntity> tourRoomCategoryEntityList = tourRoomCategoryRepository.saveAll(tourRoomCategoryEntities);
+        List<TourRoomCategoryData> tourRoomCategoryDataList = tourRoomCategoryEntityList.stream()
+                .map(tourRoomCategoryEntity -> new TourRoomCategoryData(tourRoomCategoryEntity))
+                .collect(Collectors.toList());
+        return tourRoomCategoryDataList;
     }
 
     @Override
@@ -127,17 +144,19 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // accommodation type
     @Override
-    public AcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest) {
-        return addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest()));
+    public InsertAcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest) {
+        TourAccommodationTypeData tourAccommodationTypeData = addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourAccommodationTypeData, accommodationTypeAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest) {
-        return addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
+    public InsertAcknowledgeListResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest) {
+        List<TourAccommodationTypeData> tourAccommodationTypeDataList = addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
+        return new InsertAcknowledgeListResponse(tourAccommodationTypeDataList, accommodationTypeListAddRequest.getRequestId());
     }
 
     @Transactional
-    public AcknowledgeResponse addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
+    public List<TourAccommodationTypeData> addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
         List<TourAccommodationTypeEntity> tourAccommodationEntities = accommodations.stream()
                 .map(accommodationTypeRequest -> {
                     TourAccommodationTypeEntity tourAccommodationTypeEntity = new TourAccommodationTypeEntity();
@@ -145,20 +164,11 @@ public class AccommodationServiceImpl implements AccommodationService {
                     return tourAccommodationTypeEntity;
                 })
                 .collect(Collectors.toList());
-        tourAccommodationTypeRepository.saveAll(tourAccommodationEntities);
-        return new AcknowledgeResponse();
-    }
 
-
-    // accommodation
-    @Override
-    public AcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest) {
-        return addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest()));
-    }
-
-    @Override
-    public AcknowledgeResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest) {
-        return addAccommodations(accommodationListAddRequest.getAccommodationRequestList());
+        return tourAccommodationTypeRepository.saveAll(tourAccommodationEntities)
+                .stream()
+                .map(tourAccommodationTypeEntity -> new TourAccommodationTypeData(tourAccommodationTypeEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -175,8 +185,21 @@ public class AccommodationServiceImpl implements AccommodationService {
         return new TourAccommodationTypeListResponse(tourAccommodationTypeDataList);
     }
 
+    // accommodation
+    @Override
+    public InsertAcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest) {
+        TourAccommodationData tourAccommodationData = addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourAccommodationData, accommodationAddRequest.getRequestId());
+    }
+
+    @Override
+    public InsertAcknowledgeListResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest) {
+        List<TourAccommodationData> tourAccommodationDataList = addAccommodations(accommodationListAddRequest.getAccommodationList());
+        return new InsertAcknowledgeListResponse(tourAccommodationDataList, accommodationListAddRequest.getRequestId());
+    }
+
     @Transactional
-    public AcknowledgeResponse addAccommodations(List<AccommodationRequest> accommodations) {
+    public List<TourAccommodationData> addAccommodations(List<AccommodationRequest> accommodations) {
         Set<Long> accommodationTypeIDs = accommodations.stream()
                 .map(AccommodationRequest::getAccommodationTypeID)
                 .collect(Collectors.toSet());
@@ -191,8 +214,9 @@ public class AccommodationServiceImpl implements AccommodationService {
                     return tourAccommodationEntity;
                 })
                 .collect(Collectors.toList());
-        tourAccommodationRepository.saveAll(tourAccommodationEntities);
-        return new AcknowledgeResponse();
+        return tourAccommodationRepository.saveAll(tourAccommodationEntities).stream()
+                .map(tourAccommodationEntity -> new TourAccommodationData(tourAccommodationEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -209,6 +233,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         return new TourAccommodationListResponse(tourAccommodationDataList);
     }
 
+    // tour package accommodation
     @Override
     public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, TourPackageAccommodationRequest accommodation) {
         List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, List.of(accommodation));

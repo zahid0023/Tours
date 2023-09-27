@@ -5,6 +5,8 @@ import com.ghuddy.backendapp.tours.dto.request.activity.ActivityListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
@@ -17,9 +19,9 @@ import java.util.Set;
 public interface ActivityService {
 
     // Activity Type
-    AcknowledgeResponse addActivityType(ActivityTypeAddRequest activityTypeAddRequest);
+    InsertAcknowledgeResponse addActivityType(ActivityTypeAddRequest activityTypeAddRequest);
 
-    AcknowledgeResponse addActivityTypes(ActivityTypeListAddRequest activityTypeListAddRequest);
+    InsertAcknowledgeListResponse addActivityTypes(ActivityTypeListAddRequest activityTypeListAddRequest);
 
     ActivityTypeEntity getActivityType(Long activityTypeID);
 
@@ -28,9 +30,9 @@ public interface ActivityService {
     ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     // Activity
-    AcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest);
+    InsertAcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest);
 
-    AcknowledgeResponse addActivities(ActivityListAddRequest activityListAddRequest);
+    InsertAcknowledgeListResponse addActivities(ActivityListAddRequest activityListAddRequest);
 
     ActivityEntity getActivity(Long ActivityID);
 

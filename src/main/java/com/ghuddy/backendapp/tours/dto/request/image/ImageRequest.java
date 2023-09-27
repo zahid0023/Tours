@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class ImageRequest extends BaseRequest {
+public class ImageRequest {
     @Schema(description = "The filename of the uploaded image", example = "image1.jpg", required = true)
     @JsonProperty("file_name")
     private String fileName;
@@ -17,9 +17,4 @@ public class ImageRequest extends BaseRequest {
     @Schema(description = "The caption that goes with the image", example = "A picture of tour", required = true)
     @JsonProperty("image_caption")
     private String imageCaption;
-
-    @Override
-    public void validate() throws AbstractException {
-
-    }
 }

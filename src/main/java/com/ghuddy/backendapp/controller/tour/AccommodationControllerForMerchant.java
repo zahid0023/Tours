@@ -68,27 +68,6 @@ public class AccommodationControllerForMerchant {
         }
     }
 
-    // accommodation type
-    @RequestMapping(path = "/accommodation/type/get/all", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAccommodationTypes(@RequestParam String requestId) {
-        try {
-            return new ResponseEntity<>(accommodationService.getAllTourAccommodationTypes(), HttpStatus.OK);
-        } catch (EmptyListException ex) {
-            log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(path = "/accommodation/type/get/all/paginated", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAccommodationTypesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
-        try {
-            return new ResponseEntity<>(accommodationService.getAllTourAccommodationTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
-        } catch (EmptyListException ex) {
-            log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode()), HttpStatus.NOT_FOUND);
-        }
-    }
-
     // accommodation
     @RequestMapping(path = "/accommodation/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAccommodations(@RequestParam String requestId) {

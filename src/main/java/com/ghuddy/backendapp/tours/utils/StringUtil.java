@@ -15,5 +15,11 @@ public class StringUtil {
     public static String tourPackageName(String tourName, String packageTypeName) {
         return tourName + " - " + packageTypeName;
     }
+
+    public static String tourName(String destinationLocationName, Integer numberOfDays, Integer numberOfNights) {
+        String day = numberOfDays > 1 ? numberOfDays + " Days" : numberOfDays == 1 ? numberOfDays + " Day" : "";
+        String night = numberOfNights > 1 ? numberOfNights + " Nights" : numberOfNights == 1 ? numberOfNights + " Night" : "";
+        return destinationLocationName + " Tour - " + day + " " + night;
+    }
 }
 

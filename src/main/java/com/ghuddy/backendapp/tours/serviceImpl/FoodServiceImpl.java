@@ -1,6 +1,8 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.FoodDao;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
 import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
@@ -42,18 +44,20 @@ public class FoodServiceImpl implements FoodService {
         this.foodDao = foodDao;
     }
 
-    // food items
+    // food item
     @Override
-    public AcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest) {
-        return addFoodItems(List.of(foodItemAddRequest.getFoodItem()));
+    public InsertAcknowledgeResponse addFoodItem(FoodItemAddRequest foodItemAddRequest) {
+        FoodItemData foodItemData = addFoodItems(List.of(foodItemAddRequest.getFoodItem())).get(0);
+        return new InsertAcknowledgeResponse(foodItemData, foodItemAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest) {
-        return addFoodItems(foodItemListAddRequest.getFoodItems());
+    public InsertAcknowledgeListResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest) {
+        List<FoodItemData> foodItemDataList = addFoodItems(foodItemListAddRequest.getFoodItems());
+        return new InsertAcknowledgeListResponse(foodItemDataList, foodItemListAddRequest.getRequestId());
     }
 
-    private AcknowledgeResponse addFoodItems(List<FoodItemRequest> foodItems) {
+    private List<FoodItemData> addFoodItems(List<FoodItemRequest> foodItems) {
         List<FoodItemEntity> foodItemEntities = foodItems.stream()
                 .map(foodItemRequest -> {
                     FoodItemEntity foodItemEntity = new FoodItemEntity();
@@ -61,8 +65,9 @@ public class FoodServiceImpl implements FoodService {
                     return foodItemEntity;
                 })
                 .collect(Collectors.toList());
-        foodItemRepository.saveAll(foodItemEntities);
-        return new AcknowledgeResponse();
+        return foodItemRepository.saveAll(foodItemEntities).stream()
+                .map(foodItemEntity -> new FoodItemData(foodItemEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -82,16 +87,18 @@ public class FoodServiceImpl implements FoodService {
 
     // meal type
     @Override
-    public AcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest) {
-        return addMealTypes(List.of(mealTypeAddRequest.getMealType()));
+    public InsertAcknowledgeResponse addMealType(MealTypeAddRequest mealTypeAddRequest) {
+        MealTypeData mealTypeData = addMealTypes(List.of(mealTypeAddRequest.getMealType())).get(0);
+        return new InsertAcknowledgeResponse(mealTypeData, mealTypeAddRequest.getRequestId());
     }
 
     @Override
-    public AcknowledgeResponse addMealTypes(MealTypeListAddRequest mealTypeListAddRequest) {
-        return addMealTypes(mealTypeListAddRequest.getMealTypes());
+    public InsertAcknowledgeListResponse addMealTypes(MealTypeListAddRequest mealTypeListAddRequest) {
+        List<MealTypeData> mealTypeDataList = addMealTypes(mealTypeListAddRequest.getMealTypes());
+        return new InsertAcknowledgeListResponse<>(mealTypeDataList, mealTypeListAddRequest.getRequestId());
     }
 
-    private AcknowledgeResponse addMealTypes(List<MealTypeRequest> mealTypes) {
+    private List<MealTypeData> addMealTypes(List<MealTypeRequest> mealTypes) {
         List<MealTypeEntity> mealTypeEntities = mealTypes.stream()
                 .map(mealTypeRequest -> {
                     MealTypeEntity mealTypeEntity = new MealTypeEntity();
@@ -99,8 +106,9 @@ public class FoodServiceImpl implements FoodService {
                     return mealTypeEntity;
                 })
                 .collect(Collectors.toList());
-        mealTypeRepository.saveAll(mealTypeEntities);
-        return new AcknowledgeResponse();
+        return mealTypeRepository.saveAll(mealTypeEntities).stream()
+                .map(mealTypeEntity -> new MealTypeData(mealTypeEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -117,6 +125,7 @@ public class FoodServiceImpl implements FoodService {
         return new MealTypeListResponse(mealTypeDataList);
     }
 
+    // tour package meal package
     @Transactional
     @Override
     public AcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest) {

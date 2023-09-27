@@ -1,10 +1,13 @@
 package com.ghuddy.backendapp.tours.model.data.activity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.ActivityTypeEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ActivityTypeData {
     @Schema(description = "The id of the activity type", example = "1")
     @JsonProperty("activity_type_id")
@@ -16,4 +19,9 @@ public class ActivityTypeData {
     @JsonProperty("description")
     private String description;
 
+    public ActivityTypeData(ActivityTypeEntity activityTypeEntity) {
+        this.activityTypeId = activityTypeEntity.getId();
+        this.activityTypeName = activityTypeEntity.getActivityTypeName();
+        this.description = activityTypeEntity.getDescription();
+    }
 }

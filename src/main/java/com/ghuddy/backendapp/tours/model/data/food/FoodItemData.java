@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.food;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,8 @@ public class FoodItemData {
     @Schema(description = "The name of the food item", required = true, example = "Rice")
     @JsonProperty("food_item_name")
     private String foodItemName;
+    public FoodItemData(FoodItemEntity foodItemEntity){
+        this.foodItemId = foodItemEntity.getId();
+        this.foodItemName = foodItemEntity.getFoodItemName();
+    }
 }

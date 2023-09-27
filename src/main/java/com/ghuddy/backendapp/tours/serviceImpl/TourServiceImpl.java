@@ -6,7 +6,11 @@ import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourResponseList;
+import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
+import com.ghuddy.backendapp.tours.model.data.tour.CreatedTourData;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
@@ -57,26 +61,25 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public AcknowledgeResponse addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException, DataIntegrityViolationException {
+    public InsertAcknowledgeResponse addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException {
         DestinationLocationEntity destinationLocationEntity = destinationLocationService.getDestinationLocationEntityById(tourAddRequest.getLocationID());
         TourLocationEntity tourLocationEntity = new TourLocationEntity();
-        tourLocationEntity.setTourName(destinationLocationEntity.getPlaceName() + " " + "Tour");
+        tourLocationEntity.setTourName(StringUtil.tourName(destinationLocationEntity.getPlaceName(), tourAddRequest.getNumberOfDays(), tourAddRequest.getNumberOfNights()));
         tourLocationEntity.setDestinationLocationEntity(destinationLocationEntity);
         tourLocationEntity.setNumberOfDays(tourAddRequest.getNumberOfDays());
         tourLocationEntity.setNumberOfNights(tourAddRequest.getNumberOfNights());
         tourLocationEntity.setShortAddress(tourAddRequest.getShortAddress());
         tourLocationEntity.setTourTag(StringUtil.tagify(destinationLocationEntity.getPlaceName(), tourAddRequest.getShortAddress()));
-        tourLocationRepository.save(tourLocationEntity); // tour is added!!
-        return new AcknowledgeResponse();
+        tourLocationEntity = tourLocationRepository.save(tourLocationEntity); // tour is added!!
+        return new InsertAcknowledgeResponse(new AddedTourDataOptimized(tourLocationEntity), tourAddRequest.getRequestId());
     }
 
     @Transactional
     @Override
-    public AcknowledgeResponse createTour(TourCreateRequest tourCreateRequest) {
-        TourLocationEntity tourLocationEntity = tourLocationService.getAddedTourByID(tourCreateRequest.getTourID());
+    public InsertAcknowledgeResponse createTour(TourCreateRequest tourCreateRequest) {
+        TourLocationEntity tourLocationEntity = tourLocationService.getAddedTourByID(tourCreateRequest.getAddedTourID());
 
         TourEntity tourEntity = new TourEntity();
-        tourEntity.setTourName("Bandarban Tour");
         tourEntity.setTitle(tourCreateRequest.getTitle());
         tourEntity.setDescription(tourCreateRequest.getDescription());
         tourEntity.setThumbImageUrl(tourCreateRequest.getThumbImageURL());
@@ -84,11 +87,12 @@ public class TourServiceImpl implements TourService {
 
         List<TourItineraryEntity> tourItineraryEntities = tourItineraryService.setTourActivities(tourEntity, tourCreateRequest.getTourActivities());
         tourEntity.setTourItineraryEntities(tourItineraryEntities);
+
         List<TourSpecialityEntity> tourSpecialityEntities = specialityService.setTourSpecialities(tourEntity, tourCreateRequest.getTourSpecialities());
         tourEntity.setTourSpecialityEntities(tourSpecialityEntities);
 
-        tourRepository.save(tourEntity);
-        return new AcknowledgeResponse();
+        tourEntity = tourRepository.save(tourEntity);
+        return new InsertAcknowledgeResponse(new CreatedTourData(tourEntity), tourCreateRequest.getRequestId());
     }
 
     @Override
