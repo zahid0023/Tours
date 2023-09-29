@@ -8,19 +8,19 @@ import java.time.LocalTime;
 
 @Data
 public class TourItineraryData {
-    @JsonProperty("activity_name")
-    private String activityName;
-    @JsonProperty("day_number")
-    private Integer dayNumber;
-    @JsonProperty("start_time")
-    private LocalTime startTime;
-    @JsonProperty("end_time")
-    private LocalTime endTime;
+    @JsonProperty("tour_activity_name")
+    private String tourActivityName;
+    @JsonProperty("tour_activity_day_number")
+    private Integer tourActivityDayNumber;
+    @JsonProperty("tour_activity_start_time")
+    private LocalTime tourActivityStartTime;
+    @JsonProperty("tour_activity_end_time")
+    private LocalTime tourActivityEndTime;
 
     public TourItineraryData(TourItineraryEntity tourItineraryEntity) {
-        this.activityName = tourItineraryEntity.getActivity().getActivityName();
-        this.dayNumber = tourItineraryEntity.getDayNumber();
-        this.startTime = tourItineraryEntity.getStartTime();
-        this.endTime = tourItineraryEntity.getEndTime();
+        this.tourActivityName = tourItineraryEntity.getActivity().getActivityName();
+        this.tourActivityDayNumber = tourItineraryEntity.getDayNumber();
+        this.tourActivityStartTime = tourItineraryEntity.getStartTime();
+        this.tourActivityEndTime = tourItineraryEntity.getEndTime();
     }
 }

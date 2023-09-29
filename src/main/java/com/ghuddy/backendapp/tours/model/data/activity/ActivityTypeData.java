@@ -16,12 +16,12 @@ public class ActivityTypeData {
     @JsonProperty("activity_type_name")
     private String activityTypeName;
     @Schema(description = "The description of the activity")
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("activity_type_description")
+    private String activityTypeDescription;
 
     public ActivityTypeData(ActivityTypeEntity activityTypeEntity) {
         this.activityTypeId = activityTypeEntity.getId();
         this.activityTypeName = activityTypeEntity.getActivityTypeName();
-        this.description = activityTypeEntity.getDescription();
+        this.activityTypeDescription = activityTypeEntity.getDescription();
     }
 }

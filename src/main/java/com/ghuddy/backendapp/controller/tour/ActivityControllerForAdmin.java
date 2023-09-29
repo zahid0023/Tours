@@ -53,10 +53,10 @@ public class ActivityControllerForAdmin {
     @RequestMapping(path = "/activity/type/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllActivityTypes(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(activityService.getAllActivityTypes(), HttpStatus.OK);
+            return new ResponseEntity<>(activityService.getAllActivityTypes(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -64,10 +64,10 @@ public class ActivityControllerForAdmin {
     @RequestMapping(path = "/activity/type/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllActivityTypesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(activityService.getAllActivityTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(activityService.getAllActivityTypesPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -106,10 +106,10 @@ public class ActivityControllerForAdmin {
     @RequestMapping(path = "/activity/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllActivities(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(activityService.getAllActivities(), HttpStatus.OK);
+            return new ResponseEntity<>(activityService.getAllActivities(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -117,10 +117,10 @@ public class ActivityControllerForAdmin {
     @RequestMapping(path = "/activity/get/all-paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllActivitiesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(activityService.getAllActivitiesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(activityService.getAllActivitiesPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 

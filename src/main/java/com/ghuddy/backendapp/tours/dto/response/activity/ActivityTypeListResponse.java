@@ -14,7 +14,8 @@ public class ActivityTypeListResponse extends BaseResponse {
     @JsonProperty("activity_types")
     private List<ActivityTypeData> activityTypeDataList;
 
-    public ActivityTypeListResponse(List<ActivityTypeData> activityTypeDataList) {
+    public ActivityTypeListResponse(List<ActivityTypeData> activityTypeDataList, String requestId) {
         this.activityTypeDataList = activityTypeDataList;
+        this.setRequestId(requestId);
     }
 }

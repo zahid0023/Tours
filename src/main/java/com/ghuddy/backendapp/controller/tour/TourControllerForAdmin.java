@@ -61,7 +61,7 @@ public class TourControllerForAdmin {
             description = "This API does not return the created tours but the added tours. " +
                     "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
                     "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
-    @RequestMapping(path = "/tours/get-all", method = RequestMethod.GET)
+    @RequestMapping(path = "/tours/added-tours/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAddedTours(@RequestParam String requestId) {
         try {
             return new ResponseEntity<>(tourLocationService.getAllAddedTours(requestId), HttpStatus.OK);
@@ -76,7 +76,7 @@ public class TourControllerForAdmin {
                     "You have to provide pageSize and pageNumber to get the paginated tours. " +
                     "The tours returned by this API does not have any activities associated with it i.e. it does not have any itinerary. " +
                     "This API is mainly used to get all the added tours so that admin can associate activities with this tour and create a tour.")
-    @RequestMapping(path = "/tours/get-all/paginated", method = RequestMethod.GET)
+    @RequestMapping(path = "/tours/added-tours/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAddedToursPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(tourLocationService.getAllAddedToursPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
@@ -122,5 +122,15 @@ public class TourControllerForAdmin {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(path = "/tours/created-tours/get/all", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCreatedTours(@RequestParam String requestId) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/tours/created-tours/get/all/paginated", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCreatedToursPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

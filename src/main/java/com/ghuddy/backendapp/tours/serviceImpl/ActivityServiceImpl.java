@@ -6,7 +6,6 @@ import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
 import com.ghuddy.backendapp.tours.dto.request.activity.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
@@ -16,17 +15,13 @@ import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.ActivityRepository;
 import com.ghuddy.backendapp.tours.repository.ActivityTypeRepository;
-import com.ghuddy.backendapp.tours.repository.TransportationRouteRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
-import com.ghuddy.backendapp.tours.service.ImageService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,22 +30,16 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class ActivityServiceImpl implements ActivityService {
-    private final TransportationRouteRepository transportationRouteRepository;
     private final ActivityTypeRepository activityTypeRepository;
     private final ActivityRepository activityRepository;
     private final ActivityDAO activityDAO;
-    private final ImageService imageService;
 
     public ActivityServiceImpl(ActivityTypeRepository activityTypeRepository,
                                ActivityRepository activityRepository,
-                               ActivityDAO activityDAO,
-                               ImageService imageService,
-                               TransportationRouteRepository transportationRouteRepository) {
+                               ActivityDAO activityDAO) {
         this.activityTypeRepository = activityTypeRepository;
         this.activityRepository = activityRepository;
         this.activityDAO = activityDAO;
-        this.imageService = imageService;
-        this.transportationRouteRepository = transportationRouteRepository;
     }
 
     @Override
@@ -85,17 +74,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ActivityTypeListResponse getAllActivityTypes() throws EmptyListException {
+    public ActivityTypeListResponse getAllActivityTypes(String requestId) throws EmptyListException {
         List<ActivityTypeData> activityTypeDataList = activityDAO.getAllActivityTypes(0, 0);
         if (activityTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new ActivityTypeListResponse(activityTypeDataList);
+        return new ActivityTypeListResponse(activityTypeDataList, requestId);
     }
 
     @Override
-    public ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
+    public ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
         List<ActivityTypeData> activityTypeDataList = activityDAO.getAllActivityTypes(pageSize, pageNumber);
         if (activityTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new ActivityTypeListResponse(activityTypeDataList);
+        return new ActivityTypeListResponse(activityTypeDataList, requestId);
     }
 
     @Override
@@ -119,21 +108,24 @@ public class ActivityServiceImpl implements ActivityService {
         List<ActivityEntity> activityEntities = activities.stream()
                 .map(activityRequest -> {
                     ActivityEntity activityEntity = new ActivityEntity();
-                    List<ActivityImageEntity> activityImageEntities = activityRequest.getActivityImages().stream()
-                            .map(imageRequest -> {
-                                ActivityImageEntity activityImageEntity = new ActivityImageEntity();
-                                activityImageEntity.setActivityEntity(activityEntity);
-                                activityImageEntity.setFileName(imageRequest.getFileName());
-                                activityImageEntity.setImageUrl(imageRequest.getImageURL());
-                                activityImageEntity.setImageUrl(imageRequest.getImageURL());
-                                activityImageEntity.setCaption(imageRequest.getImageCaption());
-                                return activityImageEntity;
-                            })
-                            .collect(Collectors.toList());
                     activityEntity.setActivityTypeEntity(activityTypeEntityMap.get(activityRequest.getActivityTypeID()));
                     activityEntity.setActivityName(activityRequest.getActivityName());
                     activityEntity.setShortLocation(activityRequest.getShortLocation());
-                    activityEntity.setActivityImageEntities(activityImageEntities);
+                    if (activityRequest.getActivityImages() != null && !activityRequest.getActivityImages().isEmpty()) {
+                        List<ActivityImageEntity> activityImageEntities = activityRequest.getActivityImages().stream()
+                                .map(imageRequest -> {
+                                    ActivityImageEntity activityImageEntity = new ActivityImageEntity();
+                                    activityImageEntity.setActivityEntity(activityEntity);
+                                    activityImageEntity.setFileName(imageRequest.getFileName());
+                                    activityImageEntity.setImageUrl(imageRequest.getImageURL());
+                                    activityImageEntity.setImageUrl(imageRequest.getImageURL());
+                                    activityImageEntity.setCaption(imageRequest.getImageCaption());
+                                    return activityImageEntity;
+                                })
+                                .collect(Collectors.toList());
+                        activityEntity.setActivityImageEntities(activityImageEntities);
+                    } else log.warn("No image with this activity!");
+
                     return activityEntity;
                 })
                 .collect(Collectors.toList());
@@ -148,17 +140,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ActivityListResponse getAllActivities() throws EmptyListException {
+    public ActivityListResponse getAllActivities(String requestId) throws EmptyListException {
         List<ActivityData> activities = activityDAO.getAllActivities(0, 0);
         if (activities.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new ActivityListResponse(activities);
+        return new ActivityListResponse(activities, requestId);
     }
 
     @Override
-    public ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber) throws EmptyListException {
+    public ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber, String requestid) throws EmptyListException {
         List<ActivityData> activities = activityDAO.getAllActivities(pageSize, pageNumber);
         if (activities.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new ActivityListResponse(activities);
+        return new ActivityListResponse(activities, requestid);
     }
 
     @Override

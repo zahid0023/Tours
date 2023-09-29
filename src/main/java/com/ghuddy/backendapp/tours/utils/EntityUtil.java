@@ -41,9 +41,8 @@ public class EntityUtil {
         return entityMap;
     }
 
-    public static LimitOffsetData getLimitOffsetClause(Integer pageSize, Integer pageNumber) {
-        int offset = (pageNumber - 1) * pageSize;
-        return new LimitOffsetData(" limit ? offset ?", offset);
+    public static Integer getOffset(Integer pageSize, Integer pageNumber) {
+        return (pageNumber - 1) * pageSize;
     }
 
     // for getting all entities(data classes) without any pagination call this method with pageSize = 0 and pageNumber = 0
@@ -52,9 +51,8 @@ public class EntityUtil {
             if (pageNumber == 0 && pageSize == 0) {
                 return jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(entityClass));
             } else {
-                LimitOffsetData limitOffsetData = getLimitOffsetClause(pageSize, pageNumber);
-                String paginatedQuery = query + limitOffsetData.appendSql();
-                Integer offset = limitOffsetData.offset();
+                String paginatedQuery = query + " limit ? offset ?";
+                Integer offset = getOffset(pageSize, pageNumber);
                 return jdbcTemplate.query(paginatedQuery, BeanPropertyRowMapper.newInstance(entityClass), pageSize, offset);
             }
         } catch (EmptyResultDataAccessException ex) {

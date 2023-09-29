@@ -1,18 +1,18 @@
 package com.ghuddy.backendapp.tours.model.data.tour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
+import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import lombok.Data;
 
 @Data
 public class AddedTourDataOptimized {
     @JsonProperty("added_tour_id")
     private Long addedTourId;
-    @JsonProperty("tour_name")
-    private String tourName;
+    @JsonProperty("added_tour_name")
+    private String addedTourName;
 
-    public AddedTourDataOptimized(TourLocationEntity tourLocationEntity) {
-        this.addedTourId = tourLocationEntity.getId();
-        this.tourName = tourLocationEntity.getTourName();
+    public AddedTourDataOptimized(AddedTourEntity addedTourEntity) {
+        this.addedTourId = addedTourEntity.getId();
+        this.addedTourName = addedTourEntity.getTourName();
     }
 }

@@ -19,9 +19,14 @@ public class ActivityImageData {
     @JsonProperty("activity_image_url")
     private String activityImageUrl;
 
+    @Schema(description = "The caption of the image", example = "A caption")
+    @JsonProperty("activity_image_caption")
+    private String activityImageCaption;
+
     ActivityImageData(ActivityImageEntity activityImageEntity) {
         this.activityImageId = activityImageEntity.getId();
         this.activityImageFileName = activityImageEntity.getFileName();
         this.activityImageUrl = activityImageEntity.getImageUrl();
+        this.activityImageCaption = activityImageEntity.getCaption();
     }
 }

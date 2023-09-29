@@ -1,8 +1,6 @@
 package com.ghuddy.backendapp.tours.model.data.activity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.dto.data.ImageData;
-import com.ghuddy.backendapp.tours.dto.data.LimitOffsetData;
 import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,18 +15,18 @@ public class ActivityData {
     private Long activityId;
     @JsonProperty("activity_name")
     private String activityName;
-    @JsonProperty("short_location")
-    private String shortLocation;
-    @JsonProperty("activity_type")
-    private String activityType;
+    @JsonProperty("activity_short_location")
+    private String activityShortLocation;
+    @JsonProperty("activity_type_name")
+    private String activityTypeName;
     @JsonProperty("activity_images")
     private List<ActivityImageData> activityImages;
 
     public ActivityData(ActivityEntity activityEntity) {
         this.activityId = activityEntity.getId();
         this.activityName = activityEntity.getActivityName();
-        this.shortLocation = activityEntity.getShortLocation();
-        this.activityType = activityEntity.getActivityTypeEntity().getActivityTypeName();
+        this.activityShortLocation = activityEntity.getShortLocation();
+        this.activityTypeName = activityEntity.getActivityTypeEntity().getActivityTypeName();
         this.activityImages = activityEntity.getActivityImageEntities()
                 .stream()
                 .map(activityImageEntity -> new ActivityImageData(activityImageEntity))

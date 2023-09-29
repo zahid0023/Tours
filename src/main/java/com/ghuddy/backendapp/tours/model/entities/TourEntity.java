@@ -23,8 +23,8 @@ public class TourEntity extends BaseEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_location_id")
-    private TourLocationEntity tourLocation;
+    @JoinColumn(name = "added_tour_id")
+    private AddedTourEntity addedTourEntity;
 
     @OneToMany(mappedBy = "tourEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<TourItineraryEntity> tourItineraryEntities = new ArrayList<>();

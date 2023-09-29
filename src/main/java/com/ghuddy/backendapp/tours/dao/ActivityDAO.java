@@ -9,5 +9,5 @@ import java.util.List;
 public interface ActivityDAO {
     List<ActivityTypeData> getAllActivityTypes(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    List<ActivityData> getAllActivities(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    List<ActivityData> getAllActivities(Integer pageSize, Integer pageNumber);
 }

@@ -1,9 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.tour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourSpecialityEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,7 +28,7 @@ public class CreatedTourData {
 
     public CreatedTourData(TourEntity tourEntity) {
         this.createdTourId = tourEntity.getId();
-        this.createdTourName = tourEntity.getTourLocation().getTourName();
+        this.createdTourName = tourEntity.getAddedTourEntity().getTourName();
         this.createdTourThumbImageUrl = tourEntity.getThumbImageUrl();
         this.createdTourTitle = tourEntity.getTitle();
         this.createdTourDescription = tourEntity.getDescription();

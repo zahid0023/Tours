@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_location_mapping")
-public class TourLocationEntity extends BaseEntity {
+@Table(name = "added_tours")
+public class AddedTourEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

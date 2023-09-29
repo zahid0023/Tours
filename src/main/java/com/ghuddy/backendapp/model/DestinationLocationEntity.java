@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.model;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourLocationEntity;
+import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TransportationRouteEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class DestinationLocationEntity extends BaseEntity {
 
     // ghuddy backend code base have to add the following
     @OneToMany(mappedBy = "destinationLocationEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourLocationEntity> tourLocationEntities = new LinkedList<>();
+    private List<AddedTourEntity> tourLocationEntities = new LinkedList<>();
 
     @OneToMany(mappedBy = "sourceLocation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportationRouteEntity> transportationSourceRoutes = new LinkedList<>();

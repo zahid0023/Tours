@@ -25,9 +25,9 @@ public interface ActivityService {
 
     ActivityTypeEntity getActivityType(Long activityTypeID);
 
-    ActivityTypeListResponse getAllActivityTypes() throws EmptyListException;
+    ActivityTypeListResponse getAllActivityTypes(String requestId) throws EmptyListException;
 
-    ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    ActivityTypeListResponse getAllActivityTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     // Activity
     InsertAcknowledgeResponse addActivity(ActivityAddRequest activityAddRequest);
@@ -38,7 +38,7 @@ public interface ActivityService {
 
     Map<Long, ActivityEntity> getActivityEntityMapByIDs(Set<Long> activityIDs);
 
-    ActivityListResponse getAllActivities() throws EmptyListException;
+    ActivityListResponse getAllActivities(String requestId) throws EmptyListException;
 
-    ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber) throws EmptyListException;
+    ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber, String requestId) throws EmptyListException;
 }
