@@ -147,10 +147,10 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ActivityListResponse getAllActivitiesPaginated(int pageSize, int pageNumber, String requestid) throws EmptyListException {
+    public ActivityListResponse getAllActivitiesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
         List<ActivityData> activities = activityDAO.getAllActivities(pageSize, pageNumber);
         if (activities.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new ActivityListResponse(activities, requestid);
+        return new ActivityListResponse(activities, requestId);
     }
 
     @Override

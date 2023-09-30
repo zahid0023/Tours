@@ -14,21 +14,21 @@ import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
 import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.repository.AddedTourRespository;
-import com.ghuddy.backendapp.tours.service.TourLocationService;
+import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.utils.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TourLocationServiceImpl implements TourLocationService {
+public class AddedAddedTourServiceImpl implements AddedTourService {
     private final AddedTourRespository addedTourRespository;
     private final DestinationLocationService destinationLocationService;
     private final TourDAO tourDAO;
 
-    public TourLocationServiceImpl(AddedTourRespository addedTourRespository,
-                                   DestinationLocationService destinationLocationService,
-                                   TourDAO tourDAO) {
+    public AddedAddedTourServiceImpl(AddedTourRespository addedTourRespository,
+                                     DestinationLocationService destinationLocationService,
+                                     TourDAO tourDAO) {
         this.addedTourRespository = addedTourRespository;
         this.destinationLocationService = destinationLocationService;
         this.tourDAO = tourDAO;

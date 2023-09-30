@@ -6,7 +6,7 @@ import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.service.TourLocationService;
+import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.TourService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1/admin")
 //@Api(tags = "Tour - Tour Controller For Admin", description = "This controller is used to manage tours by admins.")
 public class TourControllerForAdmin {
-    private final TourLocationService tourLocationService;
+    private final AddedTourService addedTourService;
     private final TourService tourService;
 
-    public TourControllerForAdmin(TourLocationService tourLocationService,
+    public TourControllerForAdmin(AddedTourService addedTourService,
                                   TourService tourService) {
-        this.tourLocationService = tourLocationService;
+        this.addedTourService = addedTourService;
         this.tourService = tourService;
     }
 
@@ -35,7 +35,7 @@ public class TourControllerForAdmin {
     @RequestMapping(path = "/tours/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTour(@RequestBody TourAddRequest tourAddRequest) {
         try {
-            return new ResponseEntity<>(tourLocationService.addTour(tourAddRequest), HttpStatus.OK);
+            return new ResponseEntity<>(addedTourService.addTour(tourAddRequest), HttpStatus.OK);
         } catch (LocationNotFoundException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
@@ -50,7 +50,7 @@ public class TourControllerForAdmin {
     @RequestMapping(path = "/tours/get/{added-tour-id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAddedTourByAddedTourId(@PathVariable("added-tour-id") Long addedTourId, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(tourLocationService.getAddedTourByAddedTourId(addedTourId), HttpStatus.OK);
+            return new ResponseEntity<>(addedTourService.getAddedTourByAddedTourId(addedTourId), HttpStatus.OK);
         } catch (TourNotFoundException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
@@ -64,7 +64,7 @@ public class TourControllerForAdmin {
     @RequestMapping(path = "/tours/added-tours/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAddedTours(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(tourLocationService.getAllAddedTours(requestId), HttpStatus.OK);
+            return new ResponseEntity<>(addedTourService.getAllAddedTours(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
@@ -79,7 +79,7 @@ public class TourControllerForAdmin {
     @RequestMapping(path = "/tours/added-tours/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAddedToursPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(tourLocationService.getAllAddedToursPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
+            return new ResponseEntity<>(addedTourService.getAllAddedToursPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
@@ -126,11 +126,21 @@ public class TourControllerForAdmin {
 
     @RequestMapping(path = "/tours/created-tours/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllCreatedTours(@RequestParam String requestId) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(tourService.getAllCreatedTours(requestId), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/tours/created-tours/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllCreatedToursPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(tourService.getAllCreatedToursPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
     }
 }

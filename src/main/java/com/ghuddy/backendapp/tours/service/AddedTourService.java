@@ -9,7 +9,7 @@ import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
 import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 
-public interface TourLocationService {
+public interface AddedTourService {
     InsertAcknowledgeResponse<AddedTourDataOptimized> addTour(TourAddRequest tourAddRequest) throws LocationNotFoundException;
 
     AddedTourEntity getAddedTourEntityById(Long addedTourEntityId) throws TourNotFoundException;

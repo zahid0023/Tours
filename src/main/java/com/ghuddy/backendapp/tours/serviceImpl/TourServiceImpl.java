@@ -1,11 +1,13 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourDataResponseList;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.data.tour.CreatedTourData;
+import com.ghuddy.backendapp.tours.model.data.tour.TourData;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
 import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
@@ -13,11 +15,9 @@ import com.ghuddy.backendapp.tours.model.entities.TourSpecialityEntity;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
 import com.ghuddy.backendapp.tours.service.SpecialityService;
 import com.ghuddy.backendapp.tours.service.TourItineraryService;
-import com.ghuddy.backendapp.tours.service.TourLocationService;
+import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.TourService;
-import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -30,26 +30,29 @@ public class TourServiceImpl implements TourService {
     private final SpecialityService specialityService;
     private final TourItineraryService tourItineraryService;
     private final TourRepository tourRepository;
-    private final TourLocationService tourLocationService;
+    private final AddedTourService addedTourService;
     private final JdbcTemplate jdbcTemplate;
+    private final TourDAO tourDAO;
 
     public TourServiceImpl(SpecialityService specialityService,
                            TourItineraryService tourItineraryService,
                            TourRepository tourRepository,
-                           TourLocationService tourLocationService,
-                           JdbcTemplate jdbcTemplate) {
+                           AddedTourService addedTourService,
+                           JdbcTemplate jdbcTemplate,
+                           TourDAO tourDAO) {
         this.specialityService = specialityService;
         this.tourItineraryService = tourItineraryService;
         this.tourRepository = tourRepository;
-        this.tourLocationService = tourLocationService;
+        this.addedTourService = addedTourService;
         this.jdbcTemplate = jdbcTemplate;
+        this.tourDAO = tourDAO;
     }
 
     // created tour
     @Transactional
     @Override
-    public InsertAcknowledgeResponse<CreatedTourData> createTour(TourCreateRequest tourCreateRequest) throws TourNotFoundException {
-        AddedTourEntity addedTourEntity = tourLocationService.getAddedTourEntityById(tourCreateRequest.getAddedTourID());
+    public InsertAcknowledgeResponse<TourData> createTour(TourCreateRequest tourCreateRequest) throws TourNotFoundException {
+        AddedTourEntity addedTourEntity = addedTourService.getAddedTourEntityById(tourCreateRequest.getAddedTourID());
 
         TourEntity tourEntity = new TourEntity();
         tourEntity.setTitle(tourCreateRequest.getTitle());
@@ -68,7 +71,7 @@ public class TourServiceImpl implements TourService {
         }
 
         tourEntity = tourRepository.save(tourEntity);
-        return new InsertAcknowledgeResponse<>(new CreatedTourData(tourEntity), tourCreateRequest.getRequestId());
+        return new InsertAcknowledgeResponse<>(new TourData(tourEntity), tourCreateRequest.getRequestId());
     }
 
     /**
@@ -87,8 +90,8 @@ public class TourServiceImpl implements TourService {
      * @throws TourNotFoundException when the created tour by this id is not found
      */
     @Override
-    public CreatedTourData getCreatedTourByCreatedTourId(Long createdTourEntityId) throws TourNotFoundException {
-        return new CreatedTourData(getCreatedTourEntityById(createdTourEntityId));
+    public TourData getCreatedTourByCreatedTourId(Long createdTourEntityId) throws TourNotFoundException {
+        return new TourData(getCreatedTourEntityById(createdTourEntityId));
     }
 
     /**
@@ -97,14 +100,10 @@ public class TourServiceImpl implements TourService {
      * @throws EmptyListException
      */
     @Override
-    public List<CreatedTourData> getAllCreatedTours(String requestId) throws EmptyListException {
-        String query = "";
-        try {
-            List<CreatedTourData> createdTourDataList = EntityUtil.getAllEntitiesPaginated(query, 0, 0, CreatedTourData.class, jdbcTemplate);
-            return createdTourDataList;
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        }
+    public TourDataResponseList getAllCreatedTours(String requestId) throws EmptyListException {
+        List<TourData> tourDataList = tourDAO.getAllCreatedTours(0, 0);
+        if (tourDataList == null || tourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourDataResponseList(tourDataList, requestId);
     }
 
     /**
@@ -114,7 +113,9 @@ public class TourServiceImpl implements TourService {
      * @throws EmptyListException
      */
     @Override
-    public List<CreatedTourData> getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        return null;
+    public TourDataResponseList getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+        List<TourData> tourDataList = tourDAO.getAllCreatedTours(pageSize, pageNumber);
+        if (tourDataList == null || tourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourDataResponseList(tourDataList, requestId);
     }
 }
