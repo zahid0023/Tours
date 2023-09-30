@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.transporation.*;
-import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 //@Api(tags = "Tour - Tour Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
 public class TransportationControllerForAdmin {
     private final TransportationService transportationService;
-    private final TourPackageService tourPackageService;
 
-    public TransportationControllerForAdmin(TransportationService transportationService,
-                                            TourPackageService tourPackageService) {
+    public TransportationControllerForAdmin(TransportationService transportationService) {
         this.transportationService = transportationService;
-        this.tourPackageService = tourPackageService;
     }
 
     // transportation brand

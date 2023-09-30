@@ -72,13 +72,13 @@ public class FoodControllerForMerchant {
     // meal package
     @RequestMapping(path = "/food/meal-package/add", method = RequestMethod.POST)
     public ResponseEntity<?> addMealPackage(@RequestBody MealPackageAddRequest mealPackageAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(mealPackageAddRequest.getTourPackageID());
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageAddRequest.getTourPackageID());
         return new ResponseEntity<>(foodService.addTourPackageMealPackage(tourPackageEntity, mealPackageAddRequest.getMealPackage()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/food/meal-package/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addMealPackages(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(mealPackageListAddRequest.getTourPackageID());
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageListAddRequest.getTourPackageID());
         return new ResponseEntity<>(foodService.addTourPackageMealPackages(tourPackageEntity, mealPackageListAddRequest.getMealPackages()), HttpStatus.CREATED);
     }
 }

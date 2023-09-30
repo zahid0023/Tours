@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public class TourAccommodationData {
+public class TourPackageAccommodationData {
     @Schema(description = "The id of the accommodation", example = "1")
     @JsonProperty("tour_accommodation_id")
     private Long tourAccommodationId;
@@ -30,10 +30,11 @@ public class TourAccommodationData {
     @JsonProperty("tour_accommodation_total_reviews")
     private Integer tourAccommodationTotalReviews;
 
-    public TourAccommodationData(TourAccommodationEntity tourAccommodationEntity) {
+    public TourPackageAccommodationData(TourAccommodationEntity tourAccommodationEntity) {
         this.tourAccommodationId = tourAccommodationEntity.getId();
         this.tourAccommodationName = tourAccommodationEntity.getAccommodationName();
         this.tourAccommodationType = tourAccommodationEntity.getTourAccommodationTypeEntity().getAccommodationTypeName();
+        this.tourAccommodationAddress = tourAccommodationEntity.getAccommodationAddress();
         this.tourAccommodationAverageRating = tourAccommodationEntity.getAverageRating();
         this.tourAccommodationTotalReviews = tourAccommodationEntity.getTotalReviews();
     }

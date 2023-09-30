@@ -25,7 +25,7 @@ public class TourPackageTransportationEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "transportation_brand_id", nullable = false)
-    private TransportationBrandEntity transportationBrand;
+    private TransportationBrandEntity transportationBrandEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "transportation_provider_id", nullable = false)

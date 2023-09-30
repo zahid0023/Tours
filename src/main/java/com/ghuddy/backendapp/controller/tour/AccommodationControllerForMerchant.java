@@ -30,7 +30,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/room/category/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRoomCategories(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourRoomCategories(), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourRoomCategories(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -40,7 +40,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/room/category/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRoomCategoriesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourRoomCategoriesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourRoomCategoriesPaginated(pageSize, pageNumber,requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -51,7 +51,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/room/type/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRoomTypes(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourRoomTypes(), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourRoomTypes(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -61,7 +61,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/room/type/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRoomTypesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourRoomTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourRoomTypesPaginated(pageSize, pageNumber,requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -72,7 +72,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/accommodation/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAccommodations(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourAccommodations(), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourAccommodations(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -82,7 +82,7 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/accommodation/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAccommodationsPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(accommodationService.getAllTourAccommodationsPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(accommodationService.getAllTourAccommodationsPaginated(pageSize, pageNumber,requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId), HttpStatus.NOT_FOUND);
@@ -92,13 +92,13 @@ public class AccommodationControllerForMerchant {
     // Tour Package Accommodation
     @RequestMapping(path = "/tour-package/accommodation/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageAccommodation(@RequestBody TourPackageAccommodationAddRequest tourPackageAccommodationAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(tourPackageAccommodationAddRequest.getTourPackageID());
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageAccommodationAddRequest.getTourPackageID());
         return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, tourPackageAccommodationAddRequest.getTourPackageAccommodation()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/tour-package/accommodation/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageAccommodations(@RequestBody TourPackageAccommodationListAddRequest tourPackageAccommodationListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageByPackageID(tourPackageAccommodationListAddRequest.getTourPackageID());
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageAccommodationListAddRequest.getTourPackageID());
         return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, tourPackageAccommodationListAddRequest.getTourPackageAccommodations()), HttpStatus.CREATED);
     }
 }

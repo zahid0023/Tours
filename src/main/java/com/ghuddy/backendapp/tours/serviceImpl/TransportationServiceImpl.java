@@ -276,7 +276,7 @@ public class TransportationServiceImpl implements TransportationService {
                     tourPackageTransportationEntity.setTourPackageEntity(tourPackageEntity);
                     tourPackageTransportationEntity.setTransportationRouteEntity(transportationRouteEntityMap.get(tourPackageTransportationRequest.getTransportationRouteID()));
                     tourPackageTransportationEntity.setTransportationModeEntity(transportationModeEntityMap.get(tourPackageTransportationRequest.getTransportationModeID()));
-                    tourPackageTransportationEntity.setTransportationBrand(transportationBrandEntityMap.get(tourPackageTransportationRequest.getTransportationBrandID()));
+                    tourPackageTransportationEntity.setTransportationBrandEntity(transportationBrandEntityMap.get(tourPackageTransportationRequest.getTransportationBrandID()));
                     tourPackageTransportationEntity.setTransportationProviderEntity(transportationProviderEntityMap.get(tourPackageTransportationRequest.getTransportationProviderID()));
                     tourPackageTransportationEntity.setIsAc(tourPackageTransportationRequest.getIsAC());
                     tourPackageTransportationEntity.setTripType(tourPackageTransportationRequest.getTripType());

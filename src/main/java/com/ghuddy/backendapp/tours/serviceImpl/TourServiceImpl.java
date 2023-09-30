@@ -18,7 +18,6 @@ import com.ghuddy.backendapp.tours.service.TourItineraryService;
 import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.TourService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,20 +30,17 @@ public class TourServiceImpl implements TourService {
     private final TourItineraryService tourItineraryService;
     private final TourRepository tourRepository;
     private final AddedTourService addedTourService;
-    private final JdbcTemplate jdbcTemplate;
     private final TourDAO tourDAO;
 
     public TourServiceImpl(SpecialityService specialityService,
                            TourItineraryService tourItineraryService,
                            TourRepository tourRepository,
                            AddedTourService addedTourService,
-                           JdbcTemplate jdbcTemplate,
                            TourDAO tourDAO) {
         this.specialityService = specialityService;
         this.tourItineraryService = tourItineraryService;
         this.tourRepository = tourRepository;
         this.addedTourService = addedTourService;
-        this.jdbcTemplate = jdbcTemplate;
         this.tourDAO = tourDAO;
     }
 
@@ -95,9 +91,9 @@ public class TourServiceImpl implements TourService {
     }
 
     /**
-     * @param requestId
-     * @return
-     * @throws EmptyListException
+     * @param requestId the id of the request
+     * @return TourDataResponseList
+     * @throws EmptyListException when the list of tour is empty
      */
     @Override
     public TourDataResponseList getAllCreatedTours(String requestId) throws EmptyListException {
@@ -107,10 +103,10 @@ public class TourServiceImpl implements TourService {
     }
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @return
-     * @throws EmptyListException
+     * @param pageSize   the size of the page
+     * @param pageNumber the page number
+     * @return TourDataResponseList
+     * @throws EmptyListException when the list of tours is empty
      */
     @Override
     public TourDataResponseList getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {

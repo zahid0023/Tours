@@ -5,6 +5,8 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddReq
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
@@ -15,21 +17,24 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TourPackageService {
-    AcknowledgeResponse addTourPackageType(TourPackageTypeAddRequest tourPackageTypeAddRequest);
+    // tour package type
+    InsertAcknowledgeResponse addTourPackageType(TourPackageTypeAddRequest tourPackageTypeAddRequest);
 
-    AcknowledgeResponse addTourPackageTypes(TourPackageTypeListAddRequest tourPackageTypeListAddRequest);
+    InsertAcknowledgeListResponse addTourPackageTypes(TourPackageTypeListAddRequest tourPackageTypeListAddRequest);
+
+    TourPackageTypeEntity getTourPackageTypeEntityByPackageTypeID(Long tourPackageTypeID);
+
+    Map<Long, TourPackageTypeEntity> getTourPackageTypeEntitiesByPackageTypeIDs(Set<Long> tourPackageTypeIDs);
 
     TourPackageTypeListResponse getAllTourPackageTypes() throws EmptyListException;
 
     TourPackageTypeListResponse getAllTourPackageTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    AcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException;
+    // tour package
+    InsertAcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException;
 
-    AcknowledgeResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException;
+    InsertAcknowledgeListResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException;
 
-    TourPackageEntity getTourPackageByPackageID(Long tourPackageID);
+    TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
 
-    TourPackageTypeEntity getTourPackageTypeByPackageTypeID(Long tourPackageTypeID);
-
-    Map<Long, TourPackageTypeEntity> getTourPackageTypeByPackageTypeIDs(Set<Long> tourPackageTypeIDs);
 }

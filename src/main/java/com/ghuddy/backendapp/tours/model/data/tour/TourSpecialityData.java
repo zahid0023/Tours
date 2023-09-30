@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class TourSpecialityData {
     @JsonProperty("tour_speciality_id")
     private Long tourSpecialityId;
-    @JsonProperty("our_speciality_title")
+    @JsonProperty("tour_speciality_title")
     private String tourSpecialityTitle;
     @JsonProperty("tour_speciality_description")
     private String tourSpecialityDescription;

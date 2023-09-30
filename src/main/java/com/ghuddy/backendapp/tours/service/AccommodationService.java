@@ -24,9 +24,9 @@ public interface AccommodationService {
 
     Map<Long, TourRoomTypeEntity> getTourRoomTypeEntitiesByIDs(Set<Long> roomTypeIDs);
 
-    TourRoomTypeListResponse getAllTourRoomTypes() throws EmptyListException;
+    TourRoomTypeListResponse getAllTourRoomTypes(String requestId) throws EmptyListException;
 
-    TourRoomTypeListResponse getAllTourRoomTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    TourRoomTypeListResponse getAllTourRoomTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
 
     // room category
@@ -37,9 +37,9 @@ public interface AccommodationService {
 
     Map<Long, TourRoomCategoryEntity> getTourRoomCategoryEntitiesByIDs(Set<Long> roomCategoryIDs);
 
-    TourRoomCategoryListResponse getAllTourRoomCategories() throws EmptyListException;
+    TourRoomCategoryListResponse getAllTourRoomCategories(String requestId) throws EmptyListException;
 
-    TourRoomCategoryListResponse getAllTourRoomCategoriesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    TourRoomCategoryListResponse getAllTourRoomCategoriesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     // accommodation type
 
@@ -51,9 +51,9 @@ public interface AccommodationService {
 
     Map<Long, TourAccommodationTypeEntity> getAccommodationTypeEntitiesByIDs(Set<Long> accommodationTypeIDs);
 
-    TourAccommodationTypeListResponse getAllTourAccommodationTypes() throws EmptyListException;
+    TourAccommodationTypeListResponse getAllTourAccommodationTypes(String requestId) throws EmptyListException;
 
-    TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     // accommodation
 
@@ -63,9 +63,9 @@ public interface AccommodationService {
 
     Map<Long, TourAccommodationEntity> getAccommodationEntitiesByIDs(Set<Long> accommodationIDs);
 
-    TourAccommodationListResponse getAllTourAccommodations() throws EmptyListException;
+    TourAccommodationListResponse getAllTourAccommodations(String requestId) throws EmptyListException;
 
-    TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     // tour package accommodation
     AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, TourPackageAccommodationRequest accommodation);

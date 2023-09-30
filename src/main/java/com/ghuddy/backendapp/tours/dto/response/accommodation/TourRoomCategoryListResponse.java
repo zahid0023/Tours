@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.dto.response.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.dto.response.BaseResponse;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,9 +12,10 @@ import java.util.List;
 public class TourRoomCategoryListResponse extends BaseResponse {
     @Schema(description = "The list of room categories", required = true)
     @JsonProperty("tour_room_categories")
-    private List<TourRoomCategoryData> tourRoomCategoryDataList;
+    private List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList;
 
-    public TourRoomCategoryListResponse(List<TourRoomCategoryData> tourRoomCategoryDataList) {
-        this.tourRoomCategoryDataList = tourRoomCategoryDataList;
+    public TourRoomCategoryListResponse(List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList, String requestId) {
+        this.tourPackageRoomCategoryDataList = tourPackageRoomCategoryDataList;
+        this.setRequestId(requestId);
     }
 }

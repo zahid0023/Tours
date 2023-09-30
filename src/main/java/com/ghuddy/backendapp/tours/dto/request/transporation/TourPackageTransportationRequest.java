@@ -8,16 +8,16 @@ import lombok.Data;
 @Data
 public class TourPackageTransportationRequest {
     @Schema(description = "The id of the transportation route", required = true, example = "1")
-    @JsonProperty("transportation_id")
+    @JsonProperty("tour_package_transportation_route_id")
     private Long transportationRouteID;
     @Schema(description = "The id of the transportation mode", required = true, example = "1")
-    @JsonProperty("transportation_mode_id")
+    @JsonProperty("tour_package_transportation_mode_id")
     private Long transportationModeID;
     @Schema(description = "The id of the transportation brand", required = true, example = "1")
-    @JsonProperty("transportation_brand_id")
+    @JsonProperty("tour_package_transportation_brand_id")
     private Long transportationBrandID;
     @Schema(description = "The id of the transportation provider", required = true, example = "1")
-    @JsonProperty("transportation_provider_id")
+    @JsonProperty("tour_package_transportation_provider_id")
     private Long transportationProviderID;
     @Schema(description = "The type of the tour, can be one of the following: ONE_WAY/ROUND_TRIP", required = true, example = "ONE_WAY")
     @JsonProperty("trip_type")

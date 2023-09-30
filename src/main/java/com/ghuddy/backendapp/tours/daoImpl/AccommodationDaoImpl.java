@@ -1,10 +1,10 @@
 package com.ghuddy.backendapp.tours.daoImpl;
 
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
@@ -23,7 +23,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
 
     @Override
-    public List<TourRoomCategoryData> getTourRoomCategories(Integer pageSize, Integer pageNumber) throws EmptyListException {
+    public List<TourPackageRoomCategoryData> getTourRoomCategories(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
                 select id                 as tour_room_category_id,
                        room_category_name as tour_room_category_name,
@@ -31,7 +31,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
                 from tour_room_category
                 """;
         try {
-            List<TourRoomCategoryData> tourRoomCategories = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourRoomCategoryData.class, jdbcTemplate);
+            List<TourPackageRoomCategoryData> tourRoomCategories = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourPackageRoomCategoryData.class, jdbcTemplate);
             return tourRoomCategories;
         } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
@@ -39,7 +39,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
 
     @Override
-    public List<TourRoomTypeData> getTourRoomTypes(Integer pageSize, Integer pageNumber) throws EmptyListException {
+    public List<TourPackageRoomTypeData> getTourRoomTypes(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
                 select id             as tour_room_type_id,
                        room_type_name as tour_room_type_name,
@@ -47,7 +47,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
                 from tour_room_type
                 """;
         try {
-            List<TourRoomTypeData> tourRoomTypes = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourRoomTypeData.class, jdbcTemplate);
+            List<TourPackageRoomTypeData> tourRoomTypes = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourPackageRoomTypeData.class, jdbcTemplate);
             return tourRoomTypes;
         } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
@@ -55,14 +55,14 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
 
     @Override
-    public List<TourAccommodationTypeData> getTourAccommodationTypes(Integer pageSize, Integer pageNumber) throws EmptyListException {
+    public List<TourPackageAccommodationTypeData> getTourAccommodationTypes(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
                 select id                      as tour_accommodation_type_id,
                        accommodation_type_name as tour_accommodation_type_name
                 from tour_accommodation_type
                 """;
         try {
-            List<TourAccommodationTypeData> tourAccommodationTypes = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourAccommodationTypeData.class, jdbcTemplate);
+            List<TourPackageAccommodationTypeData> tourAccommodationTypes = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourPackageAccommodationTypeData.class, jdbcTemplate);
             return tourAccommodationTypes;
         } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
@@ -70,7 +70,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
 
     @Override
-    public List<TourAccommodationData> getTourAccommodations(Integer pageSize, Integer pageNumber) throws EmptyListException {
+    public List<TourPackageAccommodationData> getTourAccommodations(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
                 select ta.id                       as tour_accommodation_id,
                        ta.accommodation_name       as tour_accommodation_name,
@@ -82,7 +82,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
                          inner join tour_accommodation_type tat on tat.id = ta.accommodation_type_id
                 """;
         try {
-            List<TourAccommodationData> tourAccommodations = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourAccommodationData.class, jdbcTemplate);
+            List<TourPackageAccommodationData> tourAccommodations = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TourPackageAccommodationData.class, jdbcTemplate);
             return tourAccommodations;
         } catch (EmptyResultDataAccessException ex) {
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TourRoomTypeData {
+public class TourPackageRoomTypeData {
     @Schema(description = "The id of the tour room type", example = "1")
     @JsonProperty("tour_room_type_id")
     private Long tourRoomTypeId;
@@ -19,7 +19,7 @@ public class TourRoomTypeData {
     @JsonProperty("tour_room_type_description")
     private String tourRoomTypeDescription;
 
-    public TourRoomTypeData(TourRoomTypeEntity tourRoomTypeEntity) {
+    public TourPackageRoomTypeData(TourRoomTypeEntity tourRoomTypeEntity) {
         this.tourRoomTypeId = tourRoomTypeEntity.getId();
         this.tourRoomTypeName = tourRoomTypeEntity.getRoomTypeName();
         this.tourRoomTypeDescription = tourRoomTypeEntity.getDescription();

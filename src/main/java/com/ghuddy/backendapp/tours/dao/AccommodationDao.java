@@ -1,19 +1,19 @@
 package com.ghuddy.backendapp.tours.dao;
 
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;
 
 public interface AccommodationDao {
-    List<TourRoomCategoryData> getTourRoomCategories(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    List<TourPackageRoomCategoryData> getTourRoomCategories(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    List<TourRoomTypeData> getTourRoomTypes(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    List<TourPackageRoomTypeData> getTourRoomTypes(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    List<TourAccommodationTypeData> getTourAccommodationTypes(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    List<TourPackageAccommodationTypeData> getTourAccommodationTypes(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
-    List<TourAccommodationData> getTourAccommodations(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    List<TourPackageAccommodationData> getTourAccommodations(Integer pageSize, Integer pageNumber) throws EmptyListException;
 }

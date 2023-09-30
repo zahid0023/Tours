@@ -22,6 +22,7 @@ public class TourPackageControllerForMerchant {
         this.tourPackageService = tourPackageService;
     }
 
+    // tour package type
     @RequestMapping(path = "/tour-package/type/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTourPackageTypes(@RequestParam String requestId) {
         try {
@@ -42,6 +43,7 @@ public class TourPackageControllerForMerchant {
         }
     }
 
+    // tour package
     @RequestMapping(path = "/tour-package/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackage(@RequestBody TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException {
         return new ResponseEntity<>(tourPackageService.addTourPackage(tourPackageAddRequest), HttpStatus.CREATED);

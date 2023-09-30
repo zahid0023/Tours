@@ -3,10 +3,10 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourAccommodationTypeData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomCategoryData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;
@@ -52,18 +52,18 @@ public class AccommodationServiceImpl implements AccommodationService {
     // room type
     @Override
     public InsertAcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
-        TourRoomTypeData tourRoomTypeData = addRoomTypes(List.of(roomTypeAddRequest.getRoomType())).get(0);
-        return new InsertAcknowledgeResponse(tourRoomTypeData, roomTypeAddRequest.getRequestId());
+        TourPackageRoomTypeData tourPackageRoomTypeData = addRoomTypes(List.of(roomTypeAddRequest.getRoomType())).get(0);
+        return new InsertAcknowledgeResponse(tourPackageRoomTypeData, roomTypeAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addRoomTypes(RoomTypeListAddRequest roomTypeListAddRequest) {
-        List<TourRoomTypeData> tourRoomTypeDataList = addRoomTypes(roomTypeListAddRequest.getRoomTypes());
-        return new InsertAcknowledgeListResponse<>(tourRoomTypeDataList, roomTypeListAddRequest.getRequestId());
+        List<TourPackageRoomTypeData> tourPackageRoomTypeDataList = addRoomTypes(roomTypeListAddRequest.getRoomTypes());
+        return new InsertAcknowledgeListResponse<>(tourPackageRoomTypeDataList, roomTypeListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourRoomTypeData> addRoomTypes(List<RoomTypeRequest> roomTypes) {
+    public List<TourPackageRoomTypeData> addRoomTypes(List<RoomTypeRequest> roomTypes) {
         List<TourRoomTypeEntity> tourRoomTypeEntities = roomTypes.stream()
                 .map(roomTypeRequest -> {
                     TourRoomTypeEntity tourRoomTypeEntity = new TourRoomTypeEntity();
@@ -75,44 +75,44 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         List<TourRoomTypeEntity> tourRoomTypeEntityList = tourRoomTypeRepository.saveAll(tourRoomTypeEntities);
 
-        List<TourRoomTypeData> tourRoomTypeDataList = tourRoomTypeEntityList.stream()
+        List<TourPackageRoomTypeData> tourPackageRoomTypeDataList = tourRoomTypeEntityList.stream()
                 .map(tourRoomTypeEntity -> {
-                    TourRoomTypeData tourRoomTypeData = new TourRoomTypeData(tourRoomTypeEntity);
-                    return tourRoomTypeData;
+                    TourPackageRoomTypeData tourPackageRoomTypeData = new TourPackageRoomTypeData(tourRoomTypeEntity);
+                    return tourPackageRoomTypeData;
                 })
                 .collect(Collectors.toList());
-        return tourRoomTypeDataList;
+        return tourPackageRoomTypeDataList;
     }
 
     @Override
-    public TourRoomTypeListResponse getAllTourRoomTypes() throws EmptyListException {
-        List<TourRoomTypeData> tourRoomTypeDataList = accommodationDao.getTourRoomTypes(0, 0);
-        if (tourRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourRoomTypeListResponse(tourRoomTypeDataList);
+    public TourRoomTypeListResponse getAllTourRoomTypes(String requestId) throws EmptyListException {
+        List<TourPackageRoomTypeData> tourPackageRoomTypeDataList = accommodationDao.getTourRoomTypes(0, 0);
+        if (tourPackageRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomTypeListResponse(tourPackageRoomTypeDataList, requestId);
     }
 
     @Override
-    public TourRoomTypeListResponse getAllTourRoomTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        List<TourRoomTypeData> tourRoomTypeDataList = accommodationDao.getTourRoomTypes(pageSize, pageNumber);
-        if (tourRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourRoomTypeListResponse(tourRoomTypeDataList);
+    public TourRoomTypeListResponse getAllTourRoomTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+        List<TourPackageRoomTypeData> tourPackageRoomTypeDataList = accommodationDao.getTourRoomTypes(pageSize, pageNumber);
+        if (tourPackageRoomTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomTypeListResponse(tourPackageRoomTypeDataList, requestId);
     }
 
     // room category
     @Override
     public InsertAcknowledgeResponse addRoomCategory(RoomCategoryAddRequest roomCategoryAddRequest) {
-        TourRoomCategoryData tourRoomCategoryData = addRoomCategories(List.of(roomCategoryAddRequest.getRoomCategoryRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourRoomCategoryData, roomCategoryAddRequest.getRequestId());
+        TourPackageRoomCategoryData tourPackageRoomCategoryData = addRoomCategories(List.of(roomCategoryAddRequest.getRoomCategoryRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourPackageRoomCategoryData, roomCategoryAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addRoomCategories(RoomCategoryListAddRequest roomCategoryListAddRequest) {
-        List<TourRoomCategoryData> tourRoomCategoryDataList = addRoomCategories(roomCategoryListAddRequest.getRoomCategoryRequestList());
-        return new InsertAcknowledgeListResponse(tourRoomCategoryDataList, roomCategoryListAddRequest.getRequestId());
+        List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList = addRoomCategories(roomCategoryListAddRequest.getRoomCategoryRequestList());
+        return new InsertAcknowledgeListResponse(tourPackageRoomCategoryDataList, roomCategoryListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourRoomCategoryData> addRoomCategories(List<RoomCategoryRequest> roomCategories) {
+    public List<TourPackageRoomCategoryData> addRoomCategories(List<RoomCategoryRequest> roomCategories) {
         List<TourRoomCategoryEntity> tourRoomCategoryEntities = roomCategories.stream()
                 .map(roomCategoryRequest -> {
                     TourRoomCategoryEntity tourRoomCategoryEntity = new TourRoomCategoryEntity();
@@ -122,41 +122,41 @@ public class AccommodationServiceImpl implements AccommodationService {
                 })
                 .collect(Collectors.toList());
         List<TourRoomCategoryEntity> tourRoomCategoryEntityList = tourRoomCategoryRepository.saveAll(tourRoomCategoryEntities);
-        List<TourRoomCategoryData> tourRoomCategoryDataList = tourRoomCategoryEntityList.stream()
-                .map(tourRoomCategoryEntity -> new TourRoomCategoryData(tourRoomCategoryEntity))
+        List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList = tourRoomCategoryEntityList.stream()
+                .map(tourRoomCategoryEntity -> new TourPackageRoomCategoryData(tourRoomCategoryEntity))
                 .collect(Collectors.toList());
-        return tourRoomCategoryDataList;
+        return tourPackageRoomCategoryDataList;
     }
 
     @Override
-    public TourRoomCategoryListResponse getAllTourRoomCategories() throws EmptyListException {
-        List<TourRoomCategoryData> tourRoomCategoryDataList = accommodationDao.getTourRoomCategories(0, 0);
-        if (tourRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourRoomCategoryListResponse(tourRoomCategoryDataList);
+    public TourRoomCategoryListResponse getAllTourRoomCategories(String requestId) throws EmptyListException {
+        List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList = accommodationDao.getTourRoomCategories(0, 0);
+        if (tourPackageRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomCategoryListResponse(tourPackageRoomCategoryDataList, requestId);
     }
 
     @Override
-    public TourRoomCategoryListResponse getAllTourRoomCategoriesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        List<TourRoomCategoryData> tourRoomCategoryDataList = accommodationDao.getTourRoomCategories(pageSize, pageNumber);
-        if (tourRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourRoomCategoryListResponse(tourRoomCategoryDataList);
+    public TourRoomCategoryListResponse getAllTourRoomCategoriesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+        List<TourPackageRoomCategoryData> tourPackageRoomCategoryDataList = accommodationDao.getTourRoomCategories(pageSize, pageNumber);
+        if (tourPackageRoomCategoryDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourRoomCategoryListResponse(tourPackageRoomCategoryDataList, requestId);
     }
 
     // accommodation type
     @Override
     public InsertAcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest) {
-        TourAccommodationTypeData tourAccommodationTypeData = addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourAccommodationTypeData, accommodationTypeAddRequest.getRequestId());
+        TourPackageAccommodationTypeData tourPackageAccommodationTypeData = addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourPackageAccommodationTypeData, accommodationTypeAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest) {
-        List<TourAccommodationTypeData> tourAccommodationTypeDataList = addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
-        return new InsertAcknowledgeListResponse(tourAccommodationTypeDataList, accommodationTypeListAddRequest.getRequestId());
+        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
+        return new InsertAcknowledgeListResponse(tourPackageAccommodationTypeDataList, accommodationTypeListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourAccommodationTypeData> addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
+    public List<TourPackageAccommodationTypeData> addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
         List<TourAccommodationTypeEntity> tourAccommodationEntities = accommodations.stream()
                 .map(accommodationTypeRequest -> {
                     TourAccommodationTypeEntity tourAccommodationTypeEntity = new TourAccommodationTypeEntity();
@@ -167,39 +167,39 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         return tourAccommodationTypeRepository.saveAll(tourAccommodationEntities)
                 .stream()
-                .map(tourAccommodationTypeEntity -> new TourAccommodationTypeData(tourAccommodationTypeEntity))
+                .map(tourAccommodationTypeEntity -> new TourPackageAccommodationTypeData(tourAccommodationTypeEntity))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TourAccommodationTypeListResponse getAllTourAccommodationTypes() throws EmptyListException {
-        List<TourAccommodationTypeData> tourAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(0, 0);
-        if (tourAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationTypeListResponse(tourAccommodationTypeDataList);
+    public TourAccommodationTypeListResponse getAllTourAccommodationTypes(String requestId) throws EmptyListException {
+        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(0, 0);
+        if (tourPackageAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(tourPackageAccommodationTypeDataList, requestId);
     }
 
     @Override
-    public TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        List<TourAccommodationTypeData> tourAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(pageSize, pageNumber);
-        if (tourAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationTypeListResponse(tourAccommodationTypeDataList);
+    public TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(pageSize, pageNumber);
+        if (tourPackageAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(tourPackageAccommodationTypeDataList, requestId);
     }
 
     // accommodation
     @Override
     public InsertAcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest) {
-        TourAccommodationData tourAccommodationData = addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourAccommodationData, accommodationAddRequest.getRequestId());
+        TourPackageAccommodationData tourPackageAccommodationData = addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest())).get(0);
+        return new InsertAcknowledgeResponse(tourPackageAccommodationData, accommodationAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest) {
-        List<TourAccommodationData> tourAccommodationDataList = addAccommodations(accommodationListAddRequest.getAccommodationList());
-        return new InsertAcknowledgeListResponse(tourAccommodationDataList, accommodationListAddRequest.getRequestId());
+        List<TourPackageAccommodationData> tourPackageAccommodationDataList = addAccommodations(accommodationListAddRequest.getAccommodationList());
+        return new InsertAcknowledgeListResponse(tourPackageAccommodationDataList, accommodationListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourAccommodationData> addAccommodations(List<AccommodationRequest> accommodations) {
+    public List<TourPackageAccommodationData> addAccommodations(List<AccommodationRequest> accommodations) {
         Set<Long> accommodationTypeIDs = accommodations.stream()
                 .map(AccommodationRequest::getAccommodationTypeID)
                 .collect(Collectors.toSet());
@@ -215,22 +215,22 @@ public class AccommodationServiceImpl implements AccommodationService {
                 })
                 .collect(Collectors.toList());
         return tourAccommodationRepository.saveAll(tourAccommodationEntities).stream()
-                .map(tourAccommodationEntity -> new TourAccommodationData(tourAccommodationEntity))
+                .map(tourAccommodationEntity -> new TourPackageAccommodationData(tourAccommodationEntity))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TourAccommodationListResponse getAllTourAccommodations() throws EmptyListException {
-        List<TourAccommodationData> tourAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
-        if (tourAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationListResponse(tourAccommodationDataList);
+    public TourAccommodationListResponse getAllTourAccommodations(String requestId) throws EmptyListException {
+        List<TourPackageAccommodationData> tourPackageAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (tourPackageAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(tourPackageAccommodationDataList, requestId);
     }
 
     @Override
-    public TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException {
-        List<TourAccommodationData> tourAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
-        if (tourAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationListResponse(tourAccommodationDataList);
+    public TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+        List<TourPackageAccommodationData> tourPackageAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (tourPackageAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(tourPackageAccommodationDataList, requestId);
     }
 
     // tour package accommodation
