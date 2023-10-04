@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +23,38 @@ public class MealPackageData {
     @JsonProperty("food_items")
     private List<String> foodItems;
 
+    @Schema(description = "The price of this meal package", required = true, example = "120")
+    @JsonProperty("meal_package_unit_price")
+    private BigDecimal unitPrice;
+    @Schema(description = "The number of this meal package provided during the tour", required = true, example = "4")
+    @JsonProperty("meal_package_quantity")
+    private Integer quantity;
+
+    @Schema(description = "The net price of this meal package", required = true, example = "120")
+    @JsonProperty("meal_package_net_price")
+    private BigDecimal netPrice;
+    @Schema(description = "The added/subtracted price of this meal package", required = true, example = "120")
+    @JsonProperty("meal_package_added_price")
+    private BigDecimal addedPrice;
+    @Schema(description = "The total/final price of this meal package", required = true, example = "120")
+    @JsonProperty("meal_package_total_price")
+    private BigDecimal totalMealPackagePrice;
+
+    @Schema(description = "Whether this is meal package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
+    @JsonProperty("meal_package_is_default")
+    private Boolean isDefault;
+
     public MealPackageData(MealPackageEntity mealPackageEntity) {
         this.mealPackageName = mealPackageEntity.getMealPackageName();
         this.mealTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
         this.foodItems = mealPackageEntity.getFoodItemEntities().stream()
                 .map(foodItemEntity -> foodItemEntity.getFoodItemName())
                 .collect(Collectors.toList());
+        this.unitPrice = mealPackageEntity.getUnitPrice();
+        this.quantity = mealPackageEntity.getQuantity();
+        this.netPrice = mealPackageEntity.getNetPrice();
+        this.addedPrice = mealPackageEntity.getAddedPrice();
+        this.totalMealPackagePrice = mealPackageEntity.getTotalMealPackagePrice();
+        this.isDefault = mealPackageEntity.getIsIncluded();
     }
 }

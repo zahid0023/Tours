@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class TourPackageAddRequest extends BaseRequest {
     @Schema(description = "The id of the tour", required = true, example = "1")
-    @JsonProperty("tour_id")
-    private Long tourID;
+    @JsonProperty("subscribed_tour_id")
+    private Long subscribedTourID;
     @Schema(description = "The tour package that will be stored in the database", required = true)
     @JsonProperty("tour_package")
     private TourPackageRequest tourPackageRequest;

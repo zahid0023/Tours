@@ -15,6 +15,9 @@ import java.util.Objects;
 @Table(name = "tour_itinerary")
 public class TourItineraryEntity extends BaseEntity {
 
+    @Column(name = "active")
+    private Boolean isActive;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_id", nullable = false)
     private TourEntity tourEntity;
@@ -22,15 +25,6 @@ public class TourItineraryEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "activity_id", nullable = false)
     private ActivityEntity activity;
-
-    @Column(name = "day_number", nullable = false)
-    private Integer dayNumber;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
 
     @Override
     public boolean equals(Object o) {

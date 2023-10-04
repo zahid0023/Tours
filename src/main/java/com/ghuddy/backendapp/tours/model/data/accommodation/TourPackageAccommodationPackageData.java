@@ -1,10 +1,12 @@
 package com.ghuddy.backendapp.tours.model.data.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageAccommodationEntity;
+import com.ghuddy.backendapp.tours.model.entities.AccommodationPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -31,13 +33,39 @@ public class TourPackageAccommodationPackageData {
     @JsonProperty("bed_configuration")
     private String bedConfiguration;
 
-    public TourPackageAccommodationPackageData(TourPackageAccommodationEntity tourPackageAccommodationEntity) {
-        this.tourPackageAccommodationName = tourPackageAccommodationEntity.getTourAccommodationEntity().getAccommodationName();
-        this.tourPackageRoomCategoryName = tourPackageAccommodationEntity.getTourRoomCategoryEntity().getRoomCategoryName();
-        this.tourPackageRoomTypeName = tourPackageAccommodationEntity.getTourRoomTypeEntity().getRoomTypeName();
-        this.isShareable = tourPackageAccommodationEntity.getIsShareable();
-        this.suitableForPersons = tourPackageAccommodationEntity.getSuitableForPersons();
-        this.bedCount = tourPackageAccommodationEntity.getBedCount();
-        this.bedConfiguration = tourPackageAccommodationEntity.getBedConfiguration();
+    @Schema(description = "The price of this accommodation package", required = true, example = "1200")
+    @JsonProperty("accommodation_package_unit_price")
+    private BigDecimal unitPrice;
+    @Schema(description = "The total number of rooms provided for this tour package", required = true, example = "1")
+    @JsonProperty("accommodation_package_quantity")
+    private Integer quantity;
+
+    @Schema(description = "The net price of this accommodation package", required = true, example = "120")
+    @JsonProperty("accommodation_package_net_price")
+    private BigDecimal netPrice;
+    @Schema(description = "The added/subtracted price of this accommodation package", required = true, example = "120")
+    @JsonProperty("accommodation_package_added_price")
+    private BigDecimal addedPrice;
+    @Schema(description = "The total/final price of this accommodation package", required = true, example = "120")
+    @JsonProperty("accommodation_package_total_price")
+    private BigDecimal totalAccommodationPackagePrice;
+    @Schema(description = "Whether this is accommodation package comes with the tour package or optional, i.e. the user can choose this, for this the price will vary", required = true, example = "true")
+    @JsonProperty("accommodation_package_is_default")
+    private Boolean isDefault;
+
+    public TourPackageAccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity) {
+        this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
+        this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
+        this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();
+        this.isShareable = accommodationPackageEntity.getIsShareable();
+        this.suitableForPersons = accommodationPackageEntity.getSuitableForPersons();
+        this.bedCount = accommodationPackageEntity.getBedCount();
+        this.bedConfiguration = accommodationPackageEntity.getBedConfiguration();
+        this.unitPrice = accommodationPackageEntity.getUnitPrice();
+        this.quantity = accommodationPackageEntity.getQuantity();
+        this.netPrice = accommodationPackageEntity.getNetPrice();
+        this.addedPrice = accommodationPackageEntity.getAddedPrice();
+        this.totalAccommodationPackagePrice = accommodationPackageEntity.getTotalAccommodationPackagePrice();
+        this.isDefault = accommodationPackageEntity.getIsIncluded();
     }
 }

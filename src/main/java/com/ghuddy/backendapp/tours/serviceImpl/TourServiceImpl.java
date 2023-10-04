@@ -56,7 +56,7 @@ public class TourServiceImpl implements TourService {
         tourEntity.setThumbImageUrl(tourCreateRequest.getThumbImageURL());
         tourEntity.setAddedTourEntity(addedTourEntity);
 
-        List<TourItineraryEntity> tourItineraryEntities = tourItineraryService.setTourActivities(tourEntity, tourCreateRequest.getTourActivities());
+        List<TourItineraryEntity> tourItineraryEntities = tourItineraryService.setTourActivities(tourEntity, tourCreateRequest.getTourActivityIds());
         tourEntity.setTourItineraryEntities(tourItineraryEntities);
 
         if (tourCreateRequest.getTourSpecialities() != null && !tourCreateRequest.getTourSpecialities().isEmpty()) {

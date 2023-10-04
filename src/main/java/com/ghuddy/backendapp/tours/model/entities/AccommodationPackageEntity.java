@@ -6,13 +6,15 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_package_accommodation")
-public class TourPackageAccommodationEntity extends BaseEntity {
+@Table(name = "tour_package_accommodation_package")
+public class AccommodationPackageEntity extends BaseEntity {
 
     @Column(name = "is_shareable")
     private Boolean isShareable;
@@ -29,23 +31,51 @@ public class TourPackageAccommodationEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_category_id", nullable = false)
     private TourRoomCategoryEntity tourRoomCategoryEntity;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_type_id", nullable = false)
     private TourRoomTypeEntity tourRoomTypeEntity;
-
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "tour_package_id", nullable = false)
-    private TourPackageEntity tourPackageEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_id", nullable = false)
     private TourAccommodationEntity tourAccommodationEntity;
 
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "tour_package_id", nullable = false)
+    private TourPackageEntity tourPackageEntity;
+
+    @Column(name = "active")
+    private Boolean active;
+
+    @NotNull
+    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal unitPrice;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @NotNull
+    @Column(name = "net_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal netPrice;
+
+    @NotNull
+    @Column(name = "added_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal addedPrice;
+
+    @NotNull
+    @Column(name = "total_accommodation_package_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalAccommodationPackagePrice;
+
+    @NotNull
+    @Column(name = "is_included", nullable = false)
+    private Boolean isIncluded = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        TourPackageAccommodationEntity that = (TourPackageAccommodationEntity) o;
+        AccommodationPackageEntity that = (AccommodationPackageEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

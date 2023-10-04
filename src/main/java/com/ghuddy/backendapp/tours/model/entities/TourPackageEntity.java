@@ -2,10 +2,13 @@ package com.ghuddy.backendapp.tours.model.entities;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,15 +16,16 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "tour_package")
 public class TourPackageEntity extends BaseEntity {
 
     @Column(name = "tour_package_name", nullable = false)
     private String tourPackageName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private TourEntity tourEntity;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscribed_tour_id")
+    private SubscribedTourEntity subscribedTourEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_package_type_id", nullable = false)
@@ -31,13 +35,38 @@ public class TourPackageEntity extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccommodationPackageEntity> accommodationPackageEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MealPackageEntity> mealPackageEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = new ArrayList<>();
+    private List<TransportationPackageEntity> transportationPackageEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageTransportationEntity> tourPackageTransportationEntities = new ArrayList<>();
+    @NotNull
+    @Column(name = "is_food_included", nullable = false)
+    private Boolean isFoodIncluded;
+
+    @NotNull
+    @Column(name = "is_accommodation_included", nullable = false)
+    private Boolean isAccommodationIncluded;
+
+    @NotNull
+    @Column(name = "is_transportation_included", nullable = false)
+    private Boolean isTransportationIncluded;
+
+    @NotNull
+    @Column(name = "is_transfer_included", nullable = false)
+    private Boolean isTransferIncluded;
+
+    @Column(name = "net_price", precision = 10, scale = 2)
+    private BigDecimal netPrice;
+
+    @Column(name = "added_price", precision = 10, scale = 2)
+    private BigDecimal addedPrice;
+
+    @Column(name = "total_package_price", precision = 10, scale = 2)
+    private BigDecimal totalPackagePrice;
 
     @Override
     public boolean equals(Object o) {

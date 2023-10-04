@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "meal_package")
+@Table(name = "tour_package_meal_package")
 public class MealPackageEntity extends BaseEntity {
 
     @Column(name = "meal_package_name", nullable = false)
@@ -27,12 +29,38 @@ public class MealPackageEntity extends BaseEntity {
     @JoinColumn(name = "tour_package_id")
     private TourPackageEntity tourPackageEntity;
 
-
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "meal_package_food_item_mapping",
             joinColumns = @JoinColumn(name = "meal_package_id"),
             inverseJoinColumns = @JoinColumn(name = "food_item_id"))
     private List<FoodItemEntity> foodItemEntities = new ArrayList<>();
+
+    @Column(name = "active")
+    private Boolean active;
+
+    @NotNull
+    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal unitPrice;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @NotNull
+    @Column(name = "net_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal netPrice;
+
+    @NotNull
+    @Column(name = "added_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal addedPrice;
+
+    @NotNull
+    @Column(name = "total_meal_package_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalMealPackagePrice;
+
+    @NotNull
+    @Column(name = "is_included", nullable = false)
+    private Boolean isIncluded = false;
 
     @Override
     public boolean equals(Object o) {

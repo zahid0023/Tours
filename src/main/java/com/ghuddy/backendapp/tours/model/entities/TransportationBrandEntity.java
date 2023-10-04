@@ -18,6 +18,6 @@ public class TransportationBrandEntity extends BaseEntity {
     private String brandName;
 
     @OneToMany(mappedBy = "transportationBrandEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageTransportationEntity> tourPackageTransportationEntities = new ArrayList<>();
+    private List<TransportationPackageEntity> tourPackageTransportationEntities = new ArrayList<>();
 
 }

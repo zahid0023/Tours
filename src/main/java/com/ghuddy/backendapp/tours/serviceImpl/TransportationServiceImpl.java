@@ -34,7 +34,7 @@ public class TransportationServiceImpl implements TransportationService {
     private final TransportationModeRepository transportationModeRepository;
     private final TransportationProviderRepository transportationProviderRepository;
     private final TransportationRouteRepository transportationRouteRepository;
-    private final TourPackageTransportationRepository tourPackageTransportationRepository;
+    private final TransportationPackageRepository transportationPackageRepository;
     private final DestinationLocationService destinationLocationService;
     private final TransportationDao transportationDao;
 
@@ -42,14 +42,14 @@ public class TransportationServiceImpl implements TransportationService {
                                      TransportationModeRepository transportationModeRepository,
                                      TransportationProviderRepository transportationProviderRepository,
                                      TransportationRouteRepository transportationRouteRepository,
-                                     TourPackageTransportationRepository tourPackageTransportationRepository,
+                                     TransportationPackageRepository transportationPackageRepository,
                                      DestinationLocationService destinationLocationService,
                                      TransportationDao transportationDao) {
         this.transportationBrandRepository = transportationBrandRepository;
         this.transportationModeRepository = transportationModeRepository;
         this.transportationProviderRepository = transportationProviderRepository;
         this.transportationRouteRepository = transportationRouteRepository;
-        this.tourPackageTransportationRepository = tourPackageTransportationRepository;
+        this.transportationPackageRepository = transportationPackageRepository;
         this.destinationLocationService = destinationLocationService;
         this.transportationDao = transportationDao;
     }
@@ -94,7 +94,7 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     /**
-     * @param pageSize the page size
+     * @param pageSize   the page size
      * @param pageNumber the page number
      * @return TransportationBrandListResponse the response
      * @throws EmptyListException when there are no elements in the list
@@ -239,21 +239,21 @@ public class TransportationServiceImpl implements TransportationService {
     @Transactional
     @Override
     public AcknowledgeResponse addTourPackageTransportation(TourPackageEntity tourPackageEntity, TourPackageTransportationRequest tourPackageTransportationRequest) {
-        List<TourPackageTransportationEntity> tourPackageTransportationEntities = setTourPackageTransportations(tourPackageEntity, List.of(tourPackageTransportationRequest));
-        tourPackageTransportationRepository.saveAll(tourPackageTransportationEntities);
+        List<TransportationPackageEntity> tourPackageTransportationEntities = setTourPackageTransportations(tourPackageEntity, List.of(tourPackageTransportationRequest));
+        transportationPackageRepository.saveAll(tourPackageTransportationEntities);
         return new AcknowledgeResponse();
     }
 
     @Transactional
     @Override
     public AcknowledgeResponse addTourPackageTransportations(TourPackageEntity tourPackageEntity, TourPackageTransportationListAddRequest tourPackageTransportationListAddRequest) {
-        List<TourPackageTransportationEntity> tourPackageTransportationEntities = setTourPackageTransportations(tourPackageEntity, tourPackageTransportationListAddRequest.getTourPackageTransportations());
-        tourPackageTransportationRepository.saveAll(tourPackageTransportationEntities);
+        List<TransportationPackageEntity> tourPackageTransportationEntities = setTourPackageTransportations(tourPackageEntity, tourPackageTransportationListAddRequest.getTourPackageTransportations());
+        transportationPackageRepository.saveAll(tourPackageTransportationEntities);
         return new AcknowledgeResponse();
     }
 
     @Override
-    public List<TourPackageTransportationEntity> setTourPackageTransportations(TourPackageEntity tourPackageEntity, List<TourPackageTransportationRequest> tourPackageTransportations) {
+    public List<TransportationPackageEntity> setTourPackageTransportations(TourPackageEntity tourPackageEntity, List<TourPackageTransportationRequest> tourPackageTransportations) {
         Map<String, Set<Long>> idMaps = new HashMap<>();
         tourPackageTransportations.forEach(tourPackageTransportationRequest -> {
             idMaps.computeIfAbsent("route", key -> new HashSet<>())
@@ -270,17 +270,23 @@ public class TransportationServiceImpl implements TransportationService {
         Map<Long, TransportationBrandEntity> transportationBrandEntityMap = getTransportationBrandEntitiesByIDs(idMaps.get("brand"));
         Map<Long, TransportationProviderEntity> transportationProviderEntityMap = getTransportationProviderEntitiesByIDs(idMaps.get("provider"));
 
-        List<TourPackageTransportationEntity> tourPackageTransportationEntities = tourPackageTransportations.stream()
+        List<TransportationPackageEntity> tourPackageTransportationEntities = tourPackageTransportations.stream()
                 .map(tourPackageTransportationRequest -> {
-                    TourPackageTransportationEntity tourPackageTransportationEntity = new TourPackageTransportationEntity();
-                    tourPackageTransportationEntity.setTourPackageEntity(tourPackageEntity);
-                    tourPackageTransportationEntity.setTransportationRouteEntity(transportationRouteEntityMap.get(tourPackageTransportationRequest.getTransportationRouteID()));
-                    tourPackageTransportationEntity.setTransportationModeEntity(transportationModeEntityMap.get(tourPackageTransportationRequest.getTransportationModeID()));
-                    tourPackageTransportationEntity.setTransportationBrandEntity(transportationBrandEntityMap.get(tourPackageTransportationRequest.getTransportationBrandID()));
-                    tourPackageTransportationEntity.setTransportationProviderEntity(transportationProviderEntityMap.get(tourPackageTransportationRequest.getTransportationProviderID()));
-                    tourPackageTransportationEntity.setIsAc(tourPackageTransportationRequest.getIsAC());
-                    tourPackageTransportationEntity.setTripType(tourPackageTransportationRequest.getTripType());
-                    return tourPackageTransportationEntity;
+                    TransportationPackageEntity transportationPackageEntity = new TransportationPackageEntity();
+                    transportationPackageEntity.setTourPackageEntity(tourPackageEntity);
+                    transportationPackageEntity.setTransportationRouteEntity(transportationRouteEntityMap.get(tourPackageTransportationRequest.getTransportationRouteID()));
+                    transportationPackageEntity.setTransportationModeEntity(transportationModeEntityMap.get(tourPackageTransportationRequest.getTransportationModeID()));
+                    transportationPackageEntity.setTransportationBrandEntity(transportationBrandEntityMap.get(tourPackageTransportationRequest.getTransportationBrandID()));
+                    transportationPackageEntity.setTransportationProviderEntity(transportationProviderEntityMap.get(tourPackageTransportationRequest.getTransportationProviderID()));
+                    transportationPackageEntity.setIsAc(tourPackageTransportationRequest.getIsAC());
+                    transportationPackageEntity.setTripType(tourPackageTransportationRequest.getTripType());
+                    transportationPackageEntity.setUnitPrice(tourPackageTransportationRequest.getUnitPrice());
+                    transportationPackageEntity.setQuantity(tourPackageTransportationRequest.getQuantity());
+                    transportationPackageEntity.setNetPrice(tourPackageTransportationRequest.getNetPrice());
+                    transportationPackageEntity.setAddedPrice(tourPackageTransportationRequest.getAddedPrice());
+                    transportationPackageEntity.setTotalTransportationPackagePrice(tourPackageTransportationRequest.getTotalTransportationPackagePrice());
+                    transportationPackageEntity.setIsIncluded(tourPackageTransportationRequest.getIsDefault());
+                    return transportationPackageEntity;
                 })
                 .collect(Collectors.toList());
 

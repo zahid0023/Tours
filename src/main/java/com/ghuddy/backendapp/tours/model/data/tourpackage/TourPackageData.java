@@ -41,10 +41,10 @@ public class TourPackageData {
         this.mealPackageDataList = tourPackageEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
                 .collect(Collectors.toList());
-        this.tourPackageAccommodationPackageDataList = tourPackageEntity.getTourPackageAccommodationEntities().stream()
+        this.tourPackageAccommodationPackageDataList = tourPackageEntity.getAccommodationPackageEntities().stream()
                 .map(tourPackageAccommodationEntity -> new TourPackageAccommodationPackageData(tourPackageAccommodationEntity))
                 .collect(Collectors.toList());
-        this.tourPackageTransportationPackageDataList = tourPackageEntity.getTourPackageTransportationEntities().stream()
+        this.tourPackageTransportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
                 .map(tourPackageTransportationEntity -> new TourPackageTransportationPackageData(tourPackageTransportationEntity))
                 .collect(Collectors.toList());
     }

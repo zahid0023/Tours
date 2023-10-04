@@ -25,24 +25,18 @@ public class TourItineraryServiceImpl implements TourItineraryService {
     }
 
     @Override
-    public List<TourItineraryEntity> setTourActivities(TourEntity tourEntity, List<TourActivityRequest> tourActivities) {
+    public List<TourItineraryEntity> setTourActivities(TourEntity tourEntity, Set<Long> tourActivityIds) {
 
-        Set<Long> activityIDs = tourActivities.stream()
-                .map(TourActivityRequest::getActivityID)
-                .collect(Collectors.toSet());
-        Map<Long, ActivityEntity> activityEntityMap = activityService.getActivityEntityMapByIDs(activityIDs);
-        List<TourItineraryEntity> tourItineraryEntities = tourActivities.stream()
-                .map(tourActivityRequest -> {
+        Map<Long, ActivityEntity> activityEntityMap = activityService.getActivityEntityMapByIDs(tourActivityIds);
+        List<TourItineraryEntity> tourItineraryEntities = tourActivityIds.stream()
+                .map(activityId -> {
                     TourItineraryEntity tourItineraryEntity = new TourItineraryEntity();
                     tourItineraryEntity.setTourEntity(tourEntity);
-                    tourItineraryEntity.setActivity(activityEntityMap.get(tourActivityRequest.getActivityID()));
-                    tourItineraryEntity.setDayNumber(tourActivityRequest.getDayNumber());
-                    tourItineraryEntity.setStartTime(tourActivityRequest.getStartTime());
-                    tourItineraryEntity.setEndTime(tourActivityRequest.getEndTime());
+                    tourItineraryEntity.setActivity(activityEntityMap.get(activityId));
+                    tourItineraryEntity.setIsActive(true);
                     return tourItineraryEntity;
                 })
                 .collect(Collectors.toList());
-
         return tourItineraryEntities;
     }
 }

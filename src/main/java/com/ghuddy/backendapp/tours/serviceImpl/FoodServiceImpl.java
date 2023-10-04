@@ -159,6 +159,12 @@ public class FoodServiceImpl implements FoodService {
                             .map(this::getFoodItemEntityByID)
                             .collect(Collectors.toList());
                     mealPackageEntity.setFoodItemEntities(foodItemEntities);
+                    mealPackageEntity.setUnitPrice(mealPackageRequest.getUnitPrice());
+                    mealPackageEntity.setQuantity(mealPackageRequest.getQuantity());
+                    mealPackageEntity.setNetPrice(mealPackageRequest.getNetPrice());
+                    mealPackageEntity.setAddedPrice(mealPackageRequest.getAddedPrice());
+                    mealPackageEntity.setTotalMealPackagePrice(mealPackageRequest.getTotalMealPackagePrice());
+                    mealPackageEntity.setIsIncluded(mealPackageRequest.getIsDefault());
                     return mealPackageEntity;
                 })
                 .collect(Collectors.toList());

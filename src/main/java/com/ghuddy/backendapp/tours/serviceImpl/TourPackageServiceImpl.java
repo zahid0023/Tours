@@ -9,6 +9,7 @@ import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
@@ -22,6 +23,8 @@ import com.ghuddy.backendapp.tours.utils.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +34,6 @@ import java.util.stream.Collectors;
 public class TourPackageServiceImpl implements TourPackageService {
     private final TourPackageTypeRepository tourPackageTypeRepository;
     private final TourPackageRepository tourPackageRepository;
-    private final TourService tourService;
     private final FoodService foodService;
     private final AccommodationService accommodationService;
     private final TransportationService transportationService;
@@ -39,18 +41,16 @@ public class TourPackageServiceImpl implements TourPackageService {
 
     public TourPackageServiceImpl(TourPackageTypeRepository tourPackageTypeRepository,
                                   TourPackageRepository tourPackageRepository,
-                                  TourService tourService,
                                   FoodService foodService,
                                   AccommodationService accommodationService,
-                                  TourPackageDao tourPackageDao,
-                                  TransportationService transportationService) {
+                                  TransportationService transportationService,
+                                  TourPackageDao tourPackageDao) {
         this.tourPackageTypeRepository = tourPackageTypeRepository;
         this.tourPackageRepository = tourPackageRepository;
-        this.tourService = tourService;
         this.foodService = foodService;
         this.accommodationService = accommodationService;
-        this.tourPackageDao = tourPackageDao;
         this.transportationService = transportationService;
+        this.tourPackageDao = tourPackageDao;
     }
 
     // tour package type
@@ -107,20 +107,27 @@ public class TourPackageServiceImpl implements TourPackageService {
 
     // tour package
     @Override
-    public InsertAcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException {
-        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourPackageAddRequest.getTourID());
-        TourPackageData tourPackageData = addTourPackages(tourEntity, List.of(tourPackageAddRequest.getTourPackageRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourPackageData, tourPackageAddRequest.getRequestId());
+    public InsertAcknowledgeResponse addTourPackage(SubscribedTourEntity subscribedTourEntity, TourPackageRequest tourPackageRequest, String requestId) {
+
+        TourPackageEntity tourPackageEntity = prepareTourPackages(subscribedTourEntity, List.of(tourPackageRequest)).get(0);
+        TourPackageData tourPackageData = new TourPackageData(tourPackageRepository.save(tourPackageEntity));
+
+        return new InsertAcknowledgeResponse(tourPackageData, requestId);
     }
 
     @Override
-    public InsertAcknowledgeListResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException {
-        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourPackageListAddRequest.getTourID());
-        List<TourPackageData> tourPackageDataList = addTourPackages(tourEntity, tourPackageListAddRequest.getTourPackages());
-        return new InsertAcknowledgeListResponse(tourPackageDataList, tourPackageListAddRequest.getRequestId());
+    public InsertAcknowledgeListResponse addTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList, String requestId) {
+
+        List<TourPackageEntity> tourPackageEntities = prepareTourPackages(subscribedTourEntity, tourPackageRequestList);
+        List<TourPackageData> tourPackageData = tourPackageRepository.saveAll(tourPackageEntities).stream()
+                .map(tourPackageEntity -> new TourPackageData(tourPackageEntity))
+                .collect(Collectors.toList());
+
+        return new InsertAcknowledgeListResponse(tourPackageData, requestId);
     }
 
-    private List<TourPackageData> addTourPackages(TourEntity tourEntity, List<TourPackageRequest> tourPackages) {
+    @Override
+    public List<TourPackageEntity> prepareTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages) {
         Set<Long> tourPackageTypeIDs = tourPackages.stream()
                 .map(TourPackageRequest::getTourPackageTypeID)
                 .collect(Collectors.toSet());
@@ -128,28 +135,43 @@ public class TourPackageServiceImpl implements TourPackageService {
         List<TourPackageEntity> tourPackageEntities = tourPackages.stream()
                 .map(tourPackageRequest -> {
                     TourPackageEntity tourPackageEntity = new TourPackageEntity();
-                    tourPackageEntity.setTourEntity(tourEntity);
+                    tourPackageEntity.setSubscribedTourEntity(subscribedTourEntity);
                     TourPackageTypeEntity tourPackageTypeEntity = tourPackageTypeEntityMap.get(tourPackageRequest.getTourPackageTypeID());
                     tourPackageEntity.setTourPackageType(tourPackageTypeEntity);
-                    tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(tourEntity.getAddedTourEntity().getTourName(), tourPackageTypeEntity.getPackageTypeName()));
+                    tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName(), tourPackageTypeEntity.getPackageTypeName()));
                     tourPackageEntity.setDescription(tourPackageRequest.getTourPackageDescription());
-                    if (tourPackageRequest.getTourPackageMealPackages() != null && !tourPackageRequest.getTourPackageMealPackages().isEmpty())
-                        tourPackageEntity.setMealPackageEntities(foodService.setTourPackageMealPackages(tourPackageEntity, tourPackageRequest.getTourPackageMealPackages()));
-                    if (tourPackageRequest.getTourPackageAccommodations() != null && !tourPackageRequest.getTourPackageAccommodations().isEmpty())
-                        tourPackageEntity.setTourPackageAccommodationEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getTourPackageAccommodations()));
-                    if (tourPackageRequest.getTourPackageTransportations() != null && !tourPackageRequest.getTourPackageTransportations().isEmpty())
-                        tourPackageEntity.setTourPackageTransportationEntities(transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTourPackageTransportations()));
+
+                    boolean isFoodIncluded = false;
+                    boolean isAccommodationIncluded = false;
+                    boolean isTransportationIncluded = false;
+                    boolean isTransferIncluded = false;
+
+                    if (tourPackageRequest.getMealPackages() != null && !tourPackageRequest.getMealPackages().isEmpty())
+                        tourPackageEntity.setMealPackageEntities(foodService.setTourPackageMealPackages(tourPackageEntity, tourPackageRequest.getMealPackages()));
+                    if (tourPackageRequest.getAccommodationPackages() != null && !tourPackageRequest.getAccommodationPackages().isEmpty())
+                        tourPackageEntity.setAccommodationPackageEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationPackages()));
+                    if (tourPackageRequest.getTransportationPackages() != null && !tourPackageRequest.getTransportationPackages().isEmpty())
+                        tourPackageEntity.setTransportationPackageEntities(transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages()));
+
+                    tourPackageEntity.setIsFoodIncluded(isFoodIncluded);
+                    tourPackageEntity.setIsAccommodationIncluded(isAccommodationIncluded);
+                    tourPackageEntity.setIsTransportationIncluded(isTransportationIncluded);
+                    tourPackageEntity.setIsTransferIncluded(isTransferIncluded);
+
+                    tourPackageEntity.setNetPrice(new BigDecimal(200));
+                    tourPackageEntity.setAddedPrice(new BigDecimal(100));
+                    tourPackageEntity.setTotalPackagePrice(new BigDecimal(300));
+
                     return tourPackageEntity;
                 })
                 .collect(Collectors.toList());
-        return tourPackageRepository.saveAll(tourPackageEntities).stream()
-                .map(tourPackageEntity -> new TourPackageData(tourPackageEntity))
-                .collect(Collectors.toList());
+        return tourPackageEntities;
     }
 
     @Override
     public TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID) {
         return tourPackageRepository.findById(tourPackageID).orElseThrow(() -> new EntityNotFoundException("TourPackageEntity Not Found"));
     }
+
 
 }

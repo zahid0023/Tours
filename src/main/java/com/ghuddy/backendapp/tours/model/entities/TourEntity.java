@@ -32,7 +32,4 @@ public class TourEntity extends BaseEntity {
     @OneToMany(mappedBy = "tourEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<TourSpecialityEntity> tourSpecialityEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageEntity> tourPackageEntities = new ArrayList<>();
-
 }

@@ -1,9 +1,11 @@
 package com.ghuddy.backendapp.tours.model.data.transportation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageTransportationEntity;
+import com.ghuddy.backendapp.tours.model.entities.TransportationPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 public class TourPackageTransportationPackageData {
@@ -26,12 +28,37 @@ public class TourPackageTransportationPackageData {
     @JsonProperty("is_ac")
     private boolean isAc;
 
-    public TourPackageTransportationPackageData(TourPackageTransportationEntity tourPackageTransportationEntity) {
-        this.transportationRouteName = tourPackageTransportationEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + tourPackageTransportationEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
-        this.transportationModeName = tourPackageTransportationEntity.getTransportationModeEntity().getModeName();
-        this.transportationBrandName = tourPackageTransportationEntity.getTransportationBrandEntity().getBrandName();
-        this.transportationProviderName = tourPackageTransportationEntity.getTransportationProviderEntity().getTransportationProviderName();
-        this.tripType = tourPackageTransportationEntity.getTripType().getDisplayName();
-        this.isAc = tourPackageTransportationEntity.getIsAc();
+    @Schema(description = "The price of this transportation package", required = true, example = "120")
+    @JsonProperty("transportation_package_unit_price")
+    private BigDecimal unitPrice;
+    @Schema(description = "The number of transportation packages provided for this tour package", required = true, example = "1")
+    @JsonProperty("transportation_package_quantity")
+    private Integer quantity;
+    @Schema(description = "The net price of this transportation package", required = true, example = "120")
+    @JsonProperty("transportation_package_net_price")
+    private BigDecimal netPrice;
+    @Schema(description = "The added/subtracted price of this transportation package", required = true, example = "120")
+    @JsonProperty("transportation_package_added_price")
+    private BigDecimal addedPrice;
+    @Schema(description = "The total/final price of this transportation package", required = true, example = "120")
+    @JsonProperty("transportation_package_total_price")
+    private BigDecimal totalTransportationPackagePrice;
+    @Schema(description = "Whether this is transportation package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
+    @JsonProperty("transportation_package_is_default")
+    private Boolean isDefault;
+
+    public TourPackageTransportationPackageData(TransportationPackageEntity transportationPackageEntity) {
+        this.transportationRouteName = transportationPackageEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + transportationPackageEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
+        this.transportationModeName = transportationPackageEntity.getTransportationModeEntity().getModeName();
+        this.transportationBrandName = transportationPackageEntity.getTransportationBrandEntity().getBrandName();
+        this.transportationProviderName = transportationPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
+        this.tripType = transportationPackageEntity.getTripType().getDisplayName();
+        this.isAc = transportationPackageEntity.getIsAc();
+        this.unitPrice = transportationPackageEntity.getUnitPrice();
+        this.quantity = transportationPackageEntity.getQuantity();
+        this.netPrice = transportationPackageEntity.getNetPrice();
+        this.addedPrice = transportationPackageEntity.getAddedPrice();
+        this.totalTransportationPackagePrice = transportationPackageEntity.getTotalTransportationPackagePrice();
+        this.isDefault = transportationPackageEntity.getIsIncluded();
     }
 }

@@ -28,6 +28,6 @@ public class TransportationProviderEntity extends BaseEntity {
     private Integer totalReviews;
 
     @OneToMany(mappedBy = "transportationProviderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageTransportationEntity> tourPackageTransportationEntities = new ArrayList<>();
+    private List<TransportationPackageEntity> tourPackageTransportationEntities = new ArrayList<>();
 
 }

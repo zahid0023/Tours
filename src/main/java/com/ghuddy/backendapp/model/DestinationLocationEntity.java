@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "place_near_by")
-public class DestinationLocationEntity extends BaseEntity {
+public class DestinationLocationEntity extends BaseEntity{
     @Column(name = "place_name", nullable = false, unique = true)
     private String placeName;
 

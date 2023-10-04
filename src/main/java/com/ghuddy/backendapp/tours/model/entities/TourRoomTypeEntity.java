@@ -21,6 +21,6 @@ public class TourRoomTypeEntity extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "tourRoomTypeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = new ArrayList<>();
+    private List<AccommodationPackageEntity> tourPackageAccommodationEntities = new ArrayList<>();
 
 }

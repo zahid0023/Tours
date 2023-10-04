@@ -32,20 +32,20 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final TourRoomCategoryRepository tourRoomCategoryRepository;
     private final TourAccommodationTypeRepository tourAccommodationTypeRepository;
     private final TourAccommodationRepository tourAccommodationRepository;
-    private final TourPackageAccommodationRepository tourPackageAccommodationRepository;
+    private final AccommodationPackageRepository accommodationPackageRepository;
     private final AccommodationDao accommodationDao;
 
     public AccommodationServiceImpl(TourRoomTypeRepository tourRoomTypeRepository,
                                     TourRoomCategoryRepository tourRoomCategoryRepository,
                                     TourAccommodationTypeRepository tourAccommodationTypeRepository,
                                     TourAccommodationRepository tourAccommodationRepository,
-                                    TourPackageAccommodationRepository tourPackageAccommodationRepository,
+                                    AccommodationPackageRepository accommodationPackageRepository,
                                     AccommodationDao accommodationDao) {
         this.tourRoomTypeRepository = tourRoomTypeRepository;
         this.tourRoomCategoryRepository = tourRoomCategoryRepository;
         this.tourAccommodationTypeRepository = tourAccommodationTypeRepository;
         this.tourAccommodationRepository = tourAccommodationRepository;
-        this.tourPackageAccommodationRepository = tourPackageAccommodationRepository;
+        this.accommodationPackageRepository = accommodationPackageRepository;
         this.accommodationDao = accommodationDao;
     }
 
@@ -235,21 +235,21 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // tour package accommodation
     @Override
-    public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, TourPackageAccommodationRequest accommodation) {
-        List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, List.of(accommodation));
-        tourPackageAccommodationRepository.saveAll(tourPackageAccommodationEntities);
+    public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationPackageRequest accommodation) {
+        List<AccommodationPackageEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, List.of(accommodation));
+        accommodationPackageRepository.saveAll(tourPackageAccommodationEntities);
         return new AcknowledgeResponse();
     }
 
     @Override
-    public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<TourPackageAccommodationRequest> accommodations) {
-        List<TourPackageAccommodationEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodations);
-        tourPackageAccommodationRepository.saveAll(tourPackageAccommodationEntities);
+    public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> accommodations) {
+        List<AccommodationPackageEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodations);
+        accommodationPackageRepository.saveAll(tourPackageAccommodationEntities);
         return new AcknowledgeResponse();
     }
 
     @Override
-    public List<TourPackageAccommodationEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<TourPackageAccommodationRequest> accommodations) {
+    public List<AccommodationPackageEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> accommodations) {
 
         Map<String, Set<Long>> idMaps = new HashMap<>();
         accommodations.forEach(tourPackageAccommodationRequest -> {
@@ -266,16 +266,22 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         return accommodations.stream()
                 .map(tourPackageAccommodationRequest -> {
-                    TourPackageAccommodationEntity tourPackageAccommodationEntity = new TourPackageAccommodationEntity();
-                    tourPackageAccommodationEntity.setTourPackageEntity(tourPackageEntity);
-                    tourPackageAccommodationEntity.setTourAccommodationEntity(accommodationEntityMap.get(tourPackageAccommodationRequest.getAccommodationID()));
-                    tourPackageAccommodationEntity.setTourRoomCategoryEntity(roomCategoryEntityMap.get(tourPackageAccommodationRequest.getRoomCategoryID()));
-                    tourPackageAccommodationEntity.setTourRoomTypeEntity(roomTypeEntityMap.get(tourPackageAccommodationRequest.getRoomTypeID()));
-                    tourPackageAccommodationEntity.setBedCount(tourPackageAccommodationRequest.getBedCount());
-                    tourPackageAccommodationEntity.setBedConfiguration(tourPackageAccommodationRequest.getBedConfiguration());
-                    tourPackageAccommodationEntity.setIsShareable(tourPackageAccommodationRequest.getIsShareable());
-                    tourPackageAccommodationEntity.setSuitableForPersons(tourPackageAccommodationRequest.getForPersons());
-                    return tourPackageAccommodationEntity;
+                    AccommodationPackageEntity accommodationPackageEntity = new AccommodationPackageEntity();
+                    accommodationPackageEntity.setTourPackageEntity(tourPackageEntity);
+                    accommodationPackageEntity.setTourAccommodationEntity(accommodationEntityMap.get(tourPackageAccommodationRequest.getAccommodationID()));
+                    accommodationPackageEntity.setTourRoomCategoryEntity(roomCategoryEntityMap.get(tourPackageAccommodationRequest.getRoomCategoryID()));
+                    accommodationPackageEntity.setTourRoomTypeEntity(roomTypeEntityMap.get(tourPackageAccommodationRequest.getRoomTypeID()));
+                    accommodationPackageEntity.setBedCount(tourPackageAccommodationRequest.getBedCount());
+                    accommodationPackageEntity.setBedConfiguration(tourPackageAccommodationRequest.getBedConfiguration());
+                    accommodationPackageEntity.setIsShareable(tourPackageAccommodationRequest.getIsShareable());
+                    accommodationPackageEntity.setSuitableForPersons(tourPackageAccommodationRequest.getForPersons());
+                    accommodationPackageEntity.setUnitPrice(tourPackageAccommodationRequest.getUnitPrice());
+                    accommodationPackageEntity.setQuantity(tourPackageAccommodationRequest.getQuantity());
+                    accommodationPackageEntity.setNetPrice(tourPackageAccommodationRequest.getNetPrice());
+                    accommodationPackageEntity.setAddedPrice(tourPackageAccommodationRequest.getAddedPrice());
+                    accommodationPackageEntity.setTotalAccommodationPackagePrice(tourPackageAccommodationRequest.getTotalAccommodationPackagePrice());
+                    accommodationPackageEntity.setIsIncluded(tourPackageAccommodationRequest.getIsDefault());
+                    return accommodationPackageEntity;
                 })
                 .collect(Collectors.toList());
     }

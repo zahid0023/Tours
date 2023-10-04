@@ -1,18 +1,18 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageData;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,9 +31,11 @@ public interface TourPackageService {
     TourPackageTypeListResponse getAllTourPackageTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     // tour package
-    InsertAcknowledgeResponse addTourPackage(TourPackageAddRequest tourPackageAddRequest) throws TourNotFoundException;
+    public InsertAcknowledgeResponse addTourPackage(SubscribedTourEntity subscribedTourEntity, TourPackageRequest tourPackageRequest, String requestId);
 
-    InsertAcknowledgeListResponse addTourPackages(TourPackageListAddRequest tourPackageListAddRequest) throws TourNotFoundException;
+    public InsertAcknowledgeListResponse addTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList, String requestId);
+
+    public List<TourPackageEntity> prepareTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages);
 
     TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
 

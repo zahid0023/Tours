@@ -24,6 +24,6 @@ public class TransportationRouteEntity extends BaseEntity {
     private DestinationLocationEntity destinationLocation;
 
     @OneToMany(mappedBy = "transportationRouteEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageTransportationEntity> tourPackageTransportationEntities = new ArrayList<>();
+    private List<TransportationPackageEntity> tourPackageTransportationEntities = new ArrayList<>();
 
 }
