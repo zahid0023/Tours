@@ -34,7 +34,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllFoodItems(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,7 +44,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllFoodItemsPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -55,7 +55,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllMealTypes(), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -65,7 +65,7 @@ public class FoodControllerForMerchant {
             return new ResponseEntity<>(foodService.getAllMealTypesPaginated(pageSize, pageNumber), HttpStatus.OK);
         } catch (EmptyListException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY,requestId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.LIST_IS_EMPTY, requestId), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -73,12 +73,12 @@ public class FoodControllerForMerchant {
     @RequestMapping(path = "/food/meal-package/add", method = RequestMethod.POST)
     public ResponseEntity<?> addMealPackage(@RequestBody MealPackageAddRequest mealPackageAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageMealPackage(tourPackageEntity, mealPackageAddRequest.getMealPackage()), HttpStatus.CREATED);
+        return new ResponseEntity<>(foodService.addTourPackageMealPackage(tourPackageEntity, mealPackageAddRequest.getMealPackage(), mealPackageAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/food/meal-package/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addMealPackages(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageMealPackages(tourPackageEntity, mealPackageListAddRequest.getMealPackages()), HttpStatus.CREATED);
+        return new ResponseEntity<>(foodService.addTourPackageMealPackages(tourPackageEntity, mealPackageListAddRequest.getMealPackages(), mealPackageListAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 }

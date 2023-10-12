@@ -1,17 +1,17 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.activity.ActivityAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.activity.ActivityListAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.activity.ActivityTypeListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.activity.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
 import com.ghuddy.backendapp.tours.model.entities.ActivityTypeEntity;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,4 +40,9 @@ public interface ActivityService {
     ActivityListResponse getAllActivities(String requestId) throws EmptyListException;
 
     ActivityListResponse getAllActivitiesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
+
+    // Tour Activity
+    List<SubscribedTourItineraryEntity> setSubscribedTourItinerary(SubscribedTourEntity subscribedTourEntity,
+                                                                   List<SubscribedTourActivityRequest> subscribedTourActivityDataList,
+                                                                   Map<Long, ActivityEntity> activityEntityMap);
 }

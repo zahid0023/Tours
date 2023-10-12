@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class InsertAcknowledgeResponse<T> extends BaseResponse {
-    @Schema(description = "The id of the entity that was inserted into the database",
+    @Schema(description = "The entity that was inserted into the database",
             required = true,
             example = "1")
     private final T entity;

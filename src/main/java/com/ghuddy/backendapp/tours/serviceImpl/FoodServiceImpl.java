@@ -1,30 +1,34 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.FoodDao;
+import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
-import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
-import com.ghuddy.backendapp.tours.dto.request.food.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
+import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
+import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
 import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.enums.ErrorCode;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.repository.FoodItemRepository;
 import com.ghuddy.backendapp.tours.repository.MealPackageRepository;
 import com.ghuddy.backendapp.tours.repository.MealTypeRepository;
 import com.ghuddy.backendapp.tours.service.FoodService;
+import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
+import com.ghuddy.backendapp.tours.utils.StringUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,15 +37,21 @@ public class FoodServiceImpl implements FoodService {
     private final MealTypeRepository mealTypeRepository;
     private final MealPackageRepository mealPackageRepository;
     private final FoodDao foodDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final TourPackagePriceService tourPackagePriceService;
 
     public FoodServiceImpl(FoodItemRepository foodItemRepository,
                            MealTypeRepository mealTypeRepository,
                            MealPackageRepository mealPackageRepository,
-                           FoodDao foodDao) {
+                           FoodDao foodDao,
+                           JdbcTemplate jdbcTemplate,
+                           TourPackagePriceService tourPackagePriceService) {
         this.foodItemRepository = foodItemRepository;
         this.mealTypeRepository = mealTypeRepository;
         this.mealPackageRepository = mealPackageRepository;
         this.foodDao = foodDao;
+        this.jdbcTemplate = jdbcTemplate;
+        this.tourPackagePriceService = tourPackagePriceService;
     }
 
     // food item
@@ -128,25 +138,29 @@ public class FoodServiceImpl implements FoodService {
     // tour package meal package
     @Transactional
     @Override
-    public AcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest) {
-        List<MealPackageEntity> mealPackageEntities = setTourPackageMealPackages(tourPackageEntity, List.of(mealPackageRequest));
-        mealPackageRepository.saveAll(mealPackageEntities);
-        return new AcknowledgeResponse();
+    public InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId) {
+        MealPackageEntity mealPackageEntity = setTourPackageMealPackages(tourPackageEntity, List.of(mealPackageRequest)).get(0);
+        mealPackageEntity = mealPackageRepository.save(mealPackageEntity);
+        return new InsertAcknowledgeResponse(new MealPackageData(mealPackageEntity), requestId);
+
     }
 
     @Transactional
     @Override
-    public AcknowledgeResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages) {
+    public InsertAcknowledgeListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages, String requestId) {
         List<MealPackageEntity> mealPackageEntities = setTourPackageMealPackages(tourPackageEntity, mealPackages);
-        mealPackageRepository.saveAll(mealPackageEntities);
-        return new AcknowledgeResponse();
+        mealPackageEntities = mealPackageRepository.saveAll(mealPackageEntities);
+        List<MealPackageData> mealPackageDataList = mealPackageEntities.stream()
+                .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
+                .collect(Collectors.toList());
+        return new InsertAcknowledgeListResponse(mealPackageDataList, requestId);
     }
 
     @Override
     public List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages) {
-        List<Long> mealTypeIDs = mealPackages.stream()
+        Set<Long> mealTypeIDs = mealPackages.stream()
                 .map(MealPackageRequest::getMealTypeID) // Extract mealTypeID from each MealPackageRequest
-                .collect(Collectors.toList()); // Collect into a List<Long>
+                .collect(Collectors.toSet()); // Collect into a List<Long>
         Map<Long, MealTypeEntity> mealTypeEntityMap = getMealTypeEntitiesByIds(mealTypeIDs);
         List<MealPackageEntity> mealPackageEntities = mealPackages.stream()
                 .map(mealPackageRequest -> {
@@ -154,17 +168,15 @@ public class FoodServiceImpl implements FoodService {
                     MealPackageEntity mealPackageEntity = new MealPackageEntity();
                     mealPackageEntity.setTourPackageEntity(tourPackageEntity);
                     mealPackageEntity.setMealTypeEntity(mealTypeEntity);
-                    mealPackageEntity.setMealPackageName(mealPackageRequest.getMealPackageName());
                     List<FoodItemEntity> foodItemEntities = mealPackageRequest.getFoodItemIDs().stream()
                             .map(this::getFoodItemEntityByID)
                             .collect(Collectors.toList());
                     mealPackageEntity.setFoodItemEntities(foodItemEntities);
-                    mealPackageEntity.setUnitPrice(mealPackageRequest.getUnitPrice());
-                    mealPackageEntity.setQuantity(mealPackageRequest.getQuantity());
-                    mealPackageEntity.setNetPrice(mealPackageRequest.getNetPrice());
-                    mealPackageEntity.setAddedPrice(mealPackageRequest.getAddedPrice());
-                    mealPackageEntity.setTotalMealPackagePrice(mealPackageRequest.getTotalMealPackagePrice());
+                    mealPackageEntity.setPerMealPrice(mealPackageRequest.getPerMealPrice());
+                    mealPackageEntity.setPerPersonNumberOfMeals(mealPackageRequest.getNumberOfMeals());
+                    mealPackageEntity.setPerPersonTotalMealPrice(tourPackagePriceService.perPersonPerMealPackageTotalPrice(mealPackageRequest));
                     mealPackageEntity.setIsIncluded(mealPackageRequest.getIsDefault());
+                    mealPackageEntity.setMealPackageName(StringUtil.mealPackageName(tourPackageEntity, mealPackageEntity, jdbcTemplate));
                     return mealPackageEntity;
                 })
                 .collect(Collectors.toList());
@@ -182,7 +194,7 @@ public class FoodServiceImpl implements FoodService {
         return foodItemRepository.findById(foodItemID).orElseThrow(() -> new EntityNotFoundException("FoodItemEntity Not Found"));
     }
 
-    private Map<Long, MealTypeEntity> getMealTypeEntitiesByIds(List<Long> ids) {
+    private Map<Long, MealTypeEntity> getMealTypeEntitiesByIds(Set<Long> ids) {
         return mealTypeRepository.findMealTypeEntitiesByIds(ids);
     }
 }

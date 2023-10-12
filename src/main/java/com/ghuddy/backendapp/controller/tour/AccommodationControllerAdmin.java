@@ -23,12 +23,12 @@ public class AccommodationControllerAdmin {
     // Room Category
     @RequestMapping(path = "/room/category/add", method = RequestMethod.POST)
     public ResponseEntity<?> addRoomCategory(@RequestBody RoomCategoryAddRequest roomCategoryAddRequest) {
-        return new ResponseEntity<>(accommodationService.addRoomCategory(roomCategoryAddRequest), HttpStatus.OK);
+        return new ResponseEntity<>(accommodationService.addRoomCategory(roomCategoryAddRequest), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/room/category/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addRoomCategories(@RequestBody RoomCategoryListAddRequest roomCategoryListAddRequest) {
-        return new ResponseEntity<>(accommodationService.addRoomCategories(roomCategoryListAddRequest), HttpStatus.OK);
+        return new ResponseEntity<>(accommodationService.addRoomCategories(roomCategoryListAddRequest), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/room/category/get/all", method = RequestMethod.GET)
@@ -121,7 +121,7 @@ public class AccommodationControllerAdmin {
 
     @RequestMapping(path = "/accommodation/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addAccommodations(@RequestBody AccommodationListAddRequest accommodationListAddRequest) {
-        return new ResponseEntity<>(accommodationService.addAccommodations(accommodationListAddRequest), HttpStatus.OK);
+        return new ResponseEntity<>(accommodationService.addAccommodations(accommodationListAddRequest), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/accommodation/get/all", method = RequestMethod.GET)

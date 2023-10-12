@@ -34,12 +34,6 @@ public class TourPackageTransportationPackageData {
     @Schema(description = "The number of transportation packages provided for this tour package", required = true, example = "1")
     @JsonProperty("transportation_package_quantity")
     private Integer quantity;
-    @Schema(description = "The net price of this transportation package", required = true, example = "120")
-    @JsonProperty("transportation_package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The added/subtracted price of this transportation package", required = true, example = "120")
-    @JsonProperty("transportation_package_added_price")
-    private BigDecimal addedPrice;
     @Schema(description = "The total/final price of this transportation package", required = true, example = "120")
     @JsonProperty("transportation_package_total_price")
     private BigDecimal totalTransportationPackagePrice;
@@ -56,8 +50,6 @@ public class TourPackageTransportationPackageData {
         this.isAc = transportationPackageEntity.getIsAc();
         this.unitPrice = transportationPackageEntity.getUnitPrice();
         this.quantity = transportationPackageEntity.getQuantity();
-        this.netPrice = transportationPackageEntity.getNetPrice();
-        this.addedPrice = transportationPackageEntity.getAddedPrice();
         this.totalTransportationPackagePrice = transportationPackageEntity.getTotalTransportationPackagePrice();
         this.isDefault = transportationPackageEntity.getIsIncluded();
     }

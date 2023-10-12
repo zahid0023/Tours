@@ -39,24 +39,16 @@ public class MealPackageEntity extends BaseEntity {
     private Boolean active;
 
     @NotNull
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    @Column(name = "per_meal_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal perMealPrice;
 
     @NotNull
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "per_person_number_of_meals", nullable = false)
+    private Integer perPersonNumberOfMeals;
 
     @NotNull
-    @Column(name = "net_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal netPrice;
-
-    @NotNull
-    @Column(name = "added_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal addedPrice;
-
-    @NotNull
-    @Column(name = "total_meal_package_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalMealPackagePrice;
+    @Column(name = "per_person_total_meal_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal perPersonTotalMealPrice;
 
     @NotNull
     @Column(name = "is_included", nullable = false)

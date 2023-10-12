@@ -29,13 +29,6 @@ public class MealPackageData {
     @Schema(description = "The number of this meal package provided during the tour", required = true, example = "4")
     @JsonProperty("meal_package_quantity")
     private Integer quantity;
-
-    @Schema(description = "The net price of this meal package", required = true, example = "120")
-    @JsonProperty("meal_package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The added/subtracted price of this meal package", required = true, example = "120")
-    @JsonProperty("meal_package_added_price")
-    private BigDecimal addedPrice;
     @Schema(description = "The total/final price of this meal package", required = true, example = "120")
     @JsonProperty("meal_package_total_price")
     private BigDecimal totalMealPackagePrice;
@@ -50,11 +43,9 @@ public class MealPackageData {
         this.foodItems = mealPackageEntity.getFoodItemEntities().stream()
                 .map(foodItemEntity -> foodItemEntity.getFoodItemName())
                 .collect(Collectors.toList());
-        this.unitPrice = mealPackageEntity.getUnitPrice();
-        this.quantity = mealPackageEntity.getQuantity();
-        this.netPrice = mealPackageEntity.getNetPrice();
-        this.addedPrice = mealPackageEntity.getAddedPrice();
-        this.totalMealPackagePrice = mealPackageEntity.getTotalMealPackagePrice();
+        this.unitPrice = mealPackageEntity.getPerMealPrice();
+        this.quantity = mealPackageEntity.getPerPersonNumberOfMeals();
+        this.totalMealPackagePrice = mealPackageEntity.getPerPersonTotalMealPrice();
         this.isDefault = mealPackageEntity.getIsIncluded();
     }
 }

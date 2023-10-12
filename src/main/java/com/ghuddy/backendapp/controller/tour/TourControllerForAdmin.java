@@ -114,7 +114,7 @@ public class TourControllerForAdmin {
     @Operation(summary = "This API is used to get a created tour. This API is different from the one that is used to get the added tour.",
             description = "This API is used to get a created tour. By created tour it means that the tour that has some activities i.e. an ititnerary" +
                     "associated with it. This API returns the tour that you create using the /api/v1/tours/create end point.")
-    @RequestMapping(path = "/tours/get/{created-tour-id}", method = RequestMethod.POST)
+    @RequestMapping(path = "/tours/get/{created-tour-id}", method = RequestMethod.GET)
     public ResponseEntity<?> getCreatedTour(@PathVariable("created-tour-id") Long createdTourId, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(tourService.getCreatedTourByCreatedTourId(createdTourId), HttpStatus.OK);
@@ -143,4 +143,6 @@ public class TourControllerForAdmin {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
+
+    // subscribed tour
 }

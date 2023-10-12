@@ -15,7 +15,7 @@ public class TourPackageTransportationListAddRequest extends BaseRequest {
     private Long tourPackageID;
     @Schema(description = "The list of transportations that will be associated with the tour package")
     @JsonProperty("tour_package_transportations")
-    private List<TourPackageTransportationRequest> tourPackageTransportations;
+    private List<TransportationPackageRequest> tourPackageTransportations;
 
     @Override
     public void validate() throws AbstractException {

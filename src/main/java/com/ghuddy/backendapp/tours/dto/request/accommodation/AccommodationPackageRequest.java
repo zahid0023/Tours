@@ -31,17 +31,15 @@ public class AccommodationPackageRequest {
     private Integer forPersons;
     @Schema(description = "The price of this accommodation package", required = true, example = "1200")
     @JsonProperty("accommodation_package_unit_price")
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice; // per night room price
+
+    @Schema(description = "The number of nights the room will be provided to the traveller",example = "1")
+    @JsonProperty("accommodation_package_number_of_nights")
+    private Integer numberOfNights;
     @Schema(description = "The total number of rooms provided for this tour package", required = true, example = "1")
     @JsonProperty("accommodation_package_quantity")
     private Integer quantity;
-
-    @Schema(description = "The net price of this accommodation package", required = true, example = "120")
-    @JsonProperty("accommodation_package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The added/subtracted price of this accommodation package", required = true, example = "120")
-    @JsonProperty("accommodation_package_added_price")
-    private BigDecimal addedPrice;
+    
     @Schema(description = "The total/final price of this accommodation package", required = true, example = "120")
     @JsonProperty("accommodation_package_total_price")
     private BigDecimal totalAccommodationPackagePrice;

@@ -9,9 +9,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -59,14 +57,14 @@ public class TourPackageEntity extends BaseEntity {
     @Column(name = "is_transfer_included", nullable = false)
     private Boolean isTransferIncluded;
 
-    @Column(name = "net_price", precision = 10, scale = 2)
-    private BigDecimal netPrice;
+    @Column(name = "package_price_per_person", precision = 10, scale = 2)
+    private BigDecimal packagePricePerPerson;
 
-    @Column(name = "added_price", precision = 10, scale = 2)
-    private BigDecimal addedPrice;
-
-    @Column(name = "total_package_price", precision = 10, scale = 2)
+    @Column(name = "total_package_price")
     private BigDecimal totalPackagePrice;
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferPackageEntity> transferPackageEntities = new LinkedList<>();
 
     @Override
     public boolean equals(Object o) {

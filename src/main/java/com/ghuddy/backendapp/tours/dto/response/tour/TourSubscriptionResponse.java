@@ -8,9 +8,9 @@ import lombok.Data;
 
 @Data
 public class TourSubscriptionResponse extends BaseResponse {
-    @Schema(description = "The data of the subscribed tour")
+    @Schema(description = "Tour that merchant has subscribed")
     @JsonProperty("subscribed_tour")
-    private final SubscribedTourData subscribedTourData;
+    private SubscribedTourData subscribedTourData;
 
     public TourSubscriptionResponse(SubscribedTourData subscribedTourData, String requestId) {
         this.subscribedTourData = subscribedTourData;

@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -25,5 +24,8 @@ public class TransportationModeEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "transportationModeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportationPackageEntity> tourPackageTransportationEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "transportationModeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferPackageEntity> transferPackageEntities = new LinkedList<>();
 
 }

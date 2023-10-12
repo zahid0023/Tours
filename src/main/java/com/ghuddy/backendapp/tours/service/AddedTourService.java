@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tour.AddedTourResponseList;
+import com.ghuddy.backendapp.tours.dto.response.tour.AddedTourListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
@@ -16,7 +16,7 @@ public interface AddedTourService {
 
     AddedTourDataOptimized getAddedTourByAddedTourId(Long addedTourId) throws TourNotFoundException;
 
-    AddedTourResponseList getAllAddedTours(String requestId) throws EmptyListException;
+    AddedTourListResponse getAllAddedTours(String requestId) throws EmptyListException;
 
-    AddedTourResponseList getAllAddedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
+    AddedTourListResponse getAllAddedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 }

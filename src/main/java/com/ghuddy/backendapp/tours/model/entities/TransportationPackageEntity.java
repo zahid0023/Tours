@@ -57,14 +57,6 @@ public class TransportationPackageEntity extends BaseEntity {
     private Integer quantity;
 
     @NotNull
-    @Column(name = "net_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal netPrice;
-
-    @NotNull
-    @Column(name = "added_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal addedPrice;
-
-    @NotNull
     @Column(name = "total_transportation_package_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalTransportationPackagePrice;
 

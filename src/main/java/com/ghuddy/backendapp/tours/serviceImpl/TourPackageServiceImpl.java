@@ -1,20 +1,20 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageData;
-import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageData;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.repository.TourPackageRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageTypeRepository;
 import com.ghuddy.backendapp.tours.service.*;
@@ -23,7 +23,6 @@ import com.ghuddy.backendapp.tours.utils.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -38,19 +37,22 @@ public class TourPackageServiceImpl implements TourPackageService {
     private final AccommodationService accommodationService;
     private final TransportationService transportationService;
     private final TourPackageDao tourPackageDao;
+    private final TourPackagePriceService tourPackagePriceService;
 
     public TourPackageServiceImpl(TourPackageTypeRepository tourPackageTypeRepository,
                                   TourPackageRepository tourPackageRepository,
                                   FoodService foodService,
                                   AccommodationService accommodationService,
                                   TransportationService transportationService,
-                                  TourPackageDao tourPackageDao) {
+                                  TourPackageDao tourPackageDao,
+                                  TourPackagePriceService tourPackagePriceService) {
         this.tourPackageTypeRepository = tourPackageTypeRepository;
         this.tourPackageRepository = tourPackageRepository;
         this.foodService = foodService;
         this.accommodationService = accommodationService;
         this.transportationService = transportationService;
         this.tourPackageDao = tourPackageDao;
+        this.tourPackagePriceService = tourPackagePriceService;
     }
 
     // tour package type
@@ -109,7 +111,7 @@ public class TourPackageServiceImpl implements TourPackageService {
     @Override
     public InsertAcknowledgeResponse addTourPackage(SubscribedTourEntity subscribedTourEntity, TourPackageRequest tourPackageRequest, String requestId) {
 
-        TourPackageEntity tourPackageEntity = prepareTourPackages(subscribedTourEntity, List.of(tourPackageRequest)).get(0);
+        TourPackageEntity tourPackageEntity = setTourPackages(subscribedTourEntity, List.of(tourPackageRequest)).get(0);
         TourPackageData tourPackageData = new TourPackageData(tourPackageRepository.save(tourPackageEntity));
 
         return new InsertAcknowledgeResponse(tourPackageData, requestId);
@@ -118,7 +120,7 @@ public class TourPackageServiceImpl implements TourPackageService {
     @Override
     public InsertAcknowledgeListResponse addTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList, String requestId) {
 
-        List<TourPackageEntity> tourPackageEntities = prepareTourPackages(subscribedTourEntity, tourPackageRequestList);
+        List<TourPackageEntity> tourPackageEntities = setTourPackages(subscribedTourEntity, tourPackageRequestList);
         List<TourPackageData> tourPackageData = tourPackageRepository.saveAll(tourPackageEntities).stream()
                 .map(tourPackageEntity -> new TourPackageData(tourPackageEntity))
                 .collect(Collectors.toList());
@@ -127,7 +129,7 @@ public class TourPackageServiceImpl implements TourPackageService {
     }
 
     @Override
-    public List<TourPackageEntity> prepareTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages) {
+    public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages) {
         Set<Long> tourPackageTypeIDs = tourPackages.stream()
                 .map(TourPackageRequest::getTourPackageTypeID)
                 .collect(Collectors.toSet());
@@ -158,9 +160,8 @@ public class TourPackageServiceImpl implements TourPackageService {
                     tourPackageEntity.setIsTransportationIncluded(isTransportationIncluded);
                     tourPackageEntity.setIsTransferIncluded(isTransferIncluded);
 
-                    tourPackageEntity.setNetPrice(new BigDecimal(200));
-                    tourPackageEntity.setAddedPrice(new BigDecimal(100));
-                    tourPackageEntity.setTotalPackagePrice(new BigDecimal(300));
+                    tourPackageEntity.setPackagePricePerPerson(tourPackagePriceService.perPersonDefaultPackagePrice(tourPackageRequest));
+                    tourPackageEntity.setTotalPackagePrice(tourPackageRequest.getTotalPackagePrice());
 
                     return tourPackageEntity;
                 })

@@ -3,7 +3,6 @@ package com.ghuddy.backendapp.tours.utils;
 import lombok.experimental.UtilityClass;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 

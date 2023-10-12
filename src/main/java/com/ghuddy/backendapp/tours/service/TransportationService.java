@@ -53,17 +53,17 @@ public interface TransportationService {
 
     InsertAcknowledgeListResponse addTransportationRoutes(TransportationRouteListAddRequest transportationRouteListAddRequest);
 
-    TransportationRouteResponseList getAllTransportationRoutes() throws EmptyListException;
+    TransportationRouteResponseList getAllTransportationRoutes(String requestId) throws EmptyListException;
 
-    TransportationRouteResponseList getAllTransportationRoutesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
+    TransportationRouteResponseList getAllTransportationRoutesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     Map<Long, TransportationRouteEntity> getTransportationRouteEntitiesByIDs(Set<Long> transportationRouteIDs);
 
     // tour package transportation
-    AcknowledgeResponse addTourPackageTransportation(TourPackageEntity tourPackageEntity, TourPackageTransportationRequest tourPackageTransportationRequest);
+    AcknowledgeResponse addTourPackageTransportation(TourPackageEntity tourPackageEntity, TransportationPackageRequest transportationPackageRequest);
 
     AcknowledgeResponse addTourPackageTransportations(TourPackageEntity tourPackageEntity, TourPackageTransportationListAddRequest tourPackageTransportationListAddRequest);
 
-    List<TransportationPackageEntity> setTourPackageTransportations(TourPackageEntity tourPackageEntity, List<TourPackageTransportationRequest> tourPackageTransportations);
+    List<TransportationPackageEntity> setTourPackageTransportations(TourPackageEntity tourPackageEntity, List<TransportationPackageRequest> tourPackageTransportations);
 
 }

@@ -2,18 +2,20 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.model.UserEntity;
 import com.ghuddy.backendapp.repository.MerchantRepository;
+import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.activity.SubscribedTourActivityRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourSubscriptionRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
-import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tour.SubscribedTourListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourSubscriptionResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.SubscribedTourData;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.repository.SubscribedTourRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
-import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TourService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
 import org.springframework.stereotype.Service;
@@ -31,36 +33,49 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
     private final MerchantRepository merchantRepository;
     private final ActivityService activityService;
     private final SubscribedTourRepository subscribedTourRepository;
-    private final TourPackageService tourPackageService;
+    private final TourDAO tourDAO;
 
     public TourSubscriptionServiceImpl(TourService tourService,
                                        MerchantRepository merchantRepository,
                                        ActivityService activityService,
                                        SubscribedTourRepository subscribedTourRepository,
-                                       TourPackageService tourPackageService) {
+                                       TourDAO tourDAO) {
         this.tourService = tourService;
         this.merchantRepository = merchantRepository;
         this.activityService = activityService;
         this.subscribedTourRepository = subscribedTourRepository;
-        this.tourPackageService = tourPackageService;
+        this.tourDAO = tourDAO;
     }
 
+
     /**
-     * @param tourSubscriptionRequest the request of a merchant who wants to provide  a tour
-     * @return SubscribedTourData
+     * @param tourSubscriptionRequest the DTO for tour subscription
+     * @param requestId to keep track of the request served by this service
+     * @return TourSubscriptionResponse
+     * @throws TourNotFoundException when the tour for this id is not found to be subscribed
      */
     @Override
-    public TourSubscriptionResponse subscribeTour(TourSubscriptionRequest tourSubscriptionRequest, String requestId) throws TourNotFoundException {
-        SubscribedTourData subscribedTourData = saveSubscribedTour(tourSubscriptionRequest);
+    public TourSubscriptionResponse subscribeTour(TourSubscriptionRequest tourSubscriptionRequest, String requestId) throws TourNotFoundException, EntityNotFoundException {
+        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourSubscriptionRequest.getTourId());
+        UserEntity userEntity = merchantRepository.findById(tourSubscriptionRequest.getMerchantId()).orElseThrow(() -> new EntityNotFoundException("MerchantEntity Not Found"));
+        SubscribedTourData subscribedTourData = saveSubscribedTours(tourEntity, userEntity, tourSubscriptionRequest);
         return new TourSubscriptionResponse(subscribedTourData, requestId);
     }
 
     @Transactional
-    public SubscribedTourData saveSubscribedTour(TourSubscriptionRequest tourSubscriptionRequest) throws TourNotFoundException {
-        // Retrieve tour, merchant, and activity information
-        TourEntity tourEntity = tourService.getCreatedTourEntityById(tourSubscriptionRequest.getTourId());
-        UserEntity merchantEntity = merchantRepository.findById(tourSubscriptionRequest.getMerchantId())
-                .orElseThrow(() -> new EntityNotFoundException("MerchantEntity Not Found"));
+    public SubscribedTourData saveSubscribedTours(TourEntity tourEntity,
+                                                  UserEntity merchantEntity,
+                                                  TourSubscriptionRequest tourSubscriptionRequest) {
+
+        SubscribedTourEntity subscribedTourEntity = prepareSubscribedTourEntity(tourEntity, merchantEntity, tourSubscriptionRequest);
+        subscribedTourEntity = subscribedTourRepository.save(subscribedTourEntity);
+
+        return new SubscribedTourData(subscribedTourEntity);
+    }
+
+    private SubscribedTourEntity prepareSubscribedTourEntity(TourEntity tourEntity,
+                                                             UserEntity merchantEntity,
+                                                             TourSubscriptionRequest tourSubscriptionRequest) {
 
         Set<Long> activityIds = tourSubscriptionRequest.getSubscribedTourActivityList().stream()
                 .map(SubscribedTourActivityRequest::getActivityId)
@@ -74,56 +89,46 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
         // Set properties of SubscribedTourEntity
         subscribedTourEntity.setTourEntity(tourEntity);
         subscribedTourEntity.setMerchantEntity(merchantEntity);
-        subscribedTourEntity.setSubscribedTourItineraryEntities(setSubscribedTourItinerary(subscribedTourEntity, tourSubscriptionRequest.getSubscribedTourActivityList(), activityEntityMap));
-        subscribedTourEntity.setTourStartDate(tourSubscriptionRequest.getTourStartDate());
-        subscribedTourEntity.setTourEndDate(tourSubscriptionRequest.getTourEndDate());
+        subscribedTourEntity.setSubscribedTourItineraryEntities(activityService.setSubscribedTourItinerary(subscribedTourEntity, tourSubscriptionRequest.getSubscribedTourActivityList(), activityEntityMap));
         subscribedTourEntity.setTourReportingTime(tourSubscriptionRequest.getTourReportingTime());
         subscribedTourEntity.setTourReportingPlace(tourSubscriptionRequest.getTourReportingPlace());
-        subscribedTourEntity.setTourPackageEntities(setSubscribedTourPackages(subscribedTourEntity, tourSubscriptionRequest.getTourPackageRequestList()));
 
-        // Save SubscribedTourEntity
-        subscribedTourEntity = subscribedTourRepository.save(subscribedTourEntity);
-
-        // Return SubscribedTourData
-        return new SubscribedTourData(subscribedTourEntity);
-    }
-
-    private List<SubscribedTourItineraryEntity> setSubscribedTourItinerary(SubscribedTourEntity subscribedTourEntity,
-                                                                           List<SubscribedTourActivityRequest> subscribedTourActivityDataList,
-                                                                           Map<Long, ActivityEntity> activityEntityMap) {
-
-        // Create SubscribedTourItineraryEntities
-        List<SubscribedTourItineraryEntity> subscribedTourItineraryEntities = subscribedTourActivityDataList.stream()
-                .map(subscribedTourActivityRequest -> {
-                    SubscribedTourItineraryEntity subscribedTourItineraryEntity = new SubscribedTourItineraryEntity();
-
-                    subscribedTourItineraryEntity.setSubscribedTourEntity(subscribedTourEntity);
-                    subscribedTourItineraryEntity.setActivityEntity(activityEntityMap.get(subscribedTourActivityRequest.getActivityId()));
-                    subscribedTourItineraryEntity.setActivityDayNumber(subscribedTourActivityRequest.getDayNumber());
-                    subscribedTourItineraryEntity.setActivityStartTime(subscribedTourActivityRequest.getStartTime());
-                    subscribedTourItineraryEntity.setActivityEndTime(subscribedTourActivityRequest.getEndTime());
-                    subscribedTourItineraryEntity.setIsActive(true);
-
-                    return subscribedTourItineraryEntity;
-                })
-                .collect(Collectors.toList());
-
-        return subscribedTourItineraryEntities;
+        return subscribedTourEntity;
     }
 
     /**
-     * @param id
-     * @return
-     * @throws TourNotFoundException
+     * @param id the id of the subscribed tour
+     * @return SubscribedTourEntity
+     * @throws TourNotFoundException when the subscribed tour for this id is not found
      */
     @Override
     public SubscribedTourEntity getSubscribedTourEntityById(Long id) throws TourNotFoundException {
         return subscribedTourRepository.findById(id).orElseThrow(() -> new TourNotFoundException(ErrorCode.TOUR_NOT_FOUND));
     }
 
-    private List<TourPackageEntity> setSubscribedTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList) {
-        // create TourPackage entities
-        List<TourPackageEntity> tourPackageEntities = tourPackageService.prepareTourPackages(subscribedTourEntity, tourPackageRequestList);
-        return tourPackageEntities;
+    /**
+     * @param merchantId the id of the merchant/user
+     * @return SubscribedTourListResponse
+     */
+    @Override
+    public SubscribedTourListResponse getAllSubscribedToursByMerchantId(Long merchantId, String requestId) throws EmptyListException {
+        List<SubscribedTourData> subscribedTourDataList = tourDAO.getAllSubscribedToursForMerchant(0, 0, merchantId);
+        if (subscribedTourDataList == null || subscribedTourDataList.isEmpty())
+            throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new SubscribedTourListResponse(subscribedTourDataList,requestId);
+    }
+
+    /**
+     * @param pageSize the size of the page
+     * @param pageNumber the number of the page
+     * @param merchantId the id of the merchant
+     * @return SubscribedTourListResponse
+     */
+    @Override
+    public SubscribedTourListResponse getAllSubscribedToursPaginatedByMerchantId(Integer pageSize, Integer pageNumber, Long merchantId, String requestId) throws EmptyListException{
+        List<SubscribedTourData> subscribedTourDataList = tourDAO.getAllSubscribedToursForMerchant(pageSize, pageNumber, merchantId);
+        if (subscribedTourDataList == null || subscribedTourDataList.isEmpty())
+            throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new SubscribedTourListResponse(subscribedTourDataList,requestId);
     }
 }

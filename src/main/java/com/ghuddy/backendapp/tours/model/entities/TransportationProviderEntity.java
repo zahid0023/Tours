@@ -6,8 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,5 +28,8 @@ public class TransportationProviderEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "transportationProviderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportationPackageEntity> tourPackageTransportationEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "transportationProviderEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferPackageEntity> transferPackageEntities = new LinkedList<>();
 
 }

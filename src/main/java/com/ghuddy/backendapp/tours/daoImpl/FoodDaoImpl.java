@@ -1,10 +1,10 @@
 package com.ghuddy.backendapp.tours.daoImpl;
 
 import com.ghuddy.backendapp.tours.dao.FoodDao;
-import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
-import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
+import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

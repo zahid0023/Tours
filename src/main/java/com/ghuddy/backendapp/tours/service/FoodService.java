@@ -1,16 +1,15 @@
 package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.food.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
 import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;
 
@@ -39,9 +38,9 @@ public interface FoodService {
 
     // meal package
 
-    AcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest);
+    InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId);
 
-    AcknowledgeResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages);
+    InsertAcknowledgeListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages, String requestId);
 
     List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages);
 

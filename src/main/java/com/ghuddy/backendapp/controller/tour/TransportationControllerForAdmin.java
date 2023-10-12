@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/admin")
-//@Api(tags = "Tour - Tour Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
+//@Api(tags = "Tour - Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
 public class TransportationControllerForAdmin {
     private final TransportationService transportationService;
 
@@ -50,7 +50,6 @@ public class TransportationControllerForAdmin {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
-
 
     // transportation mode
     @RequestMapping(path = "/transportation/mode/add", method = RequestMethod.POST)
@@ -111,6 +110,7 @@ public class TransportationControllerForAdmin {
         } catch (EmptyListException ex) {
             ex.printStackTrace();
             log.error(ex.toString());
+
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
@@ -129,7 +129,7 @@ public class TransportationControllerForAdmin {
     @RequestMapping(path = "/transportation/route/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTransportationRoutes(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(transportationService.getAllTransportationRoutes(), HttpStatus.OK);
+            return new ResponseEntity<>(transportationService.getAllTransportationRoutes(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
@@ -139,7 +139,7 @@ public class TransportationControllerForAdmin {
     @RequestMapping(path = "/transportation/route/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTransportationRoutesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(transportationService.getAllTransportationRoutesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(transportationService.getAllTransportationRoutesPaginated(pageSize, pageNumber,requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);

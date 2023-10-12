@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public class TourPackageAccommodationPackageData {
+public class AccommodationPackageData {
     @Schema(description = "The name of the accommodation associated with this tour package accommodation package")
     @JsonProperty("tour_package_accommodation_name")
     private String tourPackageAccommodationName;
@@ -39,13 +39,6 @@ public class TourPackageAccommodationPackageData {
     @Schema(description = "The total number of rooms provided for this tour package", required = true, example = "1")
     @JsonProperty("accommodation_package_quantity")
     private Integer quantity;
-
-    @Schema(description = "The net price of this accommodation package", required = true, example = "120")
-    @JsonProperty("accommodation_package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The added/subtracted price of this accommodation package", required = true, example = "120")
-    @JsonProperty("accommodation_package_added_price")
-    private BigDecimal addedPrice;
     @Schema(description = "The total/final price of this accommodation package", required = true, example = "120")
     @JsonProperty("accommodation_package_total_price")
     private BigDecimal totalAccommodationPackagePrice;
@@ -53,7 +46,7 @@ public class TourPackageAccommodationPackageData {
     @JsonProperty("accommodation_package_is_default")
     private Boolean isDefault;
 
-    public TourPackageAccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity) {
+    public AccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity) {
         this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
         this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
         this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();
@@ -61,11 +54,9 @@ public class TourPackageAccommodationPackageData {
         this.suitableForPersons = accommodationPackageEntity.getSuitableForPersons();
         this.bedCount = accommodationPackageEntity.getBedCount();
         this.bedConfiguration = accommodationPackageEntity.getBedConfiguration();
-        this.unitPrice = accommodationPackageEntity.getUnitPrice();
-        this.quantity = accommodationPackageEntity.getQuantity();
-        this.netPrice = accommodationPackageEntity.getNetPrice();
-        this.addedPrice = accommodationPackageEntity.getAddedPrice();
-        this.totalAccommodationPackagePrice = accommodationPackageEntity.getTotalAccommodationPackagePrice();
+        this.unitPrice = accommodationPackageEntity.getPerNightRoomPrice();
+        this.quantity = accommodationPackageEntity.getNumberOfRooms();
+        this.totalAccommodationPackagePrice = accommodationPackageEntity.getPerPersonAccommodationPackagePrice();
         this.isDefault = accommodationPackageEntity.getIsIncluded();
     }
 }

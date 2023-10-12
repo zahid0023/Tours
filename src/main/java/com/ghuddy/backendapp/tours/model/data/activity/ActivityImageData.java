@@ -23,7 +23,7 @@ public class ActivityImageData {
     @JsonProperty("activity_image_caption")
     private String activityImageCaption;
 
-    ActivityImageData(ActivityImageEntity activityImageEntity) {
+    public ActivityImageData(ActivityImageEntity activityImageEntity) {
         this.activityImageId = activityImageEntity.getId();
         this.activityImageFileName = activityImageEntity.getFileName();
         this.activityImageUrl = activityImageEntity.getImageUrl();

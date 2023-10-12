@@ -13,7 +13,7 @@ public class TourPackageTransportationAddRequest extends BaseRequest {
     private Long tourPackageID;
     @Schema(description = "The transportation associated with this tour package", required = true)
     @JsonProperty("tour_package_transportation")
-    private TourPackageTransportationRequest tourPackageTransportation;
+    private TransportationPackageRequest tourPackageTransportation;
 
     @Override
     public void validate() throws AbstractException {

@@ -48,24 +48,19 @@ public class AccommodationPackageEntity extends BaseEntity {
     private Boolean active;
 
     @NotNull
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    @Column(name = "per_night_room_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal perNightRoomPrice;
+
+    @Column(name = "number_of_nights")
+    private Integer numberOfNights;
 
     @NotNull
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "number_of_rooms", nullable = false)
+    private Integer numberOfRooms;
 
     @NotNull
-    @Column(name = "net_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal netPrice;
-
-    @NotNull
-    @Column(name = "added_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal addedPrice;
-
-    @NotNull
-    @Column(name = "total_accommodation_package_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAccommodationPackagePrice;
+    @Column(name = "per_person_accommodation_package_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal perPersonAccommodationPackagePrice;
 
     @NotNull
     @Column(name = "is_included", nullable = false)

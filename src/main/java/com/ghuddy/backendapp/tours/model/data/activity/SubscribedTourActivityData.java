@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
 @Data
+@NoArgsConstructor
 public class SubscribedTourActivityData {
     @Schema(description = "The id of the activity", example = "1")
     @JsonProperty("activity_id")

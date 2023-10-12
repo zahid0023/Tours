@@ -1,8 +1,6 @@
 package com.ghuddy.backendapp.tours.dto.request.activity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.dto.request.BaseRequest;
-import com.ghuddy.backendapp.exception.AbstractException;
 import com.ghuddy.backendapp.tours.dto.request.image.ImageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

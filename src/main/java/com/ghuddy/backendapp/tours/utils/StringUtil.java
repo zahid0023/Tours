@@ -1,5 +1,10 @@
 package com.ghuddy.backendapp.tours.utils;
 
+import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 public class StringUtil {
     public static String slugify(String str1, String str2) {
         // Remove special characters and spaces, and convert to lowercase
@@ -20,6 +25,29 @@ public class StringUtil {
         String day = numberOfDays > 1 ? numberOfDays + " Days" : numberOfDays == 1 ? numberOfDays + " Day" : "";
         String night = numberOfNights > 1 ? numberOfNights + " Nights" : numberOfNights == 1 ? numberOfNights + " Night" : "";
         return destinationLocationName + " Tour - " + day + " " + night;
+    }
+
+    public static String mealPackageName(TourPackageEntity tourPackageEntity, MealPackageEntity mealPackageEntity, JdbcTemplate jdbcTemplate) {
+        String tourPackageName = tourPackageEntity.getTourPackageName();
+        Integer mealPackageCount;
+        try {
+            mealPackageCount = jdbcTemplate.queryForObject(
+                    """
+                            select count(*)
+                            from tour_package_meal_package
+                            where tour_package_id = ?
+                              and meal_type_id = ?;
+                                                    """,
+                    Integer.class,
+                    tourPackageEntity.getId(),
+                    mealPackageEntity.getMealTypeEntity().getId()
+            );
+            System.out.println(mealPackageCount);
+        } catch (EmptyResultDataAccessException ex) {
+            mealPackageCount = 0;
+        }
+
+        return tourPackageName + " - " + mealPackageEntity.getMealTypeEntity().getMealTypeName() + " - Package#" + (mealPackageCount + 1);
     }
 }
 

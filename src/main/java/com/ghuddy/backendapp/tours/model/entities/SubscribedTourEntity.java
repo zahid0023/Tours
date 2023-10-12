@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,14 +31,6 @@ public class SubscribedTourEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "merchant_id", nullable = false)
     private UserEntity merchantEntity;
-
-    @NotNull
-    @Column(name = "tour_start_date", nullable = false)
-    private LocalDate tourStartDate;
-
-    @NotNull
-    @Column(name = "tour_end_date", nullable = false)
-    private LocalDate tourEndDate;
 
     @NotNull
     @Column(name = "tour_reporting_time", nullable = false)

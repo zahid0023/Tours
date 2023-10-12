@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.util.Objects;
 
 @Getter

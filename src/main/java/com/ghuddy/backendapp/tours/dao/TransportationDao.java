@@ -1,10 +1,10 @@
 package com.ghuddy.backendapp.tours.dao;
 
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationBrandData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationModeData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationProviderData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationRouteData;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;
 

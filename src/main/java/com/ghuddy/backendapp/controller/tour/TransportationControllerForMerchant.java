@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
-//@Api(tags = "Tour - Tour Transportation Controller For Merchant", description = "This controller is used to manage tour transportation by merchants.")
+//@Api(tags = "Tour - Transportation Controller For Merchant", description = "This controller is used to manage tour transportation by merchants.")
 public class TransportationControllerForMerchant {
     private final TransportationService transportationService;
     private final TourPackageService tourPackageService;
@@ -30,7 +30,7 @@ public class TransportationControllerForMerchant {
     @RequestMapping(path = "/transportation/route/get/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTransportationRoutes(@RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(transportationService.getAllTransportationRoutes(), HttpStatus.OK);
+            return new ResponseEntity<>(transportationService.getAllTransportationRoutes(requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
@@ -40,7 +40,7 @@ public class TransportationControllerForMerchant {
     @RequestMapping(path = "/transportation/route/get/all/paginated", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTransportationRoutesPaginated(@RequestParam("page-size") Integer pageSize, @RequestParam("page-number") Integer pageNumber, @RequestParam String requestId) {
         try {
-            return new ResponseEntity<>(transportationService.getAllTransportationRoutesPaginated(pageSize, pageNumber), HttpStatus.OK);
+            return new ResponseEntity<>(transportationService.getAllTransportationRoutesPaginated(pageSize, pageNumber, requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
             log.error(ex.toString());
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);

@@ -3,14 +3,14 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.model.DestinationLocationEntity;
 import com.ghuddy.backendapp.service.DestinationLocationService;
 import com.ghuddy.backendapp.tours.dao.TourDAO;
-import com.ghuddy.backendapp.tours.model.data.tour.AddedTourData;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tour.AddedTourResponseList;
+import com.ghuddy.backendapp.tours.dto.response.tour.AddedTourListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.model.data.tour.AddedTourData;
 import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
 import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.repository.AddedTourRespository;
@@ -71,14 +71,14 @@ public class AddedAddedTourServiceImpl implements AddedTourService {
     }
 
     @Override
-    public AddedTourResponseList getAllAddedTours(String requestId) throws EmptyListException {
+    public AddedTourListResponse getAllAddedTours(String requestId) throws EmptyListException {
         List<AddedTourData> addedTourDataList = tourDAO.getAllAddedTours(0, 0);
-        return new AddedTourResponseList(addedTourDataList, requestId);
+        return new AddedTourListResponse(addedTourDataList, requestId);
     }
 
     @Override
-    public AddedTourResponseList getAllAddedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+    public AddedTourListResponse getAllAddedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
         List<AddedTourData> addedTourDataList = tourDAO.getAllAddedTours(pageSize, pageNumber);
-        return new AddedTourResponseList(addedTourDataList, requestId);
+        return new AddedTourListResponse(addedTourDataList, requestId);
     }
 }

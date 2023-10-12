@@ -1,23 +1,25 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.AccommodationDao;
-import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
-import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageAccommodationTypeData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
 import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationTypeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
 import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
+import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
+import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,26 +36,29 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final TourAccommodationRepository tourAccommodationRepository;
     private final AccommodationPackageRepository accommodationPackageRepository;
     private final AccommodationDao accommodationDao;
+    private final TourPackagePriceService tourPackagePriceService;
 
     public AccommodationServiceImpl(TourRoomTypeRepository tourRoomTypeRepository,
                                     TourRoomCategoryRepository tourRoomCategoryRepository,
                                     TourAccommodationTypeRepository tourAccommodationTypeRepository,
                                     TourAccommodationRepository tourAccommodationRepository,
                                     AccommodationPackageRepository accommodationPackageRepository,
-                                    AccommodationDao accommodationDao) {
+                                    AccommodationDao accommodationDao,
+                                    TourPackagePriceService tourPackagePriceService) {
         this.tourRoomTypeRepository = tourRoomTypeRepository;
         this.tourRoomCategoryRepository = tourRoomCategoryRepository;
         this.tourAccommodationTypeRepository = tourAccommodationTypeRepository;
         this.tourAccommodationRepository = tourAccommodationRepository;
         this.accommodationPackageRepository = accommodationPackageRepository;
         this.accommodationDao = accommodationDao;
+        this.tourPackagePriceService = tourPackagePriceService;
     }
 
     // room type
     @Override
-    public InsertAcknowledgeResponse addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
+    public InsertAcknowledgeResponse<TourPackageRoomTypeData> addRoomType(RoomTypeAddRequest roomTypeAddRequest) {
         TourPackageRoomTypeData tourPackageRoomTypeData = addRoomTypes(List.of(roomTypeAddRequest.getRoomType())).get(0);
-        return new InsertAcknowledgeResponse(tourPackageRoomTypeData, roomTypeAddRequest.getRequestId());
+        return new InsertAcknowledgeResponse<>(tourPackageRoomTypeData, roomTypeAddRequest.getRequestId());
     }
 
     @Override
@@ -145,18 +150,18 @@ public class AccommodationServiceImpl implements AccommodationService {
     // accommodation type
     @Override
     public InsertAcknowledgeResponse addAccommodationType(AccommodationTypeAddRequest accommodationTypeAddRequest) {
-        TourPackageAccommodationTypeData tourPackageAccommodationTypeData = addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourPackageAccommodationTypeData, accommodationTypeAddRequest.getRequestId());
+        AccommodationTypeData accommodationTypeData = addAccommodationTypes(List.of(accommodationTypeAddRequest.getAccommodationTypeRequest())).get(0);
+        return new InsertAcknowledgeResponse(accommodationTypeData, accommodationTypeAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addAccommodationTypes(AccommodationTypeListAddRequest accommodationTypeListAddRequest) {
-        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
-        return new InsertAcknowledgeListResponse(tourPackageAccommodationTypeDataList, accommodationTypeListAddRequest.getRequestId());
+        List<AccommodationTypeData> accommodationTypeDataList = addAccommodationTypes(accommodationTypeListAddRequest.getAccommodationTypeRequestList());
+        return new InsertAcknowledgeListResponse(accommodationTypeDataList, accommodationTypeListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourPackageAccommodationTypeData> addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
+    public List<AccommodationTypeData> addAccommodationTypes(List<AccommodationTypeRequest> accommodations) {
         List<TourAccommodationTypeEntity> tourAccommodationEntities = accommodations.stream()
                 .map(accommodationTypeRequest -> {
                     TourAccommodationTypeEntity tourAccommodationTypeEntity = new TourAccommodationTypeEntity();
@@ -167,39 +172,39 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         return tourAccommodationTypeRepository.saveAll(tourAccommodationEntities)
                 .stream()
-                .map(tourAccommodationTypeEntity -> new TourPackageAccommodationTypeData(tourAccommodationTypeEntity))
+                .map(tourAccommodationTypeEntity -> new AccommodationTypeData(tourAccommodationTypeEntity))
                 .collect(Collectors.toList());
     }
 
     @Override
     public TourAccommodationTypeListResponse getAllTourAccommodationTypes(String requestId) throws EmptyListException {
-        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(0, 0);
-        if (tourPackageAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationTypeListResponse(tourPackageAccommodationTypeDataList, requestId);
+        List<AccommodationTypeData> accommodationTypeDataList = accommodationDao.getTourAccommodationTypes(0, 0);
+        if (accommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(accommodationTypeDataList, requestId);
     }
 
     @Override
     public TourAccommodationTypeListResponse getAllTourAccommodationTypesPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
-        List<TourPackageAccommodationTypeData> tourPackageAccommodationTypeDataList = accommodationDao.getTourAccommodationTypes(pageSize, pageNumber);
-        if (tourPackageAccommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationTypeListResponse(tourPackageAccommodationTypeDataList, requestId);
+        List<AccommodationTypeData> accommodationTypeDataList = accommodationDao.getTourAccommodationTypes(pageSize, pageNumber);
+        if (accommodationTypeDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationTypeListResponse(accommodationTypeDataList, requestId);
     }
 
     // accommodation
     @Override
     public InsertAcknowledgeResponse addAccommodation(AccommodationAddRequest accommodationAddRequest) {
-        TourPackageAccommodationData tourPackageAccommodationData = addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest())).get(0);
-        return new InsertAcknowledgeResponse(tourPackageAccommodationData, accommodationAddRequest.getRequestId());
+        AccommodationData accommodationData = addAccommodations(List.of(accommodationAddRequest.getAccommodationRequest())).get(0);
+        return new InsertAcknowledgeResponse(accommodationData, accommodationAddRequest.getRequestId());
     }
 
     @Override
     public InsertAcknowledgeListResponse addAccommodations(AccommodationListAddRequest accommodationListAddRequest) {
-        List<TourPackageAccommodationData> tourPackageAccommodationDataList = addAccommodations(accommodationListAddRequest.getAccommodationList());
-        return new InsertAcknowledgeListResponse(tourPackageAccommodationDataList, accommodationListAddRequest.getRequestId());
+        List<AccommodationData> accommodationDataList = addAccommodations(accommodationListAddRequest.getAccommodationList());
+        return new InsertAcknowledgeListResponse(accommodationDataList, accommodationListAddRequest.getRequestId());
     }
 
     @Transactional
-    public List<TourPackageAccommodationData> addAccommodations(List<AccommodationRequest> accommodations) {
+    public List<AccommodationData> addAccommodations(List<AccommodationRequest> accommodations) {
         Set<Long> accommodationTypeIDs = accommodations.stream()
                 .map(AccommodationRequest::getAccommodationTypeID)
                 .collect(Collectors.toSet());
@@ -215,22 +220,22 @@ public class AccommodationServiceImpl implements AccommodationService {
                 })
                 .collect(Collectors.toList());
         return tourAccommodationRepository.saveAll(tourAccommodationEntities).stream()
-                .map(tourAccommodationEntity -> new TourPackageAccommodationData(tourAccommodationEntity))
+                .map(tourAccommodationEntity -> new AccommodationData(tourAccommodationEntity))
                 .collect(Collectors.toList());
     }
 
     @Override
     public TourAccommodationListResponse getAllTourAccommodations(String requestId) throws EmptyListException {
-        List<TourPackageAccommodationData> tourPackageAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
-        if (tourPackageAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationListResponse(tourPackageAccommodationDataList, requestId);
+        List<AccommodationData> accommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (accommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(accommodationDataList, requestId);
     }
 
     @Override
     public TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
-        List<TourPackageAccommodationData> tourPackageAccommodationDataList = accommodationDao.getTourAccommodations(0, 0);
-        if (tourPackageAccommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourAccommodationListResponse(tourPackageAccommodationDataList, requestId);
+        List<AccommodationData> accommodationDataList = accommodationDao.getTourAccommodations(0, 0);
+        if (accommodationDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return new TourAccommodationListResponse(accommodationDataList, requestId);
     }
 
     // tour package accommodation
@@ -275,11 +280,10 @@ public class AccommodationServiceImpl implements AccommodationService {
                     accommodationPackageEntity.setBedConfiguration(tourPackageAccommodationRequest.getBedConfiguration());
                     accommodationPackageEntity.setIsShareable(tourPackageAccommodationRequest.getIsShareable());
                     accommodationPackageEntity.setSuitableForPersons(tourPackageAccommodationRequest.getForPersons());
-                    accommodationPackageEntity.setUnitPrice(tourPackageAccommodationRequest.getUnitPrice());
-                    accommodationPackageEntity.setQuantity(tourPackageAccommodationRequest.getQuantity());
-                    accommodationPackageEntity.setNetPrice(tourPackageAccommodationRequest.getNetPrice());
-                    accommodationPackageEntity.setAddedPrice(tourPackageAccommodationRequest.getAddedPrice());
-                    accommodationPackageEntity.setTotalAccommodationPackagePrice(tourPackageAccommodationRequest.getTotalAccommodationPackagePrice());
+                    accommodationPackageEntity.setPerNightRoomPrice(tourPackageAccommodationRequest.getUnitPrice());
+                    accommodationPackageEntity.setNumberOfRooms(tourPackageAccommodationRequest.getQuantity());
+                    accommodationPackageEntity.setNumberOfNights(tourPackageAccommodationRequest.getNumberOfNights());
+                    accommodationPackageEntity.setPerPersonAccommodationPackagePrice(tourPackagePriceService.perPersonPerAccommodationPackageTotalPrice(tourPackageAccommodationRequest));
                     accommodationPackageEntity.setIsIncluded(tourPackageAccommodationRequest.getIsDefault());
                     return accommodationPackageEntity;
                 })

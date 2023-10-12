@@ -1,12 +1,12 @@
 package com.ghuddy.backendapp.tours.daoImpl;
 
 import com.ghuddy.backendapp.tours.dao.TransportationDao;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationBrandData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationModeData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationProviderData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationRouteData;
-import com.ghuddy.backendapp.tours.enums.ErrorCode;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,13 +25,13 @@ public class TransportationDaoImpl implements TransportationDao {
     @Override
     public List<TransportationRouteData> getAllTransportationRoutes(Integer pageSize, Integer pageNumber) throws EmptyListException {
         String query = """
-                select tr.id               AS transportation_route_id,
-                       src_loc.place_name  AS transportation_route_source_location,
-                       dest_loc.place_name AS transportation_route_destinations_location
+                select tr.id               as transportation_route_id,
+                       src_loc.place_name  as transportation_route_source_location,
+                       dest_loc.place_name as transportation_route_destination_location
                 from transportation_route tr
-                         inner join location src_loc ON tr.source_location_id = src_loc.id
-                         inner join location dest_loc ON tr.destination_location_id = dest_loc.id
-                """;
+                         inner join place_near_by src_loc on tr.source_location_id = src_loc.id
+                         inner join place_near_by dest_loc on tr.destination_location_id = dest_loc.id
+                                """;
         try {
             List<TransportationRouteData> transportationRoutes = EntityUtil.getAllEntitiesPaginated(query, pageSize, pageNumber, TransportationRouteData.class, jdbcTemplate);
             return transportationRoutes;

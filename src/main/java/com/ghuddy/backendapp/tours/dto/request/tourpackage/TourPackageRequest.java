@@ -1,9 +1,11 @@
 package com.ghuddy.backendapp.tours.dto.request.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.dto.request.GuideRequest;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
-import com.ghuddy.backendapp.tours.dto.request.transporation.TourPackageTransportationRequest;
+import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -24,9 +26,17 @@ public class TourPackageRequest {
     @Schema(description = "The list of the accommodation packages belonging to this tour package.")
     @JsonProperty("tour_package_accommodation_packages")
     private List<AccommodationPackageRequest> accommodationPackages;
-    @Schema(description = "The list of transportation packages belonging to this tour")
+    @Schema(description = "The list of transportation packages belonging to this tour package.")
     @JsonProperty("tour_package_transportation_packages")
-    private List<TourPackageTransportationRequest> transportationPackages;
+    private List<TransportationPackageRequest> transportationPackages;
+
+    @Schema(description = "The list of transfer packages belonging to this tour package.")
+    @JsonProperty("tour_package_transfer_packages")
+    private List<TransferPackageRequest> transferPackages;
+    @Schema(description = "The guide belonging to this tour package")
+    @JsonProperty("tour_package_guide")
+    private GuideRequest guideRequest;
+
     @Schema(description = "The price after adding all the default component prices", required = true, example = "200")
     @JsonProperty("package_net_price")
     private BigDecimal netPrice;

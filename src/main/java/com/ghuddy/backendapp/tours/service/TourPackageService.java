@@ -1,16 +1,15 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
-import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageData;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public interface TourPackageService {
 
     public InsertAcknowledgeListResponse addTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList, String requestId);
 
-    public List<TourPackageEntity> prepareTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages);
+    public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages);
 
     TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
 

@@ -1,18 +1,16 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.ActivityDAO;
+import com.ghuddy.backendapp.tours.dto.request.activity.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
-import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
-import com.ghuddy.backendapp.tours.dto.request.activity.*;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
-import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
-import com.ghuddy.backendapp.tours.model.entities.ActivityImageEntity;
-import com.ghuddy.backendapp.tours.model.entities.ActivityTypeEntity;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
+import com.ghuddy.backendapp.tours.model.data.activity.ActivityTypeData;
+import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.ActivityRepository;
 import com.ghuddy.backendapp.tours.repository.ActivityTypeRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
@@ -156,5 +154,31 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Map<Long, ActivityEntity> getActivityEntityMapByIDs(Set<Long> activityIDs) {
         return EntityUtil.findEntitiesByIds(activityIDs, activityRepository, ActivityEntity::getId, "ActivityEntity");
+    }
+
+    // Tour Activity
+
+    @Override
+    public List<SubscribedTourItineraryEntity> setSubscribedTourItinerary(SubscribedTourEntity subscribedTourEntity,
+                                                                          List<SubscribedTourActivityRequest> subscribedTourActivityDataList,
+                                                                          Map<Long, ActivityEntity> activityEntityMap) {
+
+        // Create SubscribedTourItineraryEntities
+        List<SubscribedTourItineraryEntity> subscribedTourItineraryEntities = subscribedTourActivityDataList.stream()
+                .map(subscribedTourActivityRequest -> {
+                    SubscribedTourItineraryEntity subscribedTourItineraryEntity = new SubscribedTourItineraryEntity();
+
+                    subscribedTourItineraryEntity.setSubscribedTourEntity(subscribedTourEntity);
+                    subscribedTourItineraryEntity.setActivityEntity(activityEntityMap.get(subscribedTourActivityRequest.getActivityId()));
+                    subscribedTourItineraryEntity.setActivityDayNumber(subscribedTourActivityRequest.getDayNumber());
+                    subscribedTourItineraryEntity.setActivityStartTime(subscribedTourActivityRequest.getStartTime());
+                    subscribedTourItineraryEntity.setActivityEndTime(subscribedTourActivityRequest.getEndTime());
+                    subscribedTourItineraryEntity.setIsActive(true);
+
+                    return subscribedTourItineraryEntity;
+                })
+                .collect(Collectors.toList());
+
+        return subscribedTourItineraryEntities;
     }
 }

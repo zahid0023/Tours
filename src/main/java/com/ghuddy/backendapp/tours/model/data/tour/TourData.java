@@ -15,6 +15,10 @@ public class TourData {
     private Long tourId;
     @JsonProperty("tour_name")
     private String tourName;
+    @JsonProperty("number_of_days")
+    private Integer numberOfDays;
+    @JsonProperty("number_if_nights")
+    private Integer numberOfNights;
     @JsonProperty("tour_thumb_image_url")
     private String tourThumbImageUrl;
     @JsonProperty("tour_title")
@@ -29,6 +33,8 @@ public class TourData {
     public TourData(TourEntity tourEntity) {
         this.tourId = tourEntity.getId();
         this.tourName = tourEntity.getAddedTourEntity().getTourName();
+        this.numberOfDays = tourEntity.getAddedTourEntity().getNumberOfDays();
+        this.numberOfNights = tourEntity.getAddedTourEntity().getNumberOfNights();
         this.tourThumbImageUrl = tourEntity.getThumbImageUrl();
         this.tourTitle = tourEntity.getTitle();
         this.tourDescription = tourEntity.getDescription();

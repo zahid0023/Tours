@@ -3,19 +3,19 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tour.TourDataResponseList;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.TourData;
+import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
-import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourSpecialityEntity;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
+import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.SpecialityService;
 import com.ghuddy.backendapp.tours.service.TourItineraryService;
-import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.TourService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -96,10 +96,10 @@ public class TourServiceImpl implements TourService {
      * @throws EmptyListException when the list of tour is empty
      */
     @Override
-    public TourDataResponseList getAllCreatedTours(String requestId) throws EmptyListException {
+    public TourListResponse getAllCreatedTours(String requestId) throws EmptyListException {
         List<TourData> tourDataList = tourDAO.getAllCreatedTours(0, 0);
         if (tourDataList == null || tourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourDataResponseList(tourDataList, requestId);
+        return new TourListResponse(tourDataList, requestId);
     }
 
     /**
@@ -109,9 +109,9 @@ public class TourServiceImpl implements TourService {
      * @throws EmptyListException when the list of tours is empty
      */
     @Override
-    public TourDataResponseList getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
+    public TourListResponse getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException {
         List<TourData> tourDataList = tourDAO.getAllCreatedTours(pageSize, pageNumber);
         if (tourDataList == null || tourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new TourDataResponseList(tourDataList, requestId);
+        return new TourListResponse(tourDataList, requestId);
     }
 }

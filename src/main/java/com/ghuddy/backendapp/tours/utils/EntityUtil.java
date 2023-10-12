@@ -1,6 +1,5 @@
 package com.ghuddy.backendapp.tours.utils;
 
-import com.ghuddy.backendapp.tours.dto.data.LimitOffsetData;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import lombok.experimental.UtilityClass;
