@@ -33,10 +33,6 @@ public class MealPackageData {
     @JsonProperty("meal_package_total_price")
     private BigDecimal totalMealPackagePrice;
 
-    @Schema(description = "Whether this is meal package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
-    @JsonProperty("meal_package_is_default")
-    private Boolean isDefault;
-
     public MealPackageData(MealPackageEntity mealPackageEntity) {
         this.mealPackageName = mealPackageEntity.getMealPackageName();
         this.mealTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
@@ -46,6 +42,5 @@ public class MealPackageData {
         this.unitPrice = mealPackageEntity.getPerMealPrice();
         this.quantity = mealPackageEntity.getPerPersonNumberOfMeals();
         this.totalMealPackagePrice = mealPackageEntity.getPerPersonTotalMealPrice();
-        this.isDefault = mealPackageEntity.getIsIncluded();
     }
 }

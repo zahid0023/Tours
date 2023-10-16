@@ -68,9 +68,9 @@ public interface AccommodationService {
     TourAccommodationListResponse getAllTourAccommodationsPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
 
     // tour package accommodation
-    AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationPackageRequest accommodation);
+    AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest);
 
-    AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> tourPackages);
+    AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList);
 
-    List<AccommodationPackageEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> accommodations);
+    List<AccommodationOptionEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptions);
 }

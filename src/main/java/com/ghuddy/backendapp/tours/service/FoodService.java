@@ -6,12 +6,12 @@ import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
-import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
-import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.utils.EntityUtil;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface FoodService {
     // food item
@@ -20,6 +20,7 @@ public interface FoodService {
     InsertAcknowledgeListResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest);
 
     FoodItemEntity getFoodItemEntityByID(Long foodItemID);
+    Map<Long, FoodItemEntity> getFoodItemEntitiesByIDs(Set<Long> foodItemIDs);
 
     FoodItemListResponse getAllFoodItems() throws EmptyListException;
 
@@ -32,17 +33,19 @@ public interface FoodService {
 
     MealTypeEntity getMealTypeEntityByID(Long mealTypeID);
 
+    Map<Long, MealTypeEntity> getMealTypeEntitiesByIDs(Set<Long> mealTypeIDs);
+
     MealTypeListResponse getAllMealTypes() throws EmptyListException;
 
     MealTypeListResponse getAllMealTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     // meal package
 
-    InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId);
+    InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId);
 
-    InsertAcknowledgeListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages, String requestId);
+    InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList, String requestId);
 
-    List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackages);
+    List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList);
 
 
 }

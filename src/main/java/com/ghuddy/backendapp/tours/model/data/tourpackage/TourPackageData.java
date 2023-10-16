@@ -2,6 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationPackageData;
+import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TourPackageTransportationPackageData;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
@@ -28,7 +29,7 @@ public class TourPackageData {
     private String tourPackageDescription;
     @Schema(description = "The list of the meal packages belonging to this tour package")
     @JsonProperty("tour_package_meal_packages")
-    private List<MealPackageData> mealPackageDataList;
+    private List<FoodOptionData> mealPackageDataList;
     @Schema(description = "The list of the accommodation packages belonging to this tour package")
     @JsonProperty("tour_package_accommodation_packages")
     private List<AccommodationPackageData> accommodationPackageDataList;
@@ -53,12 +54,12 @@ public class TourPackageData {
         this.tourPackageTypeName = tourPackageEntity.getTourPackageType().getPackageTypeName();
         this.tourPackageName = tourPackageEntity.getTourPackageName();
         this.tourPackageDescription = tourPackageEntity.getDescription();
-        this.mealPackageDataList = tourPackageEntity.getMealPackageEntities().stream()
+        /* this.mealPackageDataList = tourPackageEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
-                .collect(Collectors.toList());
-        this.accommodationPackageDataList = tourPackageEntity.getAccommodationPackageEntities().stream()
+                .collect(Collectors.toList());*/
+        /*this.accommodationPackageDataList = tourPackageEntity.getAccommodationPackageEntities().stream()
                 .map(tourPackageAccommodationEntity -> new AccommodationPackageData(tourPackageAccommodationEntity))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
         this.tourPackageTransportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
                 .map(tourPackageTransportationEntity -> new TourPackageTransportationPackageData(tourPackageTransportationEntity))
                 .collect(Collectors.toList());

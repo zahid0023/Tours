@@ -1,0 +1,29 @@
+package com.ghuddy.backendapp.tours.model.entities;
+
+import com.ghuddy.backendapp.model.db.BaseEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "tour_transfer_option")
+@Getter
+@Setter
+@NoArgsConstructor
+public class TransferOptionEntity extends BaseEntity {
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tour_package_id")
+    private TourPackageEntity tourPackageEntity;
+
+    @OneToMany(mappedBy = "transferOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferPackageEntity> transferPackageEntities = new ArrayList<>();
+
+    @Column(name = "active")
+    private Boolean active;
+    @Column(name = "is_default")
+    private Boolean isDefault;
+}

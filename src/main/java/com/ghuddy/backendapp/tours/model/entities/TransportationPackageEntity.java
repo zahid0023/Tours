@@ -57,8 +57,8 @@ public class TransportationPackageEntity extends BaseEntity {
     private Integer quantity;
 
     @NotNull
-    @Column(name = "total_transportation_package_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalTransportationPackagePrice;
+    @Column(name = "per_person_transportation_package_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal perPersonTransportationPackagePrice;
 
     @NotNull
     @Column(name = "is_included", nullable = false)

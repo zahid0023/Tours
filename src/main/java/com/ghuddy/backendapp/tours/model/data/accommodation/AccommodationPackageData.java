@@ -57,6 +57,6 @@ public class AccommodationPackageData {
         this.unitPrice = accommodationPackageEntity.getPerNightRoomPrice();
         this.quantity = accommodationPackageEntity.getNumberOfRooms();
         this.totalAccommodationPackagePrice = accommodationPackageEntity.getPerPersonAccommodationPackagePrice();
-        this.isDefault = accommodationPackageEntity.getIsIncluded();
+        //this.isDefault = accommodationPackageEntity.getIsIncluded();
     }
 }

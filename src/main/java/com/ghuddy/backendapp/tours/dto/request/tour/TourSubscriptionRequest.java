@@ -1,7 +1,10 @@
 package com.ghuddy.backendapp.tours.dto.request.tour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.dto.request.BaseRequest;
+import com.ghuddy.backendapp.exception.AbstractException;
 import com.ghuddy.backendapp.tours.dto.request.activity.SubscribedTourActivityRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -10,7 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class TourSubscriptionRequest {
+public class TourSubscriptionRequest extends BaseRequest {
     @Schema(description = "The id of the tour that the merchant want to subscribe to", required = true, example = "1")
     @JsonProperty("tour_id")
     private Long tourId;
@@ -28,4 +31,11 @@ public class TourSubscriptionRequest {
     @JsonProperty("tour_activities")
     private List<SubscribedTourActivityRequest> subscribedTourActivityList;
 
+    /**
+     * @throws AbstractException
+     */
+    @Override
+    public void validate() throws AbstractException {
+
+    }
 }

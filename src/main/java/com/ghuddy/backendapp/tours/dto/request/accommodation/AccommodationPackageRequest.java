@@ -3,8 +3,10 @@ package com.ghuddy.backendapp.tours.dto.request.accommodation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.checkerframework.checker.fenum.qual.SwingHorizontalOrientation;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class AccommodationPackageRequest {
@@ -17,33 +19,26 @@ public class AccommodationPackageRequest {
     @Schema(description = "The ID of the room type", required = true, example = "1")
     @JsonProperty("room_type_id")
     private Long roomTypeID;
+    @Schema(description = "The price of this accommodation package", required = true, example = "1200")
+    @JsonProperty("per_night_room_price")
+    private BigDecimal perNightRoomPrice; // per night room price
+
+    @Schema(description = "Number of person that will stay in this room", required = true, example = "2")
+    @JsonProperty("suitable_for_persons")
+    private Integer forPersons;
     @Schema(description = "Whether the traveler may share this room with another fellow traveller", required = true, example = "true")
     @JsonProperty("is_shareable")
     private Boolean isShareable;
+
     @Schema(description = "Number of beds in the room", required = true, example = "1")
     @JsonProperty("number_of_beds")
     private Integer bedCount;
     @Schema(description = "The type of bed provided in this room", required = false, example = "Queen")
     @JsonProperty("bed_configuration")
     private String bedConfiguration;
-    @Schema(description = "Number of person that will stay in this room", required = true, example = "2")
-    @JsonProperty("suitable_for_persons")
-    private Integer forPersons;
-    @Schema(description = "The price of this accommodation package", required = true, example = "1200")
-    @JsonProperty("accommodation_package_unit_price")
-    private BigDecimal unitPrice; // per night room price
 
-    @Schema(description = "The number of nights the room will be provided to the traveller",example = "1")
-    @JsonProperty("accommodation_package_number_of_nights")
-    private Integer numberOfNights;
-    @Schema(description = "The total number of rooms provided for this tour package", required = true, example = "1")
-    @JsonProperty("accommodation_package_quantity")
-    private Integer quantity;
-    
-    @Schema(description = "The total/final price of this accommodation package", required = true, example = "120")
-    @JsonProperty("accommodation_package_total_price")
-    private BigDecimal totalAccommodationPackagePrice;
-    @Schema(description = "Whether this is accommodation package comes with the tour package or optional, i.e. the user can choose this, for this the price will vary", required = true, example = "true")
-    @JsonProperty("accommodation_package_is_default")
-    private Boolean isDefault;
+    @Schema(description = "The number of rooms",example = "1")
+    @JsonProperty("number_of_rooms")
+    private Integer numberOfRooms;
+
 }

@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.food.MealPackageAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.food.MealPackageListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
@@ -70,15 +70,15 @@ public class FoodControllerForMerchant {
     }
 
     // meal package
-    @RequestMapping(path = "/food/meal-package/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addMealPackage(@RequestBody MealPackageAddRequest mealPackageAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageMealPackage(tourPackageEntity, mealPackageAddRequest.getMealPackage(), mealPackageAddRequest.getRequestId()), HttpStatus.CREATED);
+    @RequestMapping(path = "/food/option/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addTourPackageFoodOption(@RequestBody FoodOptionAddRequest foodOptionAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
+        return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/food/meal-package/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addMealPackages(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageMealPackages(tourPackageEntity, mealPackageListAddRequest.getMealPackages(), mealPackageListAddRequest.getRequestId()), HttpStatus.CREATED);
+    @RequestMapping(path = "/food/option/list/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody FoodOptionListAddRequest foodOptionListAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionListAddRequest.getTourPackageID());
+        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, foodOptionListAddRequest.getFoodOptionRequestList(), foodOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 }

@@ -32,14 +32,13 @@ public class TourPackageEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AccommodationPackageEntity> accommodationPackageEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MealPackageEntity> mealPackageEntities = new ArrayList<>();
+    private List<TransferPackageEntity> transferPackageEntities = new LinkedList<>();
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportationPackageEntity> transportationPackageEntities = new ArrayList<>();
+
 
     @NotNull
     @Column(name = "is_food_included", nullable = false)
@@ -64,7 +63,13 @@ public class TourPackageEntity extends BaseEntity {
     private BigDecimal totalPackagePrice;
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferPackageEntity> transferPackageEntities = new LinkedList<>();
+    private List<AccommodationOptionEntity> accommodationOptionEntities = new LinkedList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", orphanRemoval = true)
+    private List<FoodOptionEntity> foodOptionEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferOptionEntity> tourTransferOptionEntities = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

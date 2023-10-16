@@ -9,14 +9,14 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AccommodationPackageListAddRequest extends BaseRequest {
-    @Schema(description = "The id of the tour package", required = true, example = "1")
+public class AccommodationOptionAddRequest extends BaseRequest {
+    @Schema(description = "The id of the tour package to which this accommodation will be associated", required = true, example = "1")
     @JsonProperty("tour_package_id")
     private Long tourPackageID;
 
-    @Schema(description = "The list of accommodation provided for this tour package by the merchant", required = true)
-    @JsonProperty("tour_package_accommodations")
-    List<AccommodationPackageRequest> tourPackageAccommodations;
+    @Schema(description = "A single combination of accommodation packages", required = true)
+    @JsonProperty("tour_package_accommodation_option")
+    private AccommodationOptionRequest accommodationOptionRequest;
 
     @Override
     public void validate() throws AbstractException {

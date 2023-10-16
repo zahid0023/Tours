@@ -6,14 +6,17 @@ import com.ghuddy.backendapp.exception.AbstractException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class AccommodationPackageAddRequest extends BaseRequest {
-    @Schema(description = "The id of the tour package to which this accommodation will be associated", required = true, example = "1")
+public class AccommodationOptionListAddRequest extends BaseRequest {
+    @Schema(description = "The id of the tour package", required = true, example = "1")
     @JsonProperty("tour_package_id")
     private Long tourPackageID;
-    @Schema(description = "The accommodation that will be associated with the tour package given in the id", required = true)
-    @JsonProperty("tour_package_accommodation")
-    private AccommodationPackageRequest tourPackageAccommodation;
+
+    @Schema(description = "All combinations of accommodation packages for this tour package by the merchant", required = true)
+    @JsonProperty("tour_package_accommodation_options")
+    private List<AccommodationOptionRequest> accommodationOptionRequestList;
 
     @Override
     public void validate() throws AbstractException {

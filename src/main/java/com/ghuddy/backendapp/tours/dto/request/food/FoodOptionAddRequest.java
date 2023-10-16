@@ -6,14 +6,16 @@ import com.ghuddy.backendapp.exception.AbstractException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class MealPackageAddRequest extends BaseRequest {
+public class FoodOptionAddRequest extends BaseRequest {
     @Schema(description = "The id of the tour package",required = true,example = "1")
     @JsonProperty("tour_package_id")
     private Long tourPackageID;
     @Schema(description = "The meal package associated with the tour package",required = true)
-    @JsonProperty("meal_package")
-    private MealPackageRequest mealPackage;
+    @JsonProperty("tour_package_food_option")
+    private FoodOptionRequest foodOptionRequest;
 
     @Override
     public void validate() throws AbstractException {

@@ -1,10 +1,16 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationPackageRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeRequest;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
@@ -18,17 +24,17 @@ import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 import com.ghuddy.backendapp.tours.repository.TourPackageRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageTypeRepository;
 import com.ghuddy.backendapp.tours.service.*;
+import com.ghuddy.backendapp.tours.utils.CombinationGenerator;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import com.ghuddy.backendapp.tours.utils.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TourPackageServiceImpl implements TourPackageService {
     private final TourPackageTypeRepository tourPackageTypeRepository;
@@ -38,6 +44,7 @@ public class TourPackageServiceImpl implements TourPackageService {
     private final TransportationService transportationService;
     private final TourPackageDao tourPackageDao;
     private final TourPackagePriceService tourPackagePriceService;
+    private final TransferService transferService;
 
     public TourPackageServiceImpl(TourPackageTypeRepository tourPackageTypeRepository,
                                   TourPackageRepository tourPackageRepository,
@@ -45,7 +52,8 @@ public class TourPackageServiceImpl implements TourPackageService {
                                   AccommodationService accommodationService,
                                   TransportationService transportationService,
                                   TourPackageDao tourPackageDao,
-                                  TourPackagePriceService tourPackagePriceService) {
+                                  TourPackagePriceService tourPackagePriceService,
+                                  TransferService transferService) {
         this.tourPackageTypeRepository = tourPackageTypeRepository;
         this.tourPackageRepository = tourPackageRepository;
         this.foodService = foodService;
@@ -53,6 +61,7 @@ public class TourPackageServiceImpl implements TourPackageService {
         this.transportationService = transportationService;
         this.tourPackageDao = tourPackageDao;
         this.tourPackagePriceService = tourPackagePriceService;
+        this.transferService = transferService;
     }
 
     // tour package type
@@ -133,7 +142,9 @@ public class TourPackageServiceImpl implements TourPackageService {
         Set<Long> tourPackageTypeIDs = tourPackages.stream()
                 .map(TourPackageRequest::getTourPackageTypeID)
                 .collect(Collectors.toSet());
+
         Map<Long, TourPackageTypeEntity> tourPackageTypeEntityMap = getTourPackageTypeEntitiesByPackageTypeIDs(tourPackageTypeIDs);
+
         List<TourPackageEntity> tourPackageEntities = tourPackages.stream()
                 .map(tourPackageRequest -> {
                     TourPackageEntity tourPackageEntity = new TourPackageEntity();
@@ -148,13 +159,14 @@ public class TourPackageServiceImpl implements TourPackageService {
                     boolean isTransportationIncluded = false;
                     boolean isTransferIncluded = false;
 
-                    if (tourPackageRequest.getMealPackages() != null && !tourPackageRequest.getMealPackages().isEmpty())
-                        tourPackageEntity.setMealPackageEntities(foodService.setTourPackageMealPackages(tourPackageEntity, tourPackageRequest.getMealPackages()));
-                    if (tourPackageRequest.getAccommodationPackages() != null && !tourPackageRequest.getAccommodationPackages().isEmpty())
-                        tourPackageEntity.setAccommodationPackageEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationPackages()));
+                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty())
+                        tourPackageEntity.setFoodOptionEntities(foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList()));
+                    if (tourPackageRequest.getAccommodationOptionRequestList() != null && !tourPackageRequest.getAccommodationOptionRequestList().isEmpty())
+                        tourPackageEntity.setAccommodationOptionEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationOptionRequestList()));
+                    if (tourPackageRequest.getTransferOptionRequestList() != null && !tourPackageRequest.getTransferOptionRequestList().isEmpty())
+                        tourPackageEntity.setTourTransferOptionEntities(transferService.setTourPackageTransferOptions(tourPackageEntity, tourPackageRequest.getTransferOptionRequestList()));
                     if (tourPackageRequest.getTransportationPackages() != null && !tourPackageRequest.getTransportationPackages().isEmpty())
                         tourPackageEntity.setTransportationPackageEntities(transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages()));
-
                     tourPackageEntity.setIsFoodIncluded(isFoodIncluded);
                     tourPackageEntity.setIsAccommodationIncluded(isAccommodationIncluded);
                     tourPackageEntity.setIsTransportationIncluded(isTransportationIncluded);
@@ -164,8 +176,11 @@ public class TourPackageServiceImpl implements TourPackageService {
                     tourPackageEntity.setTotalPackagePrice(tourPackageRequest.getTotalPackagePrice());
 
                     return tourPackageEntity;
+
                 })
-                .collect(Collectors.toList());
+                .toList();
+
+
         return tourPackageEntities;
     }
 

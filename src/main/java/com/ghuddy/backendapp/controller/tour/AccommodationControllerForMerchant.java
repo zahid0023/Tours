@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationPackageAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationPackageListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
@@ -91,14 +91,14 @@ public class AccommodationControllerForMerchant {
 
     // Tour Package Accommodation
     @RequestMapping(path = "/tour-package/accommodation/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageAccommodation(@RequestBody AccommodationPackageAddRequest accommodationPackageAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationPackageAddRequest.getTourPackageID());
-        return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, accommodationPackageAddRequest.getTourPackageAccommodation()), HttpStatus.CREATED);
+    public ResponseEntity<?> addTourPackageAccommodation(@RequestBody AccommodationOptionAddRequest accommodationOptionAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionAddRequest.getTourPackageID());
+        return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, accommodationOptionAddRequest.getAccommodationOptionRequest()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/tour-package/accommodation/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageAccommodations(@RequestBody AccommodationPackageListAddRequest accommodationPackageListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationPackageListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationPackageListAddRequest.getTourPackageAccommodations()), HttpStatus.CREATED);
+    public ResponseEntity<?> addTourPackageAccommodations(@RequestBody AccommodationOptionListAddRequest accommodationOptionListAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionListAddRequest.getTourPackageID());
+        return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationOptionListAddRequest.getAccommodationOptionRequestList()), HttpStatus.CREATED);
     }
 }

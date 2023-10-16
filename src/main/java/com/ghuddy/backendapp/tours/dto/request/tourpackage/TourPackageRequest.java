@@ -2,6 +2,9 @@ package com.ghuddy.backendapp.tours.dto.request.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.dto.request.GuideRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
@@ -20,30 +23,24 @@ public class TourPackageRequest {
     @Schema(description = "The description of the tour package.", required = true, example = "tour package description")
     @JsonProperty("tour_package_description")
     private String tourPackageDescription;
-    @Schema(description = "The list of the meal packages belonging to this tour package.")
-    @JsonProperty("tour_package_meal_packages")
-    private List<MealPackageRequest> mealPackages;
-    @Schema(description = "The list of the accommodation packages belonging to this tour package.")
-    @JsonProperty("tour_package_accommodation_packages")
-    private List<AccommodationPackageRequest> accommodationPackages;
+    @Schema(description = "The list of the food options belonging to this tour package.")
+    @JsonProperty("tour_package_food_options")
+    private List<FoodOptionRequest> foodOptionRequestList;
+    @Schema(description = "The list of the accommodation options belonging to this tour package.")
+    @JsonProperty("tour_package_accommodation_options")
+    private List<AccommodationOptionRequest> accommodationOptionRequestList;
+    @Schema(description = "The list of transfer options belonging to this tour package")
+    @JsonProperty("tour_package_transfer_options")
+    private List<TransferOptionRequest> transferOptionRequestList;
     @Schema(description = "The list of transportation packages belonging to this tour package.")
     @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageRequest> transportationPackages;
 
-    @Schema(description = "The list of transfer packages belonging to this tour package.")
-    @JsonProperty("tour_package_transfer_packages")
-    private List<TransferPackageRequest> transferPackages;
     @Schema(description = "The guide belonging to this tour package")
     @JsonProperty("tour_package_guide")
     private GuideRequest guideRequest;
 
-    @Schema(description = "The price after adding all the default component prices", required = true, example = "200")
-    @JsonProperty("package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The price merchant may wish to add/subtract from the final package price, basically merchant adjust the price", required = true, example = "100")
-    @JsonProperty("package_added_price")
-    private BigDecimal addedPrice;
-    @Schema(description = "The final price of the package which is the sum of the net price and the added price", required = true, example = "300")
+    @Schema(description = "The final price of the package which is the sum of all the default component package price", required = true, example = "300")
     @JsonProperty("package_total_price")
     private BigDecimal totalPackagePrice;
 }

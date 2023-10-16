@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class AccommodationAddRequest extends BaseRequest {
-    @Schema(description = "The accommodation that will be stored in the database",required = true)
+    @Schema(description = "The accommodation that will be stored in the database", required = true)
     @JsonProperty("accommodation")
     private AccommodationRequest accommodationRequest;
 

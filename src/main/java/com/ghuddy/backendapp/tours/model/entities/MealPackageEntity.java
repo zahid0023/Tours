@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_package_meal_package")
+@Table(name = "meal_packages")
 public class MealPackageEntity extends BaseEntity {
 
     @Column(name = "meal_package_name", nullable = false)
@@ -24,10 +24,6 @@ public class MealPackageEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "meal_type_id")
     private MealTypeEntity mealTypeEntity;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_id")
-    private TourPackageEntity tourPackageEntity;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "meal_package_food_item_mapping",
@@ -50,9 +46,10 @@ public class MealPackageEntity extends BaseEntity {
     @Column(name = "per_person_total_meal_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perPersonTotalMealPrice;
 
-    @NotNull
-    @Column(name = "is_included", nullable = false)
-    private Boolean isIncluded = false;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "food_option_id")
+    private FoodOptionEntity foodOptionEntity;
 
     @Override
     public boolean equals(Object o) {

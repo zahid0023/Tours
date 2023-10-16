@@ -27,27 +27,31 @@ public class StringUtil {
         return destinationLocationName + " Tour - " + day + " " + night;
     }
 
-    public static String mealPackageName(TourPackageEntity tourPackageEntity, MealPackageEntity mealPackageEntity, JdbcTemplate jdbcTemplate) {
+    public static String mealPackageName(TourPackageEntity tourPackageEntity, MealPackageEntity mealPackageEntity, Integer mealPackageCount) {
         String tourPackageName = tourPackageEntity.getTourPackageName();
-        Integer mealPackageCount;
+        String mealPackageTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
+
+        return tourPackageName + " - " + mealPackageTypeName + " - Package#" + mealPackageCount;
+    }
+
+    public static Integer mealPackageCount(TourPackageEntity tourPackageEntity, MealPackageEntity mealPackageEntity, JdbcTemplate jdbcTemplate) {
         try {
-            mealPackageCount = jdbcTemplate.queryForObject(
+            return jdbcTemplate.queryForObject(
                     """
                             select count(*)
-                            from tour_package_meal_package
-                            where tour_package_id = ?
-                              and meal_type_id = ?;
-                                                    """,
+                            from meal_packages mp
+                                     inner join tour_food_option tfo on mp.food_option_id = tfo.id
+                                     inner join tour_package tp on tfo.tour_package_id = tp.id
+                            where tp.id = ?
+                              and mp.meal_type_id = ?
+                                                     """,
                     Integer.class,
                     tourPackageEntity.getId(),
                     mealPackageEntity.getMealTypeEntity().getId()
             );
-            System.out.println(mealPackageCount);
         } catch (EmptyResultDataAccessException ex) {
-            mealPackageCount = 0;
+            return 0;
         }
-
-        return tourPackageName + " - " + mealPackageEntity.getMealTypeEntity().getMealTypeName() + " - Package#" + (mealPackageCount + 1);
     }
 }
 

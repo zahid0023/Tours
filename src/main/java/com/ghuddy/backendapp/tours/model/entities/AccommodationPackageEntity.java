@@ -8,12 +8,14 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_package_accommodation_package")
+@Table(name = "accommodation_packages")
 public class AccommodationPackageEntity extends BaseEntity {
 
     @Column(name = "is_shareable")
@@ -40,10 +42,6 @@ public class AccommodationPackageEntity extends BaseEntity {
     @JoinColumn(name = "accommodation_id", nullable = false)
     private TourAccommodationEntity tourAccommodationEntity;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "tour_package_id", nullable = false)
-    private TourPackageEntity tourPackageEntity;
-
     @Column(name = "active")
     private Boolean active;
 
@@ -62,9 +60,9 @@ public class AccommodationPackageEntity extends BaseEntity {
     @Column(name = "per_person_accommodation_package_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perPersonAccommodationPackagePrice;
 
-    @NotNull
-    @Column(name = "is_included", nullable = false)
-    private Boolean isIncluded = false;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accommodation_option_id")
+    private AccommodationOptionEntity accommodationOptionEntity;
 
     @Override
     public boolean equals(Object o) {

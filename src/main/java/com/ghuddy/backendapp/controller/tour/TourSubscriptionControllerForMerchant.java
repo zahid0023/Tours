@@ -20,12 +20,12 @@ public class TourSubscriptionControllerForMerchant {
     }
 
     @RequestMapping(path = "/tour/subscribe", method = RequestMethod.POST)
-    public ResponseEntity<?> subscribeTour(@RequestBody TourSubscriptionRequest tourSubscriptionRequest, @RequestParam String requestId) {
+    public ResponseEntity<?> subscribeTour(@RequestBody TourSubscriptionRequest tourSubscriptionRequest) {
         try {
-            return new ResponseEntity<>(tourSubscriptionService.subscribeTour(tourSubscriptionRequest, requestId), HttpStatus.OK);
+            return new ResponseEntity<>(tourSubscriptionService.subscribeTour(tourSubscriptionRequest, tourSubscriptionRequest.getRequestId()), HttpStatus.OK);
         } catch (TourNotFoundException ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourSubscriptionRequest.getRequestId()), HttpStatus.BAD_REQUEST);
         }
     }
 

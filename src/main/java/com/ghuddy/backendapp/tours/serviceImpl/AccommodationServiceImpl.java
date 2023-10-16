@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationPackageRepository accommodationPackageRepository;
     private final AccommodationDao accommodationDao;
     private final TourPackagePriceService tourPackagePriceService;
+    private final AccommodationOptionRepository accommodationOptionRepository;
 
     public AccommodationServiceImpl(TourRoomTypeRepository tourRoomTypeRepository,
                                     TourRoomCategoryRepository tourRoomCategoryRepository,
@@ -44,7 +46,8 @@ public class AccommodationServiceImpl implements AccommodationService {
                                     TourAccommodationRepository tourAccommodationRepository,
                                     AccommodationPackageRepository accommodationPackageRepository,
                                     AccommodationDao accommodationDao,
-                                    TourPackagePriceService tourPackagePriceService) {
+                                    TourPackagePriceService tourPackagePriceService,
+                                    AccommodationOptionRepository accommodationOptionRepository) {
         this.tourRoomTypeRepository = tourRoomTypeRepository;
         this.tourRoomCategoryRepository = tourRoomCategoryRepository;
         this.tourAccommodationTypeRepository = tourAccommodationTypeRepository;
@@ -52,6 +55,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         this.accommodationPackageRepository = accommodationPackageRepository;
         this.accommodationDao = accommodationDao;
         this.tourPackagePriceService = tourPackagePriceService;
+        this.accommodationOptionRepository = accommodationOptionRepository;
     }
 
     // room type
@@ -240,54 +244,63 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // tour package accommodation
     @Override
-    public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationPackageRequest accommodation) {
-        List<AccommodationPackageEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, List.of(accommodation));
-        accommodationPackageRepository.saveAll(tourPackageAccommodationEntities);
+    public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest) {
+        AccommodationOptionEntity accommodationOptionEntity = setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
+        accommodationOptionRepository.save(accommodationOptionEntity);
         return new AcknowledgeResponse();
     }
 
     @Override
-    public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> accommodations) {
-        List<AccommodationPackageEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodations);
-        accommodationPackageRepository.saveAll(tourPackageAccommodationEntities);
+    public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList) {
+        List<AccommodationOptionEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList);
         return new AcknowledgeResponse();
     }
 
     @Override
-    public List<AccommodationPackageEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationPackageRequest> accommodations) {
+    public List<AccommodationOptionEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptions) {
 
         Map<String, Set<Long>> idMaps = new HashMap<>();
-        accommodations.forEach(tourPackageAccommodationRequest -> {
-            idMaps.computeIfAbsent("Accommodation", key -> new HashSet<>())
-                    .add(tourPackageAccommodationRequest.getAccommodationID());
-            idMaps.computeIfAbsent("RoomCategory", key -> new HashSet<>())
-                    .add(tourPackageAccommodationRequest.getRoomCategoryID());
-            idMaps.computeIfAbsent("RoomType", key -> new HashSet<>())
-                    .add(tourPackageAccommodationRequest.getRoomTypeID());
+        accommodationOptions.forEach(accommodationOptionRequest -> {
+            accommodationOptionRequest.getTourPackageAccommodation().forEach(accommodationPackageRequest -> {
+                idMaps.computeIfAbsent("Accommodation", key -> new HashSet<>())
+                        .add(accommodationPackageRequest.getAccommodationID());
+                idMaps.computeIfAbsent("RoomCategory", key -> new HashSet<>())
+                        .add(accommodationPackageRequest.getRoomCategoryID());
+                idMaps.computeIfAbsent("RoomType", key -> new HashSet<>())
+                        .add(accommodationPackageRequest.getRoomTypeID());
+            });
         });
+
         Map<Long, TourAccommodationEntity> accommodationEntityMap = getAccommodationEntitiesByIDs(idMaps.get("Accommodation"));
         Map<Long, TourRoomCategoryEntity> roomCategoryEntityMap = getTourRoomCategoryEntitiesByIDs(idMaps.get("RoomCategory"));
         Map<Long, TourRoomTypeEntity> roomTypeEntityMap = getTourRoomTypeEntitiesByIDs(idMaps.get("RoomType"));
 
-        return accommodations.stream()
-                .map(tourPackageAccommodationRequest -> {
-                    AccommodationPackageEntity accommodationPackageEntity = new AccommodationPackageEntity();
-                    accommodationPackageEntity.setTourPackageEntity(tourPackageEntity);
-                    accommodationPackageEntity.setTourAccommodationEntity(accommodationEntityMap.get(tourPackageAccommodationRequest.getAccommodationID()));
-                    accommodationPackageEntity.setTourRoomCategoryEntity(roomCategoryEntityMap.get(tourPackageAccommodationRequest.getRoomCategoryID()));
-                    accommodationPackageEntity.setTourRoomTypeEntity(roomTypeEntityMap.get(tourPackageAccommodationRequest.getRoomTypeID()));
-                    accommodationPackageEntity.setBedCount(tourPackageAccommodationRequest.getBedCount());
-                    accommodationPackageEntity.setBedConfiguration(tourPackageAccommodationRequest.getBedConfiguration());
-                    accommodationPackageEntity.setIsShareable(tourPackageAccommodationRequest.getIsShareable());
-                    accommodationPackageEntity.setSuitableForPersons(tourPackageAccommodationRequest.getForPersons());
-                    accommodationPackageEntity.setPerNightRoomPrice(tourPackageAccommodationRequest.getUnitPrice());
-                    accommodationPackageEntity.setNumberOfRooms(tourPackageAccommodationRequest.getQuantity());
-                    accommodationPackageEntity.setNumberOfNights(tourPackageAccommodationRequest.getNumberOfNights());
-                    accommodationPackageEntity.setPerPersonAccommodationPackagePrice(tourPackagePriceService.perPersonPerAccommodationPackageTotalPrice(tourPackageAccommodationRequest));
-                    accommodationPackageEntity.setIsIncluded(tourPackageAccommodationRequest.getIsDefault());
-                    return accommodationPackageEntity;
+
+        List<AccommodationOptionEntity> accommodationOptionEntities = accommodationOptions.stream()
+                .map(accommodationOptionRequest -> {
+                    AccommodationOptionEntity accommodationOptionEntity = new AccommodationOptionEntity();
+                    accommodationOptionEntity.setTourPackageEntity(tourPackageEntity);
+                    List<AccommodationPackageEntity> accommodationPackageEntities = accommodationOptionRequest.getTourPackageAccommodation().stream()
+                            .map(accommodationPackageRequest -> {
+                                AccommodationPackageEntity accommodationPackageEntity = new AccommodationPackageEntity();
+                                accommodationPackageEntity.setAccommodationOptionEntity(accommodationOptionEntity);
+                                accommodationPackageEntity.setTourAccommodationEntity(accommodationEntityMap.get(accommodationPackageRequest.getAccommodationID()));
+                                accommodationPackageEntity.setTourRoomCategoryEntity(roomCategoryEntityMap.get(accommodationPackageRequest.getRoomCategoryID()));
+                                accommodationPackageEntity.setTourRoomTypeEntity(roomTypeEntityMap.get(accommodationPackageRequest.getRoomTypeID()));
+                                accommodationPackageEntity.setBedCount(accommodationPackageRequest.getBedCount());
+                                accommodationPackageEntity.setBedConfiguration(accommodationPackageRequest.getBedConfiguration());
+                                accommodationPackageEntity.setIsShareable(accommodationPackageRequest.getIsShareable());
+                                accommodationPackageEntity.setSuitableForPersons(accommodationPackageRequest.getForPersons());
+                                accommodationPackageEntity.setPerNightRoomPrice(accommodationPackageRequest.getPerNightRoomPrice());
+                                accommodationPackageEntity.setPerPersonAccommodationPackagePrice(new BigDecimal(9));
+                                return accommodationPackageEntity;
+                            }).toList();
+                    accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);
+                    accommodationOptionEntity.setIsDefault(accommodationOptionRequest.getIsDefault());
+                    return accommodationOptionEntity;
                 })
-                .collect(Collectors.toList());
+                .toList();
+        return accommodationOptionEntities;
     }
 
     @Override
