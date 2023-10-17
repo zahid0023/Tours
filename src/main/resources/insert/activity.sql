@@ -1,0 +1,3 @@
+insert into public.activity (id, created_by, created_at, deleted, last_modified_by, updated_at, version, active, activity_name, average_rating, number_of_reviews, short_location, activity_type_id)
+values  (2, null, null, false, null, null, 0, null, 'Hiking in Keokradang', null, null, 'keokradang, bandarban', 1),
+        (3, null, null, false, null, null, 0, null, 'Hiking in Keokradang', null, null, 'keokradang, bandarban', 1);

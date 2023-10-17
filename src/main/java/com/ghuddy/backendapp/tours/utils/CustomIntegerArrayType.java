@@ -90,12 +90,19 @@ public class CustomIntegerArrayType implements UserType {
         if (value == null) {
             preparedStatement.setNull(index, Types.ARRAY);
         } else {
-            Integer[] array = (Integer[]) value;
+            int[] array = (int[]) value;
+
+            // Convert int[] to Integer[]
+            Integer[] integerArray = new Integer[array.length];
+            for (int i = 0; i < array.length; i++) {
+                integerArray[i] = array[i];
+            }
 
             // using PostgreSQL array
-            preparedStatement.setArray(index, sharedSessionContractImplementor.connection().createArrayOf("integer", array));
+            preparedStatement.setArray(index, sharedSessionContractImplementor.connection().createArrayOf("integer", integerArray));
         }
     }
+
 
     /**
      * @param o

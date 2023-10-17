@@ -11,7 +11,7 @@ import java.util.Map;
 public class AccommodationOptionRequest {
     @Schema(description = "The accommodation that will be associated with the tour package given in the id", required = true)
     @JsonProperty("tour_package_accommodations_package_list")
-    private List<AccommodationPackageRequest> tourPackageAccommodation;
+    private List<TourPackageAccommodationRequest> tourPackageAccommodationRequestList;
     @Schema(description = "Whether this is the default accommodation option for the tour package", required = true, example = "false")
     @JsonProperty("tour_package_default_accommodation_option")
     private Boolean isDefault;

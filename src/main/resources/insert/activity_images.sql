@@ -1,0 +1,3 @@
+insert into public.activity_images (id, created_by, created_at, deleted, last_modified_by, updated_at, version, active, caption, file_name, image_url, is_display_image, rejection_reason, update_request, activity_id)
+values  (1, null, null, false, null, null, 0, null, 'A picture of tour', 'image1.jpg', 'www.google.com/image1.jpg', null, null, null, 2),
+        (2, null, null, false, null, null, 0, null, 'A picture of tour', 'image1.jpg', 'www.google.com/image1.jpg', null, null, null, 3);

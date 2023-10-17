@@ -1,0 +1,3 @@
+insert into public.subscribed_tours (id, created_by, created_at, deleted, last_modified_by, updated_at, version, active, tour_id, merchant_id, tour_reporting_time, tour_reporting_place)
+values  (1, null, null, false, null, null, 0, null, 1, 1, '09:00:00', 'bandarban bus terminal, bandarban'),
+        (2, null, null, false, null, null, 0, null, 1, 1, '09:00:00', 'bandarban bus terminal, bandarban');

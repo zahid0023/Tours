@@ -1,27 +1,27 @@
-create table place_near_by
+create table if not exists users
 (
-    id               bigserial primary key,
+    id        bigserial
+        primary key,
+    user_name varchar(255)
+);
+
+create table if not exists place_near_by
+(
+    id               bigserial
+        primary key,
+    place_name       varchar(255),
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
     last_modified_by varchar(255),
     updated_at       timestamp,
-    version          integer,
-    place_name       varchar(255)
+    version          integer
 );
 
-create table users
+create table if not exists added_tours
 (
-    id        bigserial primary key,
-    user_name varchar(255)
-);
-
--- Tour Add Table.
--- Here we map tour with a destination location and
--- number of days and number of nights
-create table added_tours
-(
-    id                      bigserial primary key,
+    id                      bigserial
+        primary key,
     created_by              varchar(255),
     created_at              timestamp,
     deleted                 boolean,
@@ -34,14 +34,14 @@ create table added_tours
     short_address           varchar(255),
     tour_name               varchar(255),
     tour_tag                varchar(255),
-    destination_location_id bigint not null references place_near_by (id)
+    destination_location_id bigint not null
+        references place_near_by
 );
 
--- Activity Type Table
--- auto-generated definition
-create table activity_type
+create table if not exists activity_type
 (
-    id                 bigserial primary key,
+    id                 bigserial
+        primary key,
     created_by         varchar(255),
     created_at         timestamp,
     deleted            boolean,
@@ -53,10 +53,10 @@ create table activity_type
     description        text
 );
 
--- Activity Table
-create table activity
+create table if not exists activity
 (
-    id                bigserial primary key,
+    id                bigserial
+        primary key,
     created_by        varchar(255),
     created_at        timestamp,
     deleted           boolean,
@@ -68,36 +68,14 @@ create table activity
     average_rating    numeric(2, 1),
     number_of_reviews bigint,
     short_location    varchar(255) not null,
-    activity_type_id  bigint       not null references activity_type (id)
+    activity_type_id  bigint       not null
+        references activity_type
 );
 
--- Activity Image Table
-create table activity_images
+create table if not exists tour
 (
-    id               bigserial primary key,
-    created_by       varchar(255),
-    created_at       timestamp,
-    deleted          boolean,
-    last_modified_by varchar(255),
-    updated_at       timestamp,
-    version          integer,
-    active           boolean,
-    caption          text,
-    file_name        varchar(255) not null,
-    image_url        text         not null,
-    is_display_image boolean default false,
-    rejection_reason text,
-    update_request   boolean,
-    activity_id      bigint       not null references activity (id)
-);
-
-
--- Tour Table
--- When we assign activities to added tour then the tour is created
--- It will be created by admin by mapping added tours with activities
-create table tour
-(
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -108,15 +86,14 @@ create table tour
     description      text         not null,
     thumb_image_url  text,
     title            varchar(255) not null,
-    added_tour_id    bigint       not null references added_tours (id)
+    added_tour_id    bigint       not null
+        references added_tours
 );
 
-
--- Tour Itinerary Table
--- mapping between tour and activity
-create table tour_itinerary
+create table if not exists tour_itinerary
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -124,15 +101,16 @@ create table tour_itinerary
     updated_at       timestamp,
     version          integer,
     active           boolean,
-    activity_id      bigint not null references activity (id),
-    tour_id          bigint not null references tour (id)
+    activity_id      bigint not null
+        references activity,
+    tour_id          bigint not null
+        references tour
 );
 
--- Tour Speciality Table
--- Belongs to created Tour
-create table tour_speciality
+create table if not exists tour_speciality
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -144,15 +122,14 @@ create table tour_speciality
     icon_url         text         not null,
     title            varchar(255) not null,
     update_request   boolean default false,
-    tour_id          bigint       not null references tour (id)
+    tour_id          bigint       not null
+        references tour
 );
 
--- Subscribed Tour
--- Will be populated by merchants
--- This table is point of truth for all the things merchant does in regard to a tour
-create table subscribed_tours
+create table if not exists subscribed_tours
 (
-    id                   bigserial primary key,
+    id                   bigserial
+        primary key,
     created_by           varchar(255),
     created_at           timestamp,
     deleted              boolean,
@@ -160,19 +137,18 @@ create table subscribed_tours
     updated_at           timestamp,
     version              integer,
     active               boolean,
-    tour_id              bigint       not null references tour (id),
-    merchant_id          bigint       not null references users (id),
-    tour_start_date      date         not null,
-    tour_end_date        date         not null,
+    tour_id              bigint       not null
+        references tour,
+    merchant_id          bigint       not null
+        references users,
     tour_reporting_time  time         not null,
     tour_reporting_place varchar(100) not null
 );
 
--- Subscribed Tour Itinerary
--- Merchant will set day number, start time and end time for all the activities that must be provided with this tour
-create table subscribed_tour_itinerary
+create table if not exists subscribed_tour_itinerary
 (
-    id                  bigserial primary key,
+    id                  bigserial
+        primary key,
     created_by          varchar(255),
     created_at          timestamp,
     deleted             boolean,
@@ -180,19 +156,19 @@ create table subscribed_tour_itinerary
     updated_at          timestamp,
     version             integer,
     active              boolean,
-    subscribed_tour_id  bigint  not null references subscribed_tours (id),
-    activity_id         bigint  not null references activity (id),
+    subscribed_tour_id  bigint  not null
+        references subscribed_tours,
+    activity_id         bigint  not null
+        references activity,
     activity_day_number integer not null,
     activity_start_time time    not null,
     activity_end_time   time    not null
 );
 
--- Tour Package Table
--- It holds the tour package type
--- ex : Solo Package, Couple Package, Family Package, Group Package 1 - 12 Persons, Group Package 2 - 20 Persons
-create table tour_package_type
+create table if not exists tour_package_type
 (
-    id                bigserial primary key,
+    id                bigserial
+        primary key,
     created_by        varchar(255),
     created_at        timestamp,
     deleted           boolean,
@@ -205,12 +181,10 @@ create table tour_package_type
     suitable_for      integer      not null
 );
 
--- Tour Package table
--- In this table we will store all the package belonging to a tour
--- This table is the point of truth for the rest of the components
-create table tour_package
+create table if not exists tour_package
 (
-    id                         bigserial primary key,
+    id                         bigserial
+        primary key,
     created_by                 varchar(255),
     created_at                 timestamp,
     deleted                    boolean,
@@ -219,23 +193,23 @@ create table tour_package
     version                    integer,
     active                     boolean,
     tour_package_name          varchar(255) not null,
-    subscribed_tour_id         bigint       not null references subscribed_tours (id),
-    tour_package_type_id       bigint       not null references tour_package_type (id),
+    subscribed_tour_id         bigint       not null
+        references subscribed_tours,
+    tour_package_type_id       bigint       not null
+        references tour_package_type,
     description                text         not null,
     is_food_included           boolean      not null,
     is_accommodation_included  boolean      not null,
     is_transportation_included boolean      not null,
     is_transfer_included       boolean      not null,
-    net_price                  numeric(10, 2),
-    added_price                numeric(10, 2), -- merchant may want to add/subtract some price on top of the calculated price
-    total_package_price        numeric(10, 2)
+    package_price_per_person   numeric(10, 2),
+    total_package_price        numeric
 );
 
--- Food Item Table
--- This table stores all the food items.
-create table food_item
+create table if not exists food_item
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -246,11 +220,10 @@ create table food_item
     food_item_name   varchar(255) not null
 );
 
--- Meal Type Table
--- Meal type means Breakfast or Lunch or Dinner
-create table meal_type
+create table if not exists meal_type
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -261,44 +234,10 @@ create table meal_type
     meal_type_name   varchar(255) not null
 );
 
--- Meal Package Table
--- Each meal package belongs to a tour package.
--- A tour package may have many meal packages
-create table tour_package_meal_package
+create table if not exists tour_accommodation_type
 (
-    id                       bigserial primary key,
-    created_by               varchar(255),
-    created_at               timestamp,
-    deleted                  boolean,
-    last_modified_by         varchar(255),
-    updated_at               timestamp,
-    version                  integer,
-    active                   boolean,
-    meal_package_name        varchar(255)   not null,
-    meal_type_id             bigint         not null references meal_type (id),
-    tour_package_id          bigint         not null references tour_package (id),
-    unit_price               numeric(10, 2) not null,
-    quantity                 integer        not null,
-    net_price                numeric(10, 2),
-    added_price              numeric(10, 2), -- merchant may want to add/subtract some price on top of the calculated price
-    total_meal_package_price numeric(10, 2),
-    is_included              boolean        not null
-);
-
--- Meal Package Contents
--- This table maps between meal package and food items
-create table meal_package_food_item_mapping
-(
-    meal_package_id bigint not null references tour_package_meal_package (id),
-    food_item_id    bigint not null references food_item (id),
-    primary key (meal_package_id, food_item_id)
-);
-
-
--- Accommodation Type Table
-create table tour_accommodation_type
-(
-    id                      bigserial primary key,
+    id                      bigserial
+        primary key,
     created_by              varchar(255),
     created_at              timestamp,
     deleted                 boolean,
@@ -309,10 +248,10 @@ create table tour_accommodation_type
     accommodation_type_name varchar(255) not null
 );
 
--- Accommodation Table
-create table tour_accommodation
+create table if not exists tour_accommodation
 (
-    id                    bigserial primary key,
+    id                    bigserial
+        primary key,
     created_by            varchar(255),
     created_at            timestamp,
     deleted               boolean,
@@ -321,16 +260,17 @@ create table tour_accommodation
     version               integer,
     active                boolean,
     accommodation_name    varchar(255) not null,
-    accommodation_type_id bigint       not null references tour_accommodation_type (id),
+    accommodation_type_id bigint       not null
+        references tour_accommodation_type,
     accommodation_address varchar(255) not null,
     average_rating        numeric(3, 1),
     total_reviews         integer
 );
 
--- Room Category Table
-create table tour_room_category
+create table if not exists tour_room_category
 (
-    id                 bigserial primary key,
+    id                 bigserial
+        primary key,
     created_by         varchar(255),
     created_at         timestamp,
     deleted            boolean,
@@ -342,11 +282,10 @@ create table tour_room_category
     description        text
 );
 
--- Room Type Table
--- Example: Single, Couple
-create table tour_room_type
+create table if not exists tour_room_type
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -358,54 +297,24 @@ create table tour_room_type
     description      text
 );
 
--- Tour Package Accommodation Table
--- This table stores the room types of a specific tour package. Each package may have zero or more room types associated with it.
--- We call this table tour package accommodation because this table stores the data about accommodation of a tour package.
-create table tour_package_accommodation_package
+create table if not exists transportation_brand
 (
-    id                                bigserial primary key,
-    created_by                        varchar(255),
-    created_at                        timestamp,
-    deleted                           boolean,
-    last_modified_by                  varchar(255),
-    updated_at                        timestamp,
-    version                           integer,
-    active                            boolean,
-    room_category_id                  bigint         not null references tour_room_category (id),
-    room_type_id                      bigint         not null references tour_room_type (id),
-    accommodation_id                  bigint         not null references tour_accommodation (id),
-    tour_package_id                   bigint         not null references tour_package (id),
-    is_shareable                      boolean,
-    suitable_for_persons              integer        not null,
-    bed_count                         integer,
-    bed_configuration                 varchar(100),
-    unit_price                        numeric(10, 2) not null,
-    quantity                          integer        not null,
-    net_price                         numeric(10, 2) not null,
-    added_price                       numeric(10, 2) not null, -- merchant may want to add/subtract some price on top of the calculated price
-    total_accommodation_package_price numeric(10, 2) not null,
-    is_included                       boolean        not null
+    id               bigserial
+        primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    brand_name       varchar(255) not null
 );
 
--- Transportation Route Table
-create table if not exists transportation_route
-(
-    id                      bigserial primary key,
-    created_by              varchar(255),
-    created_at              timestamp,
-    deleted                 boolean,
-    last_modified_by        varchar(255),
-    updated_at              timestamp,
-    version                 integer,
-    active                  boolean,
-    source_location_id      bigint references place_near_by (id) not null,
-    destination_location_id bigint references place_near_by (id) not null
-);
-
--- Transportation Mode Table
 create table if not exists transportation_mode
 (
-    id               bigserial primary key,
+    id               bigserial
+        primary key,
     created_by       varchar(255),
     created_at       timestamp,
     deleted          boolean,
@@ -418,24 +327,10 @@ create table if not exists transportation_mode
     icon_url         text         not null
 );
 
--- Transportation Brand Table
-create table if not exists transportation_brand
-(
-    id               bigserial primary key,
-    created_by       varchar(255),
-    created_at       timestamp,
-    deleted          boolean,
-    last_modified_by varchar(255),
-    updated_at       timestamp,
-    version          integer,
-    active           boolean,
-    brand_name       varchar(255) not null
-);
-
--- Transportation Provider Table
 create table if not exists transportation_provider
 (
-    id                           bigserial primary key,
+    id                           bigserial
+        primary key,
     created_by                   varchar(255),
     created_at                   timestamp,
     deleted                      boolean,
@@ -449,31 +344,220 @@ create table if not exists transportation_provider
     total_reviews                integer
 );
 
--- Create Transportation Table
-create table tour_package_transportation_package
+create table if not exists transportation_route
 (
-    id                         bigserial primary key,
-    created_by                 varchar(255),
-    created_at                 timestamp,
-    deleted                    boolean,
-    last_modified_by           varchar(255),
-    updated_at                 timestamp,
-    version                    integer,
-    active                     boolean,
-    tour_package_id            bigint         not null references tour_package (id),
-    transportation_route_id    bigint         not null references transportation_route (id),
-    transportation_mode_id     bigint         not null references transportation_mode (id),
-    transportation_brand_id    bigint         not null references transportation_brand (id),
-    transportation_provider_id bigint         not null references transportation_provider (id),
-    trip_type                  varchar(20)    not null,
-    is_ac                      boolean        not null,
-    unit_price                 numeric(10, 2) not null,
-    quantity                   integer        not null,
-    net_price                  numeric(10, 2) not null,
-    added_price                numeric(10, 2) not null, -- merchant may want to add/subtract some price on top of the calculated price
-    total_package_price        numeric(10, 2) not null,
-    is_included                boolean        not null
+    id                      bigserial
+        primary key,
+    created_by              varchar(255),
+    created_at              timestamp,
+    deleted                 boolean,
+    last_modified_by        varchar(255),
+    updated_at              timestamp,
+    version                 integer,
+    active                  boolean,
+    source_location_id      bigint not null
+        references place_near_by,
+    destination_location_id bigint not null
+        references place_near_by
 );
 
+create table if not exists transportation_packages
+(
+    id                                      bigint default nextval('tour_package_transportation_package_id_seq'::regclass) not null
+        constraint tour_package_transportation_package_pkey
+            primary key,
+    created_by                              varchar(255),
+    created_at                              timestamp,
+    deleted                                 boolean,
+    last_modified_by                        varchar(255),
+    updated_at                              timestamp,
+    version                                 integer,
+    active                                  boolean,
+    tour_package_id                         bigint                                                                         not null
+        constraint tour_package_transportation_package_tour_package_id_fkey
+            references tour_package,
+    transportation_route_id                 bigint                                                                         not null
+        constraint tour_package_transportation_packag_transportation_route_id_fkey
+            references transportation_route,
+    transportation_mode_id                  bigint                                                                         not null
+        constraint tour_package_transportation_package_transportation_mode_id_fkey
+            references transportation_mode,
+    transportation_brand_id                 bigint                                                                         not null
+        constraint tour_package_transportation_packag_transportation_brand_id_fkey
+            references transportation_brand,
+    transportation_provider_id              bigint                                                                         not null
+        constraint tour_package_transportation_pac_transportation_provider_id_fkey
+            references transportation_provider,
+    trip_type                               varchar(20)                                                                    not null,
+    is_ac                                   boolean                                                                        not null,
+    unit_price                              numeric(10, 2)                                                                 not null,
+    quantity                                integer                                                                        not null,
+    per_person_transportation_package_price numeric(10, 2)                                                                 not null,
+    is_included                             boolean                                                                        not null
+);
 
+create table if not exists activity_images
+(
+    id               bigserial
+        primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    caption          text,
+    file_name        varchar(255) not null,
+    image_url        text         not null,
+    is_display_image boolean default false,
+    rejection_reason text,
+    update_request   boolean,
+    activity_id      bigint       not null
+        references activity
+);
+
+create table if not exists tour_accommodation_option
+(
+    id               bigserial
+        primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    tour_package_id  bigint
+        references tour_package,
+    is_default       boolean default false
+);
+
+create table if not exists accommodation_packages
+(
+    id                                     bigint default nextval('tour_package_accommodation_package_id_seq'::regclass) not null
+        constraint tour_package_accommodation_package_pkey
+            primary key,
+    created_by                             varchar(255),
+    created_at                             timestamp,
+    deleted                                boolean,
+    last_modified_by                       varchar(255),
+    updated_at                             timestamp,
+    version                                integer,
+    active                                 boolean,
+    room_category_id                       bigint                                                                        not null
+        constraint tour_package_accommodation_package_room_category_id_fkey
+            references tour_room_category,
+    room_type_id                           bigint                                                                        not null
+        constraint tour_package_accommodation_package_room_type_id_fkey
+            references tour_room_type,
+    accommodation_id                       bigint                                                                        not null
+        constraint tour_package_accommodation_package_accommodation_id_fkey
+            references tour_accommodation,
+    is_shareable                           boolean,
+    suitable_for_persons                   integer                                                                       not null,
+    bed_count                              integer,
+    bed_configuration                      varchar(100),
+    per_night_room_price                   numeric(10, 2)                                                                not null,
+    per_person_accommodation_package_price numeric(10, 2)                                                                not null,
+    accommodation_option_id                bigint
+        constraint acommodation_packages_accommodation_option_id_fkey
+            references tour_accommodation_option,
+    night_numbers                          integer[]
+);
+
+create table if not exists tour_food_option
+(
+    id               bigserial
+        primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    tour_package_id  bigint
+        references tour_package,
+    is_default       boolean default false
+);
+
+create table if not exists meal_packages
+(
+    id                          bigint default nextval('tour_package_meal_package_id_seq'::regclass) not null
+        constraint tour_package_meal_package_pkey
+            primary key,
+    created_by                  varchar(255),
+    created_at                  timestamp,
+    deleted                     boolean,
+    last_modified_by            varchar(255),
+    updated_at                  timestamp,
+    version                     integer,
+    active                      boolean,
+    meal_package_name           varchar(255)                                                         not null,
+    meal_type_id                bigint                                                               not null
+        constraint tour_package_meal_package_meal_type_id_fkey
+            references meal_type,
+    per_meal_price              numeric(10, 2)                                                       not null,
+    per_person_number_of_meals  integer                                                              not null,
+    per_person_total_meal_price numeric(10, 2),
+    food_option_id              bigint
+        references tour_food_option
+);
+
+create table if not exists meal_package_food_item_mapping
+(
+    meal_package_id bigint not null
+        references meal_packages,
+    food_item_id    bigint not null
+        references food_item,
+    primary key (meal_package_id, food_item_id)
+);
+
+create table if not exists tour_transfer_option
+(
+    id               bigserial
+        primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    is_default       boolean,
+    tour_package_id  bigint
+        references tour_package
+);
+
+create table if not exists transfer_packages
+(
+    id                                bigint default nextval('tour_package_transfer_package_id_seq'::regclass) not null
+        constraint tour_package_transfer_package_pkey
+            primary key,
+    created_by                        varchar(255),
+    created_at                        timestamp,
+    deleted                           boolean,
+    last_modified_by                  varchar(255),
+    updated_at                        timestamp,
+    version                           integer,
+    active                            boolean,
+    transportation_mode_id            bigint                                                                   not null
+        constraint tour_package_transfer_package_transportation_mode_id_fkey
+            references transportation_mode,
+    transportation_provider_id        bigint                                                                   not null
+        constraint tour_package_transfer_package_transportation_provider_id_fkey
+            references transportation_provider,
+    is_ac                             boolean                                                                  not null,
+    maximum_number_of_travellers      integer                                                                  not null,
+    per_day_price                     numeric(10, 2)                                                           not null,
+    number_of_vehicles                integer                                                                  not null,
+    per_person_transfer_package_price numeric(10, 2)                                                           not null,
+    tour_package_id                   bigint
+        references tour_package,
+    day_numbers                       integer[],
+    transfer_route                    text,
+    tour_transfer_option_id           bigint
+        references tour_transfer_option
+);
 

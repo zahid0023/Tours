@@ -45,6 +45,7 @@ public class AccommodationPackageData {
     @Schema(description = "Whether this is accommodation package comes with the tour package or optional, i.e. the user can choose this, for this the price will vary", required = true, example = "true")
     @JsonProperty("accommodation_package_is_default")
     private Boolean isDefault;
+    private int[] nightNumbers;
 
     public AccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity) {
         this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
@@ -55,7 +56,7 @@ public class AccommodationPackageData {
         this.bedCount = accommodationPackageEntity.getBedCount();
         this.bedConfiguration = accommodationPackageEntity.getBedConfiguration();
         this.unitPrice = accommodationPackageEntity.getPerNightRoomPrice();
-        this.quantity = accommodationPackageEntity.getNumberOfRooms();
+        this.nightNumbers = accommodationPackageEntity.getNightNumbers();
         this.totalAccommodationPackagePrice = accommodationPackageEntity.getPerPersonAccommodationPackagePrice();
         //this.isDefault = accommodationPackageEntity.getIsIncluded();
     }

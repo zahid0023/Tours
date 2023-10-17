@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class OptionRequest {
     @Schema(description = "The mapping between the night number and where the traveller will stay in that night", required = true)
     @JsonProperty("option")
-    HashMap<Integer, String> accommodationOption;
+    HashMap<Integer, String> accommodationOption; // per option
 
     @Schema(description = "Whether this is the default option for this tour package")
     @JsonProperty("is_default_option")

@@ -18,5 +18,4 @@ public class AccommodationOptionDTO {
     @JsonProperty("accommodation_options")
     private List<OptionRequest> accommodationOptions;
 
-
 }

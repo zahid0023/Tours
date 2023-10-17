@@ -4,6 +4,7 @@ import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -49,12 +50,10 @@ public class AccommodationPackageEntity extends BaseEntity {
     @Column(name = "per_night_room_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perNightRoomPrice;
 
-    @Column(name = "number_of_nights")
-    private Integer numberOfNights;
+    @Column(name = "night_numbers", columnDefinition = "integer[]")
+    @Type(type = "com.ghuddy.backendapp.tours.utils.CustomIntegerArrayType")  // Adjust the package and class name accordingly
+    private int[] nightNumbers;
 
-    @NotNull
-    @Column(name = "number_of_rooms", nullable = false)
-    private Integer numberOfRooms;
 
     @NotNull
     @Column(name = "per_person_accommodation_package_price", nullable = false, precision = 10, scale = 2)

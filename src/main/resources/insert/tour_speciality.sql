@@ -1,0 +1,4 @@
+insert into public.tour_speciality (id, created_by, created_at, deleted, last_modified_by, updated_at, version, active, description, icon_url, title, update_request, tour_id)
+values  (1, null, null, false, null, null, 0, null, 'Exciting adventures for thrill-seekers.', 'https://example.com/icons/adventure.png', 'Adventure', null, 1),
+        (2, null, null, false, null, null, 0, null, 'Exciting adventures for thrill-seekers.', 'https://example.com/icons/adventure.png', 'Adventure', null, 2),
+        (3, null, null, false, null, null, 0, null, 'Exciting adventures for thrill-seekers.', 'https://example.com/icons/adventure.png', 'Adventure', null, 3);

@@ -21,14 +21,17 @@ import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AccommodationServiceImpl implements AccommodationService {
     private final TourRoomTypeRepository tourRoomTypeRepository;
@@ -253,6 +256,8 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList) {
         List<AccommodationOptionEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList);
+        System.out.println("ok");
+        accommodationOptionRepository.saveAll(tourPackageAccommodationEntities);
         return new AcknowledgeResponse();
     }
 
@@ -261,7 +266,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         Map<String, Set<Long>> idMaps = new HashMap<>();
         accommodationOptions.forEach(accommodationOptionRequest -> {
-            accommodationOptionRequest.getTourPackageAccommodation().forEach(accommodationPackageRequest -> {
+            accommodationOptionRequest.getTourPackageAccommodationRequestList().forEach(accommodationPackageRequest -> {
                 idMaps.computeIfAbsent("Accommodation", key -> new HashSet<>())
                         .add(accommodationPackageRequest.getAccommodationID());
                 idMaps.computeIfAbsent("RoomCategory", key -> new HashSet<>())
@@ -280,7 +285,7 @@ public class AccommodationServiceImpl implements AccommodationService {
                 .map(accommodationOptionRequest -> {
                     AccommodationOptionEntity accommodationOptionEntity = new AccommodationOptionEntity();
                     accommodationOptionEntity.setTourPackageEntity(tourPackageEntity);
-                    List<AccommodationPackageEntity> accommodationPackageEntities = accommodationOptionRequest.getTourPackageAccommodation().stream()
+                    List<AccommodationPackageEntity> accommodationPackageEntities = accommodationOptionRequest.getTourPackageAccommodationRequestList().stream()
                             .map(accommodationPackageRequest -> {
                                 AccommodationPackageEntity accommodationPackageEntity = new AccommodationPackageEntity();
                                 accommodationPackageEntity.setAccommodationOptionEntity(accommodationOptionEntity);
@@ -293,6 +298,8 @@ public class AccommodationServiceImpl implements AccommodationService {
                                 accommodationPackageEntity.setSuitableForPersons(accommodationPackageRequest.getForPersons());
                                 accommodationPackageEntity.setPerNightRoomPrice(accommodationPackageRequest.getPerNightRoomPrice());
                                 accommodationPackageEntity.setPerPersonAccommodationPackagePrice(new BigDecimal(9));
+                                int[] nightNumbers = accommodationPackageRequest.getNightNumbers().stream().mapToInt(Integer::intValue).toArray();
+                                accommodationPackageEntity.setNightNumbers(nightNumbers);
                                 return accommodationPackageEntity;
                             }).toList();
                     accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);

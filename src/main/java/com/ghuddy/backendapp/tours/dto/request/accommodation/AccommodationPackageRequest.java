@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.checkerframework.checker.fenum.qual.SwingHorizontalOrientation;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -36,9 +38,5 @@ public class AccommodationPackageRequest {
     @Schema(description = "The type of bed provided in this room", required = false, example = "Queen")
     @JsonProperty("bed_configuration")
     private String bedConfiguration;
-
-    @Schema(description = "The number of rooms",example = "1")
-    @JsonProperty("number_of_rooms")
-    private Integer numberOfRooms;
 
 }

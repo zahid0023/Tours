@@ -1,0 +1,17 @@
+insert into public.tour_food_option (id, created_by, created_at, deleted, last_modified_by, updated_at, version, active, tour_package_id, is_default)
+values  (1, null, null, null, null, null, null, null, 1, false),
+        (4, null, null, false, null, null, 0, null, null, false),
+        (5, null, null, false, null, null, 0, null, null, false),
+        (6, null, null, false, null, null, 0, null, null, false),
+        (7, null, null, false, null, null, 0, null, null, false),
+        (8, null, null, false, null, null, 0, null, null, false),
+        (9, null, null, false, null, null, 0, null, null, false),
+        (10, null, null, false, null, null, 0, null, null, false),
+        (11, null, null, false, null, null, 0, null, null, false),
+        (12, null, null, false, null, null, 0, null, null, false),
+        (13, null, null, false, null, null, 0, null, 1, false),
+        (14, null, null, false, null, null, 0, null, 1, false),
+        (15, null, null, false, null, null, 0, null, 1, false),
+        (16, null, null, false, null, null, 0, null, 1, false),
+        (17, null, null, false, null, null, 0, null, 1, false),
+        (18, null, null, false, null, null, 0, null, 1, false);
