@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.transfer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.enums.TripType;
 import com.ghuddy.backendapp.tours.model.entities.TransferPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -16,6 +17,9 @@ public class TransferPackageData {
     @Schema(description = "The id of the transfer package")
     @JsonProperty("tour_package_transfer_package_id")
     private Long transferPackageId;
+    @Schema(description = "The route where the transfer service will be provided")
+    @JsonProperty("transfer_route")
+    private String transferRoute;
     @Schema(description = "The name of the transportation mode")
     @JsonProperty("tour_package_transportation_mode_name")
     private String transportationModeName;
@@ -25,16 +29,17 @@ public class TransferPackageData {
     @Schema(description = "Where is ac")
     @JsonProperty("is_ac")
     private Boolean isAc;
-    @Schema(description = "per day price of the transportation")
-    @JsonProperty("tour_package_transfer_package_price_per_day")
-    private BigDecimal perDayPrice;
 
-    @Schema(description = "The number of days the transfer will be provided")
-    @JsonProperty("tour_package_transfer_provided_in_days")
-    private Integer[] dayNumbers;
+    @Schema(description = "The type of the trip")
+    @JsonProperty("trip_type")
+    private TripType tripType;
+    @Schema(description = "per day price of the transportation")
+    @JsonProperty("tour_package_transfer_package_unit_price")
+    private BigDecimal unitPrice;
+
     @Schema(description = "maximum number of travellers in a vehicle")
-    @JsonProperty("maximum_number_of_travellers")
-    private Integer maximumNumberOfTravellers;
+    @JsonProperty("suitable_for_persons")
+    private Integer suitableForPersons;
     @Schema(description = "total number of vehicles")
     @JsonProperty("number_of_vehicles")
     private Integer numberOfVehicles;
@@ -44,14 +49,14 @@ public class TransferPackageData {
 
     public TransferPackageData(TransferPackageEntity transferPackageEntity) {
         this.transferPackageId = transferPackageEntity.getId();
+        this.transferRoute = transferPackageEntity.getTransferRoute();
         this.transportationModeName = transferPackageEntity.getTransportationModeEntity().getModeName();
         this.transportationProviderName = transferPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
         this.isAc = transferPackageEntity.getIsAc();
-        this.perDayPrice = transferPackageEntity.getPerDayPrice();
-        this.dayNumbers = transferPackageEntity.getDayNumbers();
-        this.maximumNumberOfTravellers = transferPackageEntity.getMaximumNumberOfTravellers();
+        this.tripType = transferPackageEntity.getTripType();
+        this.unitPrice = transferPackageEntity.getUnitPrice();
+        this.suitableForPersons = transferPackageEntity.getSuitableForPersons();
         this.numberOfVehicles = transferPackageEntity.getNumberOfVehicles();
         this.perPersonTransferPackagePrice = transferPackageEntity.getPerPersonTransferPackagePrice();
-        // this.isDefault = transferPackageEntity.getIsIncluded();
     }
 }

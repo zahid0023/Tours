@@ -140,8 +140,8 @@ public class FoodServiceImpl implements FoodService {
     // tour package meal package
     @Transactional
     @Override
-    public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) {
-        FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
+    public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId) {
+        MealPackageRequest foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
         foodOptionEntity = foodOptionRepository.save(foodOptionEntity);
         return new InsertAcknowledgeResponse(new FoodOptionData(foodOptionEntity), requestId);
 

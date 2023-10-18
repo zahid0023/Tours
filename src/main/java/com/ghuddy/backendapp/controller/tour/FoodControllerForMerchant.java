@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.MealPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
@@ -71,14 +70,14 @@ public class FoodControllerForMerchant {
 
     // meal package
     @RequestMapping(path = "/food/option/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageFoodOption(@RequestBody FoodOptionAddRequest foodOptionAddRequest) {
+    public ResponseEntity<?> addTourPackageFoodOption(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
         return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/food/option/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody FoodOptionListAddRequest foodOptionListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, foodOptionListAddRequest.getFoodOptionRequestList(), foodOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
+    public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageListAddRequest.getTourPackageID());
+        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, mealPackageListAddRequest.getFoodOptionRequestList(), mealPackageListAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 }

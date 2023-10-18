@@ -90,7 +90,7 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
      */
     @Override
     public BigDecimal perPersonPerTransferPackageTotalPrice(TransferPackageRequest transferPackageRequest, Integer numberOfTravellers) {
-        BigDecimal perDayPrice = transferPackageRequest.getTransferPricePerDay();
+        //BigDecimal perDayPrice = transferPackageRequest.getTransferPricePerDay();
         //Integer numberOfDays = transferPackageRequest.getNumberOfDays();
         //BigDecimal perPersonPrice = (perDayPrice.multiply(BigDecimal.valueOf(numberOfDays))).divide(BigDecimal.valueOf(numberOfTravellers));
         //return perPersonPrice;

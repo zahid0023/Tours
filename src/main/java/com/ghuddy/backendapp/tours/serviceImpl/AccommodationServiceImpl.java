@@ -297,9 +297,8 @@ public class AccommodationServiceImpl implements AccommodationService {
                                 accommodationPackageEntity.setIsShareable(accommodationPackageRequest.getIsShareable());
                                 accommodationPackageEntity.setSuitableForPersons(accommodationPackageRequest.getForPersons());
                                 accommodationPackageEntity.setPerNightRoomPrice(accommodationPackageRequest.getPerNightRoomPrice());
-                                accommodationPackageEntity.setPerPersonAccommodationPackagePrice(new BigDecimal(9));
-                                int[] nightNumbers = accommodationPackageRequest.getNightNumbers().stream().mapToInt(Integer::intValue).toArray();
-                                accommodationPackageEntity.setNightNumbers(nightNumbers);
+                                accommodationPackageEntity.setPerPersonAccommodationPackagePrice(new BigDecimal(9));;
+                                accommodationPackageEntity.setNightNumbers(accommodationPackageRequest.getNightNumbers());
                                 return accommodationPackageEntity;
                             }).toList();
                     accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);

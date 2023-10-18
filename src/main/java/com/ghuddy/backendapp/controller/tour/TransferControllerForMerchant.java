@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/merchant")
-public class TransferPackageControllerForMerchant {
+public class TransferControllerForMerchant {
     private final TourPackageService tourPackageService;
     private final TransferService transferService;
 
-    public TransferPackageControllerForMerchant(TourPackageService tourPackageService,
-                                                TransferService transferService) {
+    public TransferControllerForMerchant(TourPackageService tourPackageService,
+                                         TransferService transferService) {
         this.tourPackageService = tourPackageService;
         this.transferService = transferService;
     }
 
-    @RequestMapping(path = "/transfer/package/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/transfer/option/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransferPackage(@RequestBody TransferOptionAddRequest transferOptionAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionAddRequest.getTourPackageId());
         return new ResponseEntity<>(transferService.addTourPackageTransferOption(tourPackageEntity, transferOptionAddRequest.getTransferOptionRequest(), transferOptionAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/transfer/packages/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/transfer/option/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransferPackages(@RequestBody TransferOptionListAddRequest transferOptionListAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionListAddRequest.getTourPackageId());
         return new ResponseEntity<>(transferService.addTourPackageTransferOptions(tourPackageEntity, transferOptionListAddRequest.getTransferOptionRequestList(), transferOptionListAddRequest.getRequestId()), HttpStatus.CREATED);

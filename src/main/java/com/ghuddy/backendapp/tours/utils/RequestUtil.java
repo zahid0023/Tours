@@ -30,7 +30,7 @@ public class RequestUtil {
             });
             AccommodationOptionRequest accommodationOptionRequest = new AccommodationOptionRequest();
             accommodationOptionRequest.setIsDefault(optionRequest.getIsDefaultOption());
-            accommodationOptionRequest.setTourPackageAccommodationRequestList(tourPackageAccommodationRequestList);
+            //accommodationOptionRequest.setTourPackageAccommodationRequestList(tourPackageAccommodationRequestList);
             accommodationOptionRequestList.add(accommodationOptionRequest);
         });
         return accommodationOptionRequestList;

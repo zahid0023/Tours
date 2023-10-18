@@ -91,16 +91,17 @@ public class TransferServiceImpl implements TransferService {
                     List<TransferPackageEntity> transferPackageEntityList = transferOptionRequest.getTransferPackageRequestList().stream()
                             .map(transferPackageRequest -> {
                                 TransferPackageEntity transferPackageEntity = new TransferPackageEntity();
-                                transferPackageEntity.setTourPackageEntity(tourPackageEntity);
+                                transferPackageEntity.setTransferOptionEntity(transferOptionEntity);
                                 transferPackageEntity.setTransportationModeEntity(transportationModeEntityMap.get(transferPackageRequest.getTransferModeId()));
                                 transferPackageEntity.setTransportationProviderEntity(transportationProviderEntityMap.get(transferPackageRequest.getTransferProviderId()));
                                 transferPackageEntity.setIsAc(transferPackageRequest.getIsAc());
-                                transferPackageEntity.setMaximumNumberOfTravellers(transferPackageRequest.getMaxTransferCapacity());
-                                transferPackageEntity.setPerDayPrice(transferPackageRequest.getTransferPricePerDay());
-                                transferPackageEntity.setDayNumbers(transferPackageRequest.getDayNumbers());
+                                transferPackageEntity.setSuitableForPersons(transferPackageRequest.getSuitableForPersons());
+                                transferPackageEntity.setUnitPrice(transferPackageRequest.getTransferUnitPrice());
+                                //transferPackageEntity.setDayNumbers(transferPackageRequest.getDayNumbers());
                                 transferPackageEntity.setNumberOfVehicles(transferPackageRequest.getNumberOfVehicles());
                                 transferPackageEntity.setPerPersonTransferPackagePrice(new BigDecimal(5));
                                 transferPackageEntity.setTransferRoute(transferPackageRequest.getTransferRoute());
+                                transferPackageEntity.setTripType(transferPackageRequest.getTripType());
                                 return transferPackageEntity;
                             })
                             .collect(Collectors.toList());

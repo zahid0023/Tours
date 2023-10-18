@@ -9,13 +9,13 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FoodOptionListAddRequest extends BaseRequest {
+public class MealPackageListAddRequest extends BaseRequest {
     @Schema(description = "The id of the tour package", required = true)
     @JsonProperty("tour_package_id")
     private Long tourPackageID;
     @Schema(description = "The list of the meal packages associated with this tour package", required = true)
-    @JsonProperty("tour_package_food_options")
-    private List<FoodOptionRequest> foodOptionRequestList;
+    @JsonProperty("tour_package_meal_packages")
+    private List<MealPackageRequest> mealPackageRequestList;
 
     @Override
     public void validate() throws AbstractException {

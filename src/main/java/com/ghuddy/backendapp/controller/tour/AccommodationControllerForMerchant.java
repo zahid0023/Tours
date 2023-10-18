@@ -92,15 +92,13 @@ public class AccommodationControllerForMerchant {
     }
 
     // Tour Package Accommodation
-    @RequestMapping(path = "/tour-package/accommodation/option/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageAccommodation(@RequestBody AccommodationOptionDTOAddRequest accommodationOptionDTOAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionDTOAddRequest.getTourPackageID());
-        List<AccommodationOptionRequest> accommodationOptionRequestList = new RequestUtil().fromAccommodationOptionDTO(accommodationOptionDTOAddRequest.getAccommodationOptionDTO());
-        accommodationOptionRequestList.forEach(System.out::println);
-        return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList), HttpStatus.CREATED);
+    @RequestMapping(path = "/tour-package/accommodation/option/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addTourPackageAccommodation(@RequestBody AccommodationOptionAddRequest accommodationOptionAddRequest) {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionAddRequest.getTourPackageID());
+        return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, accommodationOptionAddRequest.getAccommodationOptionRequest()), HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/tour-package/accommodation/list/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/tour-package/accommodation/option/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageAccommodations(@RequestBody AccommodationOptionListAddRequest accommodationOptionListAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionListAddRequest.getTourPackageID());
         return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationOptionListAddRequest.getAccommodationOptionRequestList()), HttpStatus.CREATED);

@@ -1,14 +1,13 @@
 package com.ghuddy.backendapp.tours.model.entities;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
+import com.ghuddy.backendapp.tours.enums.TripType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Table(name = "transfer_packages")
@@ -20,13 +19,10 @@ public class TransferPackageEntity extends BaseEntity {
     private Boolean active;
     @Column(name = "is_ac")
     private Boolean isAc;
-    @Column(name = "maximum_number_of_travellers")
-    private Integer maximumNumberOfTravellers;
-    @Column(name = "per_day_price")
-    private BigDecimal perDayPrice;
-    @Column(name = "day_numbers", columnDefinition = "integer[]")
-    @Type(type = "com.ghuddy.backendapp.tours.utils.CustomIntegerArrayType")  // Adjust the package and class name accordingly
-    private Integer[] dayNumbers;
+    @Column(name = "suitable_for_persons")
+    private Integer suitableForPersons;
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice; // for now let us consider per vehicle per trip price
 
     @Column(name = "number_of_vehicles")
     private Integer numberOfVehicles;
@@ -36,6 +32,10 @@ public class TransferPackageEntity extends BaseEntity {
     @Column(name = "transfer_route")
     private String transferRoute;
 
+    @Enumerated
+    @Column(name = "trip_type")
+    private TripType tripType;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transportation_provider_id")
     private TransportationProviderEntity transportationProviderEntity;
@@ -43,10 +43,6 @@ public class TransferPackageEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transportation_mode_id")
     private TransportationModeEntity transportationModeEntity;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_id")
-    private TourPackageEntity tourPackageEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tour_transfer_option_id")

@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class TourPackageAccommodationRequest extends AccommodationPackageRequest {
 
-    private List<Integer> nightNumbers;
+    private List<Integer> nightNumber;
 
     public TourPackageAccommodationRequest(AccommodationPackageRequest accommodationPackageRequest, List<Integer> nightNumbers) {
         this.setAccommodationID(accommodationPackageRequest.getAccommodationID());
@@ -19,6 +19,6 @@ public class TourPackageAccommodationRequest extends AccommodationPackageRequest
         this.setIsShareable(accommodationPackageRequest.getIsShareable());
         this.setBedCount(accommodationPackageRequest.getBedCount());
         this.setBedConfiguration(accommodationPackageRequest.getBedConfiguration());
-        this.nightNumbers = nightNumbers;
+        this.nightNumber = nightNumbers;
     }
 }
