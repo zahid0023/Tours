@@ -29,15 +29,12 @@ public class TransferPackageRequest {
     @Schema(description = "Whether AC is provided", required = true, example = "true")
     @JsonProperty("is_ac")
     private Boolean isAc;
-    @Schema(description = "The price of the transfer per day", required = true, example = "3500")
-    @JsonProperty("tour_transfer_unit_price")
+    @Schema(description = "The price of the transfer per vehicle per trip", required = true, example = "3500")
+    @JsonProperty("per_vehicle_per_trip_price")
     private BigDecimal transferUnitPrice;
 
-    @Schema(description = "The number of travellers can travel at the same time in this vehicle", required = true, example = "14")
+    @Schema(description = "The number of travellers can travel at the same time in this vehicle / package type suitable for persons - whichever is in context", required = true, example = "14")
     @JsonProperty("suitable_for_persons")
     private Integer suitableForPersons;
-    @Schema(description = "The number of vehicles provided for this tour package", required = true, example = "1")
-    @JsonProperty("number_of_vehicles")
-    private Integer numberOfVehicles;
 
 }

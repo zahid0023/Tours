@@ -11,23 +11,17 @@ import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryLi
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationTypeData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomCategoryData;
-import com.ghuddy.backendapp.tours.model.data.accommodation.TourPackageRoomTypeData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.*;
 import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
-import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -247,18 +241,21 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     // tour package accommodation
     @Override
-    public AcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest) {
+    public InsertAcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest, String requestId) {
         AccommodationOptionEntity accommodationOptionEntity = setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
-        accommodationOptionRepository.save(accommodationOptionEntity);
-        return new AcknowledgeResponse();
+        accommodationOptionEntity = accommodationOptionRepository.save(accommodationOptionEntity);
+        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
+        return new InsertAcknowledgeResponse(accommodationOptionData, requestId);
     }
 
     @Override
-    public AcknowledgeResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList) {
+    public InsertAcknowledgeListResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList, String requestId) {
         List<AccommodationOptionEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList);
         System.out.println("ok");
-        accommodationOptionRepository.saveAll(tourPackageAccommodationEntities);
-        return new AcknowledgeResponse();
+        List<AccommodationOptionData> accommodationOptionDataList = accommodationOptionRepository.saveAll(tourPackageAccommodationEntities).stream()
+                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity))
+                .toList();
+        return new InsertAcknowledgeListResponse(accommodationOptionDataList, requestId);
     }
 
     @Override
@@ -297,12 +294,12 @@ public class AccommodationServiceImpl implements AccommodationService {
                                 accommodationPackageEntity.setIsShareable(accommodationPackageRequest.getIsShareable());
                                 accommodationPackageEntity.setSuitableForPersons(accommodationPackageRequest.getForPersons());
                                 accommodationPackageEntity.setPerNightRoomPrice(accommodationPackageRequest.getPerNightRoomPrice());
-                                accommodationPackageEntity.setPerPersonAccommodationPackagePrice(new BigDecimal(9));;
-                                accommodationPackageEntity.setNightNumbers(accommodationPackageRequest.getNightNumbers());
+                                accommodationPackageEntity.setNightNumber(accommodationPackageRequest.getNightNumber());
                                 return accommodationPackageEntity;
                             }).toList();
                     accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);
                     accommodationOptionEntity.setIsDefault(accommodationOptionRequest.getIsDefault());
+                    accommodationOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonAccommodationOptionPrice(accommodationOptionRequest));
                     return accommodationOptionEntity;
                 })
                 .toList();

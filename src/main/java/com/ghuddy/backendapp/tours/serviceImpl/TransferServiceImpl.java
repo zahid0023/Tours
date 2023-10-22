@@ -97,9 +97,6 @@ public class TransferServiceImpl implements TransferService {
                                 transferPackageEntity.setIsAc(transferPackageRequest.getIsAc());
                                 transferPackageEntity.setSuitableForPersons(transferPackageRequest.getSuitableForPersons());
                                 transferPackageEntity.setUnitPrice(transferPackageRequest.getTransferUnitPrice());
-                                //transferPackageEntity.setDayNumbers(transferPackageRequest.getDayNumbers());
-                                transferPackageEntity.setNumberOfVehicles(transferPackageRequest.getNumberOfVehicles());
-                                transferPackageEntity.setPerPersonTransferPackagePrice(new BigDecimal(5));
                                 transferPackageEntity.setTransferRoute(transferPackageRequest.getTransferRoute());
                                 transferPackageEntity.setTripType(transferPackageRequest.getTripType());
                                 return transferPackageEntity;
@@ -107,6 +104,7 @@ public class TransferServiceImpl implements TransferService {
                             .collect(Collectors.toList());
                     transferOptionEntity.setTransferPackageEntities(transferPackageEntityList);
                     transferOptionEntity.setIsDefault(transferOptionRequest.getIsDefault());
+                    transferOptionEntity.setPerPersonTransferOptionPrice(tourPackagePriceService.perPersonTransferOptionPrice(transferOptionRequest, tourPackageEntity.getTourPackageType().getSuitableFor()));
                     return transferOptionEntity;
 
                 })

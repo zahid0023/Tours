@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,4 +27,7 @@ public class TransferOptionEntity extends BaseEntity {
     private Boolean active;
     @Column(name = "is_default")
     private Boolean isDefault;
+
+    @Column(name = "total_option_price")
+    private BigDecimal perPersonTransferOptionPrice;
 }

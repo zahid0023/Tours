@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ghuddy.backendapp.model.db.BaseEntity;
 import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TransportationRouteEntity;

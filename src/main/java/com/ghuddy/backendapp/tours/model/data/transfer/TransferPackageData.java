@@ -34,18 +34,12 @@ public class TransferPackageData {
     @JsonProperty("trip_type")
     private TripType tripType;
     @Schema(description = "per day price of the transportation")
-    @JsonProperty("tour_package_transfer_package_unit_price")
+    @JsonProperty("per_vehicle_per_trip_price")
     private BigDecimal unitPrice;
 
     @Schema(description = "maximum number of travellers in a vehicle")
     @JsonProperty("suitable_for_persons")
     private Integer suitableForPersons;
-    @Schema(description = "total number of vehicles")
-    @JsonProperty("number_of_vehicles")
-    private Integer numberOfVehicles;
-    @Schema(description = "per person transfer package price")
-    @JsonProperty("tour_package_transfer_package_price_per_person")
-    private BigDecimal perPersonTransferPackagePrice;
 
     public TransferPackageData(TransferPackageEntity transferPackageEntity) {
         this.transferPackageId = transferPackageEntity.getId();
@@ -56,7 +50,5 @@ public class TransferPackageData {
         this.tripType = transferPackageEntity.getTripType();
         this.unitPrice = transferPackageEntity.getUnitPrice();
         this.suitableForPersons = transferPackageEntity.getSuitableForPersons();
-        this.numberOfVehicles = transferPackageEntity.getNumberOfVehicles();
-        this.perPersonTransferPackagePrice = transferPackageEntity.getPerPersonTransferPackagePrice();
     }
 }

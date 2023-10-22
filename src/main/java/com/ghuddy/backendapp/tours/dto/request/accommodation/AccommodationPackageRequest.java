@@ -25,8 +25,8 @@ public class AccommodationPackageRequest {
     @JsonProperty("per_night_room_price")
     private BigDecimal perNightRoomPrice; // per night room price
 
-    @Schema(example = "[1,2,3]")
-    private int[] nightNumbers;
+    @Schema(example = "1")
+    private Integer nightNumber;
 
     @Schema(description = "Number of person that will stay in this room", required = true, example = "2")
     @JsonProperty("suitable_for_persons")

@@ -18,11 +18,5 @@ public class MealPackageRequest {
     @Schema(description = "The price of this meal package", required = true, example = "120")
     @JsonProperty("meal_package_unit_price")// per meal package price
     private BigDecimal perMealPackagePrice;
-    @Schema(description = "The number of this meal package provided during the tour", required = true, example = "4")
-    @JsonProperty("meal_package_quantity")
-    private Integer numberOfMeals;
-    @Schema(description = "The total/final price of this meal package", required = true, example = "120")
-    @JsonProperty("meal_package_total_price")
-    private BigDecimal totalMealPackagePrice;
 
 }

@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.controller.tour;
 
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
@@ -59,6 +60,8 @@ public class TourPackageControllerForMerchant {
         } catch (TourNotFoundException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageAddRequest.getRequestId()), HttpStatus.BAD_REQUEST);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -73,6 +76,16 @@ public class TourPackageControllerForMerchant {
         } catch (TourNotFoundException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageListAddRequest.getRequestId()), HttpStatus.BAD_REQUEST);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageListAddRequest.getRequestId()), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(path = "/tour-package/option/check", method = RequestMethod.POST)
+    public ResponseEntity<?> checkTourPackageOptionsCombination(@RequestBody TourOptionCheckRequest tourOptionCheckRequest) {
+        tourPackageService.checkTourPackageOptionCombination(tourOptionCheckRequest);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+
 }

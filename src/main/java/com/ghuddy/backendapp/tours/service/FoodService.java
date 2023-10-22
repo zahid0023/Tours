@@ -1,13 +1,15 @@
 package com.ghuddy.backendapp.tours.service;
 
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
+import com.ghuddy.backendapp.tours.dto.response.food.FoodOptionCombinationCheckResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.food.FoodOptionListAddResponse;
 import com.ghuddy.backendapp.tours.model.entities.*;
-import com.ghuddy.backendapp.tours.utils.EntityUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,13 @@ public interface FoodService {
 
     // meal package
 
-    InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId);
+    FoodOptionCombinationCheckResponse getAllMealsCombination(FoodOptionCombinationCheckRequest foodOptionCombinationCheckRequest) throws EmptyListException;
 
-    InsertAcknowledgeListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList, String requestId);
+    InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException;
 
-    List<FoodOptionEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList);
+    InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList, String requestId) throws EmptyListException;
+
+    List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList) throws EmptyListException;
 
 
 }

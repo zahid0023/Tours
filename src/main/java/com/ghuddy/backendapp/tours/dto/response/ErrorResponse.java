@@ -21,9 +21,10 @@ public class ErrorResponse extends BaseResponse {
         this.setRequestId(requestId);
     }
 
-    public ErrorResponse(String status, String statusCode) {
+    public ErrorResponse(String status, String statusCode, String requestId) {
         this.status = status;
         this.statusCode = statusCode;
+        this.setRequestId(requestId);
     }
 }
 

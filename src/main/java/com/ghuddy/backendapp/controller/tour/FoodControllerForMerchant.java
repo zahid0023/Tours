@@ -1,16 +1,22 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.food.MealPackageListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionCombinationCheckRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.FoodService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
+import com.ghuddy.backendapp.tours.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -69,15 +75,26 @@ public class FoodControllerForMerchant {
     }
 
     // meal package
-    @RequestMapping(path = "/food/option/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageFoodOption(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
+    @RequestMapping(path = "/food/meal-package/combination/check", method = RequestMethod.POST)
+    public ResponseEntity<?> checkMealPackageCombination(@RequestBody FoodOptionCombinationCheckRequest foodOptionCombinationCheckRequest) {
+        try {
+            return new ResponseEntity<>(foodService.getAllMealsCombination(foodOptionCombinationCheckRequest), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), foodOptionCombinationCheckRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        } catch (RuntimeException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), "22222", foodOptionCombinationCheckRequest.getRequestId()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/food/optiont/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addTourPackageFoodOption(@RequestBody FoodOptionAddRequest foodOptionAddRequest) throws EmptyListException {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
         return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/food/option/list/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody MealPackageListAddRequest mealPackageListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(mealPackageListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, mealPackageListAddRequest.getFoodOptionRequestList(), mealPackageListAddRequest.getRequestId()), HttpStatus.CREATED);
+    public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody FoodOptionListAddRequest foodOptionListAddRequest) throws EmptyListException {
+        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionListAddRequest.getTourPackageID());
+        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, foodOptionListAddRequest.getFoodOptionRequestList(), foodOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 }

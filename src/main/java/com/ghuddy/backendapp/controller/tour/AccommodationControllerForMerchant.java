@@ -95,12 +95,12 @@ public class AccommodationControllerForMerchant {
     @RequestMapping(path = "/tour-package/accommodation/option/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageAccommodation(@RequestBody AccommodationOptionAddRequest accommodationOptionAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionAddRequest.getTourPackageID());
-        return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, accommodationOptionAddRequest.getAccommodationOptionRequest()), HttpStatus.CREATED);
+        return new ResponseEntity<>(accommodationService.addTourPackageAccommodation(tourPackageEntity, accommodationOptionAddRequest.getAccommodationOptionRequest(), accommodationOptionAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/tour-package/accommodation/option/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageAccommodations(@RequestBody AccommodationOptionListAddRequest accommodationOptionListAddRequest) {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(accommodationOptionListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationOptionListAddRequest.getAccommodationOptionRequestList()), HttpStatus.CREATED);
+        return new ResponseEntity<>(accommodationService.addTourPackageAccommodations(tourPackageEntity, accommodationOptionListAddRequest.getAccommodationOptionRequestList(), accommodationOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
     }
 }

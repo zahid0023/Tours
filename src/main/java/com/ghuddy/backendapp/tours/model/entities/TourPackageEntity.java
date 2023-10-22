@@ -36,27 +36,23 @@ public class TourPackageEntity extends BaseEntity {
     private List<TransportationPackageEntity> transportationPackageEntities = new ArrayList<>();
 
 
-    @NotNull
-    @Column(name = "is_food_included", nullable = false)
-    private Boolean isFoodIncluded;
-
-    @NotNull
-    @Column(name = "is_accommodation_included", nullable = false)
-    private Boolean isAccommodationIncluded;
-
-    @NotNull
-    @Column(name = "is_transportation_included", nullable = false)
-    private Boolean isTransportationIncluded;
-
-    @NotNull
-    @Column(name = "is_transfer_included", nullable = false)
-    private Boolean isTransferIncluded;
-
     @Column(name = "package_price_per_person", precision = 10, scale = 2)
     private BigDecimal packagePricePerPerson;
 
     @Column(name = "total_package_price")
     private BigDecimal totalPackagePrice;
+
+    @Column(name = "default_food_option_price")
+    private BigDecimal defaultFoodOptionPrice;
+
+    @Column(name = "default_accommodation_option_price")
+    private BigDecimal defaultAccommodationOptionPrice;
+
+    @Column(name = "default_transfer_option_price")
+    private BigDecimal defaultTransferOptionPrice;
+
+    @Column(name = "guide_price")
+    private BigDecimal guidePrice;
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccommodationOptionEntity> accommodationOptionEntities = new LinkedList<>();

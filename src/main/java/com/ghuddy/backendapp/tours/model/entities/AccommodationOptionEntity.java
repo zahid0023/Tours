@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -20,12 +19,15 @@ public class AccommodationOptionEntity extends BaseEntity {
     @JoinColumn(name = "tour_package_id")
     private TourPackageEntity tourPackageEntity;
 
-    @OneToMany(mappedBy = "accommodationOptionEntity", orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "accommodationOptionEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<AccommodationPackageEntity> accommodationPackageEntities = new LinkedList<>();
 
     @Column(name = "active")
-    private Boolean active;
+    private Boolean active = true;
     @Column(name = "is_default")
     private Boolean isDefault;
+
+    @Column(name = "total_option_price_per_person")
+    private BigDecimal totalOptionPricePerPerson;
 
 }

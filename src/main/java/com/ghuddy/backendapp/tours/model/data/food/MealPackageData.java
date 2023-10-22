@@ -24,14 +24,8 @@ public class MealPackageData {
     private List<String> foodItems;
 
     @Schema(description = "The price of this meal package", required = true, example = "120")
-    @JsonProperty("meal_package_unit_price")
+    @JsonProperty("per_meal_package_price")
     private BigDecimal unitPrice;
-    @Schema(description = "The number of this meal package provided during the tour", required = true, example = "4")
-    @JsonProperty("meal_package_quantity")
-    private Integer quantity;
-    @Schema(description = "The total/final price of this meal package", required = true, example = "120")
-    @JsonProperty("meal_package_total_price")
-    private BigDecimal totalMealPackagePrice;
 
     public MealPackageData(MealPackageEntity mealPackageEntity) {
         this.mealPackageName = mealPackageEntity.getMealPackageName();
@@ -40,7 +34,5 @@ public class MealPackageData {
                 .map(foodItemEntity -> foodItemEntity.getFoodItemName())
                 .collect(Collectors.toList());
         this.unitPrice = mealPackageEntity.getPerMealPrice();
-        this.quantity = mealPackageEntity.getPerPersonNumberOfMeals();
-        this.totalMealPackagePrice = mealPackageEntity.getPerPersonTotalMealPrice();
     }
 }

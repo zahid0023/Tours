@@ -21,18 +21,13 @@ public class TransferPackageEntity extends BaseEntity {
     private Boolean isAc;
     @Column(name = "suitable_for_persons")
     private Integer suitableForPersons;
-    @Column(name = "unit_price")
+    @Column(name = "per_vehicle_per_trip_price")
     private BigDecimal unitPrice; // for now let us consider per vehicle per trip price
-
-    @Column(name = "number_of_vehicles")
-    private Integer numberOfVehicles;
-    @Column(name = "per_person_transfer_package_price")
-    private BigDecimal perPersonTransferPackagePrice;
 
     @Column(name = "transfer_route")
     private String transferRoute;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "trip_type")
     private TripType tripType;
 

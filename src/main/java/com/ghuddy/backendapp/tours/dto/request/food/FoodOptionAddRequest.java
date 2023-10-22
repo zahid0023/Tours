@@ -10,10 +10,10 @@ import java.util.List;
 
 @Data
 public class FoodOptionAddRequest extends BaseRequest {
-    @Schema(description = "The id of the tour package",required = true,example = "1")
+    @Schema(description = "The id of the tour package", required = true, example = "1")
     @JsonProperty("tour_package_id")
     private Long tourPackageID;
-    @Schema(description = "The meal package associated with the tour package",required = true)
+    @Schema(description = "The food options package associated with the tour package", required = true)
     @JsonProperty("tour_package_food_option")
     private FoodOptionRequest foodOptionRequest;
 

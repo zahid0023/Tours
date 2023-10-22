@@ -38,14 +38,6 @@ public class MealPackageEntity extends BaseEntity {
     @Column(name = "per_meal_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perMealPrice;
 
-    @NotNull
-    @Column(name = "per_person_number_of_meals", nullable = false)
-    private Integer perPersonNumberOfMeals;
-
-    @NotNull
-    @Column(name = "per_person_total_meal_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal perPersonTotalMealPrice;
-
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "food_option_id")

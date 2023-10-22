@@ -143,7 +143,7 @@ public class AccommodationControllerAdmin {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             log.error(ex.toString());
-            return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), "11111"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), "22222",requestId), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

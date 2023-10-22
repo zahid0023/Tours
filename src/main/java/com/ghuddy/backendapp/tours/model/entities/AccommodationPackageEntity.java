@@ -50,14 +50,8 @@ public class AccommodationPackageEntity extends BaseEntity {
     @Column(name = "per_night_room_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perNightRoomPrice;
 
-    @Column(name = "night_numbers", columnDefinition = "integer[]")
-    @Type(type = "com.ghuddy.backendapp.tours.utils.CustomIntegerArrayType")  // Adjust the package and class name accordingly
-    private int[] nightNumbers;
-
-
-    @NotNull
-    @Column(name = "per_person_accommodation_package_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal perPersonAccommodationPackagePrice;
+    @Column(name = "night_number") // Adjust the package and class name accordingly
+    private Integer nightNumber;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_option_id")

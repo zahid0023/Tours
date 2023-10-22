@@ -31,16 +31,9 @@ public class TourPackageTransportationPackageData {
     @Schema(description = "The price of this transportation package", required = true, example = "120")
     @JsonProperty("transportation_package_unit_price")
     private BigDecimal unitPrice;
-    @Schema(description = "The number of transportation packages provided for this tour package", required = true, example = "1")
-    @JsonProperty("transportation_package_quantity")
-    private Integer quantity;
     @Schema(description = "The total/final price of this transportation package", required = true, example = "120")
     @JsonProperty("transportation_package_price_per_person")
     private BigDecimal transportationPackagePricePerPerson;
-    @Schema(description = "Whether this is transportation package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
-    @JsonProperty("transportation_package_is_default")
-    private Boolean isDefault;
-
     public TourPackageTransportationPackageData(TransportationPackageEntity transportationPackageEntity) {
         this.transportationRouteName = transportationPackageEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + transportationPackageEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
         this.transportationModeName = transportationPackageEntity.getTransportationModeEntity().getModeName();
@@ -49,8 +42,6 @@ public class TourPackageTransportationPackageData {
         this.tripType = transportationPackageEntity.getTripType().getDisplayName();
         this.isAc = transportationPackageEntity.getIsAc();
         this.unitPrice = transportationPackageEntity.getUnitPrice();
-        this.quantity = transportationPackageEntity.getQuantity();
         this.transportationPackagePricePerPerson = transportationPackageEntity.getPerPersonTransportationPackagePrice();
-        this.isDefault = transportationPackageEntity.getIsIncluded();
     }
 }
