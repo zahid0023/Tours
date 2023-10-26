@@ -6,8 +6,6 @@ import com.ghuddy.backendapp.exception.AbstractException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class FoodOptionAddRequest extends BaseRequest {
     @Schema(description = "The id of the tour package", required = true, example = "1")

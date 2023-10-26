@@ -5,12 +5,13 @@ import com.ghuddy.backendapp.tours.model.data.OptionData;
 import com.ghuddy.backendapp.tours.model.entities.AccommodationOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class AccommodationOptionData extends OptionData {
     @Schema(description = "The accommodation packages belonging to this tour package")
     @JsonProperty("tour_package_accommodation_packages")

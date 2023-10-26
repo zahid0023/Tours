@@ -1,9 +1,9 @@
 package com.ghuddy.backendapp.tours.dto.request.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.dto.request.guide.GuidePackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.guide.GuidePackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;

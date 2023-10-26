@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping(path = "/api/v1/admin")
-//@Api(tags = "Tour - Activity Controller For Admin", description = "This controller is used to manage tour activities(itineraries) by admins.")
+// @Api(tags = "Tour - Activity Controller For Admin", description = "This controller is used to manage tour activities(itineraries) by admins.")
 public class ActivityControllerForAdmin {
     private final ActivityService activityService;
 

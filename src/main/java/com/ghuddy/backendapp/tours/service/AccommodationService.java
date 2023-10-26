@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
-import com.ghuddy.backendapp.tours.dto.response.AcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationListResponse;

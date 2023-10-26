@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.dto.request.BaseRequest;
 import com.ghuddy.backendapp.exception.AbstractException;
 import com.ghuddy.backendapp.tours.dto.request.activity.SubscribedTourActivityRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 

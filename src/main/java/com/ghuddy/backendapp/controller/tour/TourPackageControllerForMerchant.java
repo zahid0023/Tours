@@ -1,13 +1,15 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,10 +84,9 @@ public class TourPackageControllerForMerchant {
     }
 
     @RequestMapping(path = "/tour-package/option/check", method = RequestMethod.POST)
-    public ResponseEntity<?> checkTourPackageOptionsCombination(@RequestBody TourOptionCheckRequest tourOptionCheckRequest) {
-        tourPackageService.checkTourPackageOptionCombination(tourOptionCheckRequest);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<?> checkTourPackageOptionsCombination(@RequestBody TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
+        TourPackageEntity tourPackageEntity = new TourPackageEntity();
+        tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(tourPackageOptionCheckRequest.getTourPackageTypeId()));
+        return new ResponseEntity<>(tourPackageService.checkTourPackageOptionCombination(tourPackageEntity, tourPackageOptionCheckRequest), HttpStatus.OK);
     }
-
-
 }

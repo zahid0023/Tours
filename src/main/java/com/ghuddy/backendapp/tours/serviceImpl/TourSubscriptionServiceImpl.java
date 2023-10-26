@@ -1,10 +1,11 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.model.UserEntity;
-import com.ghuddy.backendapp.repository.MerchantRepository;
+import com.ghuddy.backendapp.repository.UserRepository;
 import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.activity.SubscribedTourActivityRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourSubscriptionRequest;
+import com.ghuddy.backendapp.tours.dto.response.AddressResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.SubscribedTourListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourSubscriptionResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,13 +32,13 @@ import java.util.stream.Collectors;
 @Service
 public class TourSubscriptionServiceImpl implements TourSubscriptionService {
     private final TourService tourService;
-    private final MerchantRepository merchantRepository;
+    private final UserRepository merchantRepository;
     private final ActivityService activityService;
     private final SubscribedTourRepository subscribedTourRepository;
     private final TourDAO tourDAO;
 
     public TourSubscriptionServiceImpl(TourService tourService,
-                                       MerchantRepository merchantRepository,
+                                       UserRepository merchantRepository,
                                        ActivityService activityService,
                                        SubscribedTourRepository subscribedTourRepository,
                                        TourDAO tourDAO) {
@@ -50,7 +52,7 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
 
     /**
      * @param tourSubscriptionRequest the DTO for tour subscription
-     * @param requestId to keep track of the request served by this service
+     * @param requestId               to keep track of the request served by this service
      * @return TourSubscriptionResponse
      * @throws TourNotFoundException when the tour for this id is not found to be subscribed
      */
@@ -115,20 +117,36 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
         List<SubscribedTourData> subscribedTourDataList = tourDAO.getAllSubscribedToursForMerchant(0, 0, merchantId);
         if (subscribedTourDataList == null || subscribedTourDataList.isEmpty())
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new SubscribedTourListResponse(subscribedTourDataList,requestId);
+        return new SubscribedTourListResponse(subscribedTourDataList, requestId);
     }
 
     /**
-     * @param pageSize the size of the page
+     * @param pageSize   the size of the page
      * @param pageNumber the number of the page
      * @param merchantId the id of the merchant
      * @return SubscribedTourListResponse
      */
     @Override
-    public SubscribedTourListResponse getAllSubscribedToursPaginatedByMerchantId(Integer pageSize, Integer pageNumber, Long merchantId, String requestId) throws EmptyListException{
+    public SubscribedTourListResponse getAllSubscribedToursPaginatedByMerchantId(Integer pageSize, Integer pageNumber, Long merchantId, String requestId) throws EmptyListException {
         List<SubscribedTourData> subscribedTourDataList = tourDAO.getAllSubscribedToursForMerchant(pageSize, pageNumber, merchantId);
         if (subscribedTourDataList == null || subscribedTourDataList.isEmpty())
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
-        return new SubscribedTourListResponse(subscribedTourDataList,requestId);
+        return new SubscribedTourListResponse(subscribedTourDataList, requestId);
+    }
+
+    /**
+     * @param merchantId
+     * @param subscribedTourId
+     * @return
+     */
+    @Override
+    public AddressResponse getSubscribedTourRelatedAddress(Long merchantId, Long subscribedTourId, String requestId) throws TourNotFoundException {
+        SubscribedTourEntity subscribedTourEntity = getSubscribedTourEntityById(subscribedTourId);
+        List<String> addresses = new LinkedList<>();
+        addresses.add(subscribedTourEntity.getTourEntity().getAddedTourEntity().getShortAddress());
+        subscribedTourEntity.getSubscribedTourItineraryEntities().stream()
+                .forEach(subscribedTourItineraryEntity -> addresses.add(subscribedTourItineraryEntity.getActivityEntity().getShortLocation()));
+        addresses.add(subscribedTourEntity.getTourReportingPlace());
+        return new AddressResponse(addresses,requestId);
     }
 }

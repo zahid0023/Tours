@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,11 +16,18 @@ public class TransferPackageData {
     @JsonProperty("tour_package_transfer_package_id")
     private Long transferPackageId;
     @Schema(description = "The route where the transfer service will be provided")
-    @JsonProperty("transfer_route")
+    @JsonProperty("tour_package_transfer_route")
     private String transferRoute;
+
+    @Schema(description = "The mode id")
+    @JsonProperty("tour_package_transportation_mode_id")
+    private Long transportationModeId;
     @Schema(description = "The name of the transportation mode")
     @JsonProperty("tour_package_transportation_mode_name")
     private String transportationModeName;
+    @Schema(description = "The provider id")
+    @JsonProperty("tour_package_transportation_provider_id")
+    private Long transportationProviderId;
     @Schema(description = "The name of the transportation provider")
     @JsonProperty("tour_package_transportation_provider_name")
     private String transportationProviderName;
@@ -44,7 +49,9 @@ public class TransferPackageData {
     public TransferPackageData(TransferPackageEntity transferPackageEntity) {
         this.transferPackageId = transferPackageEntity.getId();
         this.transferRoute = transferPackageEntity.getTransferRoute();
+        this.transportationModeId = transferPackageEntity.getTransportationModeEntity().getId();
         this.transportationModeName = transferPackageEntity.getTransportationModeEntity().getModeName();
+        this.transportationProviderId = transferPackageEntity.getTransportationProviderEntity().getId();
         this.transportationProviderName = transferPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
         this.isAc = transferPackageEntity.getIsAc();
         this.tripType = transferPackageEntity.getTripType();

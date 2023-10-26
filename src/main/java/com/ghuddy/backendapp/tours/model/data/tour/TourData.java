@@ -17,7 +17,7 @@ public class TourData {
     private String tourName;
     @JsonProperty("number_of_days")
     private Integer numberOfDays;
-    @JsonProperty("number_if_nights")
+    @JsonProperty("number_of_nights")
     private Integer numberOfNights;
     @JsonProperty("tour_thumb_image_url")
     private String tourThumbImageUrl;

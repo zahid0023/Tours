@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_package_transportation_package")
+@Table(name = "transportation_packages")
 public class TransportationPackageEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -47,10 +47,6 @@ public class TransportationPackageEntity extends BaseEntity {
 
     @Column(name = "active")
     private Boolean active;
-
-    @NotNull
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
     
     @NotNull
     @Column(name = "per_person_transportation_package_price", nullable = false, precision = 10, scale = 2)

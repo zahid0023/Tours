@@ -1,17 +1,17 @@
 package com.ghuddy.backendapp.tours.model.data.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationPackageData;
+import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
+import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
-import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
-import com.ghuddy.backendapp.tours.model.data.transportation.TourPackageTransportationPackageData;
+import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class TourPackageData {
@@ -27,24 +27,25 @@ public class TourPackageData {
     @Schema(description = "The description of the tour package")
     @JsonProperty("tour_package_description")
     private String tourPackageDescription;
-    @Schema(description = "The list of the meal packages belonging to this tour package")
-    @JsonProperty("tour_package_meal_packages")
-    private List<FoodOptionData> mealPackageDataList;
-    @Schema(description = "The list of the accommodation packages belonging to this tour package")
-    @JsonProperty("tour_package_accommodation_packages")
-    private List<AccommodationPackageData> accommodationPackageDataList;
+    @Schema(description = "The list of the food options belonging to this tour package")
+    @JsonProperty("tour_package_food_options")
+    private List<FoodOptionData> foodOptionDataList;
+    @Schema(description = "The list of the accommodation options belonging to this tour package")
+    @JsonProperty("tour_package_accommodation_options")
+    private List<AccommodationOptionData> accommodationOptionDataList;
+    @Schema(description = "The list of the transfer option belonging to this tour package")
+    @JsonProperty("tour_package_transfer_options")
+    private List<TransferOptionData> transferOptionDataList;
 
     @Schema(description = "The list of the transportation packages belonging to this tour package")
     @JsonProperty("tour_package_transportation_packages")
-    private List<TourPackageTransportationPackageData> tourPackageTransportationPackageDataList;
+    private List<TransportationPackageData> transportationPackageDataList;
 
-    @Schema(description = "The net price of this tour package")
-    @JsonProperty("tour_package_net_price")
-    private BigDecimal netPrice;
-    @Schema(description = "The added/subtracted price of this tour package")
-    @JsonProperty("tour_package_added_price")
-    private BigDecimal addedPrice;
-    @Schema(description = "The total/final price of this meal package")
+    @Schema(description = "The default food option price per person")
+    @JsonProperty("tour_package_default_option")
+    private DefaultCombinationData defaultCombinationData;
+
+    @Schema(description = "The total price of the tour package")
     @JsonProperty("tour_package_total_price")
     private BigDecimal totalPackagePrice;
 
@@ -54,15 +55,37 @@ public class TourPackageData {
         this.tourPackageTypeName = tourPackageEntity.getTourPackageType().getPackageTypeName();
         this.tourPackageName = tourPackageEntity.getTourPackageName();
         this.tourPackageDescription = tourPackageEntity.getDescription();
-        /* this.mealPackageDataList = tourPackageEntity.getMealPackageEntities().stream()
-                .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
-                .collect(Collectors.toList());*/
-        /*this.accommodationPackageDataList = tourPackageEntity.getAccommodationPackageEntities().stream()
-                .map(tourPackageAccommodationEntity -> new AccommodationPackageData(tourPackageAccommodationEntity))
-                .collect(Collectors.toList());*/
-        this.tourPackageTransportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
-                .map(tourPackageTransportationEntity -> new TourPackageTransportationPackageData(tourPackageTransportationEntity))
-                .collect(Collectors.toList());
+        this.defaultCombinationData = new DefaultCombinationData();
+        defaultCombinationData.setDefaultOptionPricePerPerson(BigDecimal.ZERO);
         this.totalPackagePrice = tourPackageEntity.getTotalPackagePrice();
+        this.foodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
+                .map(foodOptionEntity -> {
+                    FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
+                    if (foodOptionEntity.getIsDefault()) {
+                        defaultCombinationData.setFoodOptionData(foodOptionData);
+                        defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionEntity.getTotalOptionPricePerPerson());
+                    }
+                    return foodOptionData;
+                }).toList();
+        this.accommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
+                .map(accommodationOptionEntity -> {
+                    AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
+                    if (accommodationOptionEntity.getIsDefault()) {
+                        defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+                        defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson());
+                    }
+                    return accommodationOptionData;
+                }).toList();
+        this.transferOptionDataList = tourPackageEntity.getTourTransferOptionEntities().stream()
+                .map(transferOptionEntity -> {
+                    TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
+                    if (transferOptionEntity.getIsDefault()) {
+                        defaultCombinationData.setTransferOptionData(transferOptionData);
+                        defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionEntity.getPerPersonTransferOptionPrice());
+                    }
+                    return transferOptionData;
+                }).toList();
+        this.transportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
+                .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity)).toList();
     }
 }

@@ -11,12 +11,24 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 public class AccommodationPackageData {
+    @Schema(description = "The package id for this accommodation when saved in the db, otherwise null")
+    @JsonProperty("tour_package_accommodation_package_id")
+    private Long accommodationPackageId;
+    @Schema(description = "The accommodation id")
+    @JsonProperty("tour_package_accommodation_id")
+    private Long accommodationId;
     @Schema(description = "The name of the accommodation associated with this tour package accommodation package")
     @JsonProperty("tour_package_accommodation_name")
     private String tourPackageAccommodationName;
+    @Schema(description = "The room category id")
+    @JsonProperty("tour_package_room_category_id")
+    private Long roomCategoryId;
     @Schema(description = "The name of the room category associated with this tour package accommodation package")
     @JsonProperty("tour_package_room_category_name")
     private String tourPackageRoomCategoryName;
+    @Schema(description = "The room type id")
+    @JsonProperty("tour_package_room_type_id")
+    private Long roomTypeId;
     @Schema(description = "The name of the room type associated with this tour package accommodation package")
     @JsonProperty("tour_package_room_type_name")
     private String tourPackageRoomTypeName;
@@ -37,13 +49,17 @@ public class AccommodationPackageData {
     @JsonProperty("per_night_room_price")
     private BigDecimal unitPrice;
 
-    @Schema(description = "The night in which this accommodation package will be available",example = "1")
+    @Schema(description = "The night in which this accommodation package will be available", example = "1")
     @JsonProperty("night_number")
     private Integer nightNumber;
 
     public AccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity) {
+        this.accommodationPackageId = accommodationPackageEntity.getId();
+        this.accommodationId = accommodationPackageEntity.getTourAccommodationEntity().getId();
         this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
+        this.roomCategoryId = accommodationPackageEntity.getTourRoomCategoryEntity().getId();
         this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
+        this.roomTypeId = accommodationPackageEntity.getTourRoomTypeEntity().getId();
         this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();
         this.isShareable = accommodationPackageEntity.getIsShareable();
         this.suitableForPersons = accommodationPackageEntity.getSuitableForPersons();

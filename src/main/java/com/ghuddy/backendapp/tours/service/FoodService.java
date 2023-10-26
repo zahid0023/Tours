@@ -1,6 +1,5 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
@@ -8,8 +7,10 @@ import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodOptionCombinationCheckResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.data.food.FoodOptionListAddResponse;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
+import com.ghuddy.backendapp.tours.model.entities.FoodOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.MealTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public interface FoodService {
 
     InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList, String requestId) throws EmptyListException;
 
-    List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList) throws EmptyListException;
+    List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList);
 
 
 }

@@ -7,9 +7,11 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -57,7 +59,7 @@ public class TourPackageEntity extends BaseEntity {
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccommodationOptionEntity> accommodationOptionEntities = new LinkedList<>();
 
-    @OneToMany(mappedBy = "tourPackageEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodOptionEntity> foodOptionEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)

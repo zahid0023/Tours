@@ -4,7 +4,6 @@ import com.ghuddy.backendapp.model.db.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Value;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ public class FoodOptionEntity extends BaseEntity {
     private Integer numberOfDinner = 0;
 
     @Column(name = "total_option_price")
-    private BigDecimal totalOptionPrice;
+    private BigDecimal totalOptionPricePerPerson;
 
     @Column(name = "active")
     private Boolean active = true;

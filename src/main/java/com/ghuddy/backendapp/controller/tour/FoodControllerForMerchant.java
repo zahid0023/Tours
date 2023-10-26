@@ -1,22 +1,18 @@
 package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionCombinationCheckRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.FoodService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
-import com.ghuddy.backendapp.tours.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -86,7 +82,7 @@ public class FoodControllerForMerchant {
         }
     }
 
-    @RequestMapping(path = "/food/optiont/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/food/option/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageFoodOption(@RequestBody FoodOptionAddRequest foodOptionAddRequest) throws EmptyListException {
         TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
         return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);

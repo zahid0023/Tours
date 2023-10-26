@@ -1,11 +1,12 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourOptionCheckRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.ComponentCombinationResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
@@ -35,10 +36,10 @@ public interface TourPackageService {
 
     public InsertAcknowledgeListResponse addTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackageRequestList, String requestId) throws EmptyListException;
 
-    public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages) throws EmptyListException;
+    public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages);
 
     TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
 
-    void checkTourPackageOptionCombination(TourOptionCheckRequest tourOptionCheckRequest);
+    ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
 
 }

@@ -28,14 +28,8 @@ public class TransportationPackageRequest {
     @JsonProperty("is_ac")
     private Boolean isAC;
     @Schema(description = "The price of this transportation package", required = true, example = "120")
-    @JsonProperty("transportation_package_unit_price")
+    @JsonProperty("transportation_package_per_unit_price")
     private BigDecimal unitPrice;
-    @Schema(description = "The number of transportation packages provided for this tour package", required = true, example = "1")
-    @JsonProperty("transportation_package_quantity")
-    private Integer quantity;
-    @Schema(description = "The total/final price of this transportation package for the default", required = true, example = "120")
-    @JsonProperty("transportation_package_total_price")
-    private BigDecimal totalTransportationPackagePrice;
     @Schema(description = "Whether this is transportation package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
     @JsonProperty("transportation_package_is_default")
     private Boolean isDefault;

@@ -1,11 +1,9 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
-import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
-import com.ghuddy.backendapp.tours.model.data.transfer.TransferPackageData;
 import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.TransferOptionRepository;
 import com.ghuddy.backendapp.tours.repository.TransferPackageRepository;
@@ -14,7 +12,6 @@ import com.ghuddy.backendapp.tours.service.TransferService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 

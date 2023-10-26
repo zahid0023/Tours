@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
-//@Api(tags = "Tour - Tour Subscription Controller For Merchant", description = "This controller is used to subscribe tour/tour packages by merchants.")
+// @Api(tags = "Tour - Tour Subscription Controller For Merchant", description = "This controller is used to subscribe tour/tour packages by merchants.")
 public class TourSubscriptionControllerForMerchant {
     private final TourSubscriptionService tourSubscriptionService;
 
@@ -34,6 +34,15 @@ public class TourSubscriptionControllerForMerchant {
         try {
             return new ResponseEntity<>(tourSubscriptionService.getAllSubscribedToursByMerchantId(merchantId, requestId), HttpStatus.OK);
         } catch (EmptyListException ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
+    }
+    @RequestMapping(path = "/tour/subscribed/get/all/address/by/{merchant-id}/{subscribed-tour-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllSubscribedTourAddress(@PathVariable("merchant-id") Long merchantId, @PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
+        try {
+            return new ResponseEntity<>(tourSubscriptionService.getSubscribedTourRelatedAddress(merchantId, subscribedTourId, requestId), HttpStatus.OK);
+        } catch (TourNotFoundException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }

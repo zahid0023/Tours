@@ -3,12 +3,8 @@ package com.ghuddy.backendapp.tours.dto.request.accommodation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.checkerframework.checker.fenum.qual.SwingHorizontalOrientation;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 public class AccommodationPackageRequest {

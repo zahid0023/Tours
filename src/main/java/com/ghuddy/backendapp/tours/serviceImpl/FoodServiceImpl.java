@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.FoodDao;
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.*;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
@@ -10,7 +9,6 @@ import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
-import com.ghuddy.backendapp.tours.model.data.food.FoodOptionListAddResponse;
 import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.FoodItemRepository;
@@ -28,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,10 +149,19 @@ public class FoodServiceImpl implements FoodService {
         List<MealPackageRequest> mealPackageRequestList = foodOptionCombinationCheckRequest.getMealPackageRequestList();
         HashMap<Integer, List<Long>> mealsProvidedInDays = foodOptionCombinationCheckRequest.getMealsProvidedInDays();
 
-        HashMap<String, Long> idMealTypeMap = new HashMap<>();
+        Map<String, Set<Long>> idMaps = new HashMap<>();
+        mealPackageRequestList.forEach(mealPackageRequest -> {
+            idMaps.computeIfAbsent("mealType", key -> new HashSet<>())
+                    .add(mealPackageRequest.getMealTypeID());
+            idMaps.computeIfAbsent("foodItem", key -> new HashSet<>())
+                    .addAll(mealPackageRequest.getFoodItemIDs());
+        });
 
-        List<MealTypeData> mealTypeDataList = foodDao.getAllMealTypes(0, 0);
-        mealTypeDataList.forEach(mealTypeData -> idMealTypeMap.put(mealTypeData.getMealTypeName().toLowerCase(), mealTypeData.getMealTypeId()));
+        Map<Long, MealTypeEntity> mealTypeEntityMap = getMealTypeEntitiesByIDs(idMaps.get("mealType"));
+        Map<Long, FoodItemEntity> foodItemEntityMap = getFoodItemEntitiesByIDs(idMaps.get("foodItem"));
+
+        HashMap<String, Long> idMealTypeMap = new HashMap<>();
+        mealTypeEntityMap.entrySet().forEach(longMealTypeEntityEntry -> idMealTypeMap.put(longMealTypeEntityEntry.getValue().getMealTypeName().toLowerCase(), longMealTypeEntityEntry.getKey()));
 
         Long breakfastId = idMealTypeMap.getOrDefault("breakfast", Long.valueOf(0));
         Long lunchId = idMealTypeMap.getOrDefault("lunch", Long.valueOf(0));
@@ -180,21 +186,32 @@ public class FoodServiceImpl implements FoodService {
 
             if (mealTypeIDs.contains(breakfastId) && breakfastPackages.isEmpty())
                 throw new RuntimeException("Please add at least one breakfast package");
-            else foodPackages.add(breakfastPackages);
+            else if (mealTypeIDs.contains(breakfastId)) foodPackages.add(breakfastPackages);
 
             if (mealTypeIDs.contains(lunchId) && lunchPackages.isEmpty())
                 throw new RuntimeException("Please add at least one lunch package");
-            else foodPackages.add(lunchPackages);
+            else if (mealTypeIDs.contains(lunchId)) foodPackages.add(lunchPackages);
 
             if (mealTypeIDs.contains(dinnerId) && dinnerPackages.isEmpty())
                 throw new RuntimeException("Please add at least one dinner package");
-            else foodPackages.add(dinnerPackages);
+            else if (mealTypeIDs.contains(dinnerId)) foodPackages.add(dinnerPackages);
 
             List<List<MealPackageRequest>> options = CombinationGenerator.generateMealPackagesCombination(foodPackages);
+            log.info(options.toString());
 
             options.forEach(option -> {
-                FoodOptionResponse foodOptionResponse = new FoodOptionResponse(option, integerListEntry.getKey());
-                foodOptionResponseList.add(foodOptionResponse);
+                List<MealPackageResponse> mealPackageResponseList = option.stream()
+                        .map(mealPackageRequest -> {
+                            MealPackageResponse mealPackageResponse = new MealPackageResponse();
+                            mealPackageResponse.setMealTypeID(mealPackageRequest.getMealTypeID());
+                            mealPackageResponse.setFoodItemDataList(
+                                    mealPackageRequest.getFoodItemIDs().stream()
+                                            .map(id -> new FoodItemData(foodItemEntityMap.get(id)))
+                                            .toList());
+                            mealPackageResponse.setPerMealPackagePrice(mealPackageRequest.getPerMealPackagePrice());
+                            return mealPackageResponse;
+                        }).toList();
+                foodOptionResponseList.add(new FoodOptionResponse(mealPackageResponseList, integerListEntry.getKey()));
             });
 
         });
@@ -209,10 +226,10 @@ public class FoodServiceImpl implements FoodService {
      */
     @Override
     public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException {
-        FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity,List.of(foodOptionRequest)).get(0);
+        FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
         foodOptionEntity = foodOptionRepository.save(foodOptionEntity);
         FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
-        return new InsertAcknowledgeResponse(foodOptionData,requestId);
+        return new InsertAcknowledgeResponse(foodOptionData, requestId);
     }
 
     @Transactional
@@ -220,22 +237,15 @@ public class FoodServiceImpl implements FoodService {
     public InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptions, String requestId) throws EmptyListException {
         List<FoodOptionEntity> foodOptionEntities = setTourPackageFoodOptions(tourPackageEntity, foodOptions);
         foodOptionEntities = foodOptionRepository.saveAll(foodOptionEntities);
-
-        // Create a map where day number is the key and FoodOptionEntity is the value
-        List<FoodOptionData> dayNumberToFoodOptionMap = foodOptionEntities.stream()
-                .filter(foodOptionEntity -> {
-                    log.info(foodOptionEntity.toString());
-                    return foodOptionEntity.getIsDefault();
-                })
+        List<FoodOptionData> foodOptionDataList = foodOptionEntities.stream()
                 .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity))
                 .toList();
 
-        //return new InsertAcknowledgeResponse(new DefaultFoodOptionData(tourPackageEntity.getId(), dayNumberToFoodOptionMap), requestId);
-        return new FoodOptionListAddResponse(tourPackageEntity.getId(), dayNumberToFoodOptionMap, requestId);
+        return new InsertAcknowledgeListResponse(foodOptionDataList, requestId);
     }
 
     @Override
-    public List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptions) throws EmptyListException {
+    public List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptions) {
 
         Map<String, Set<Long>> idMaps = new HashMap<>();
         foodOptions.forEach(foodOptionRequest -> {
@@ -247,21 +257,15 @@ public class FoodServiceImpl implements FoodService {
             });
         });
 
-        HashMap<String, Long> idMealTypeMap = new HashMap<>();
-
-        List<MealTypeData> mealTypeDataList = foodDao.getAllMealTypes(0, 0);
-        mealTypeDataList.forEach(mealTypeData -> idMealTypeMap.put(mealTypeData.getMealTypeName().toLowerCase(), mealTypeData.getMealTypeId()));
-
         Map<Long, MealTypeEntity> mealTypeEntityMap = getMealTypeEntitiesByIDs(idMaps.get("mealType"));
         Map<Long, FoodItemEntity> foodItemEntityMap = getFoodItemEntitiesByIDs(idMaps.get("foodItem"));
+
         List<FoodOptionEntity> foodOptionEntityList = foodOptions.stream()
                 .map(foodOptionRequest -> {
                     FoodOptionEntity foodOptionEntity = new FoodOptionEntity();
                     foodOptionEntity.setTourPackageEntity(tourPackageEntity);
-                    foodOptionEntity.setTotalOptionPrice(BigDecimal.ZERO);
                     List<MealPackageEntity> mealPackageEntityList = foodOptionRequest.getMealPackageRequestList().stream()
                             .map(mealPackageRequest -> {
-                                log.info(mealPackageRequest.toString());
                                 MealPackageEntity mealPackageEntity = new MealPackageEntity();
                                 mealPackageEntity.setFoodOptionEntity(foodOptionEntity);
                                 mealPackageEntity.setMealTypeEntity(mealTypeEntityMap.get(mealPackageRequest.getMealTypeID()));
@@ -289,9 +293,10 @@ public class FoodServiceImpl implements FoodService {
                             .collect(Collectors.toList());
                     foodOptionEntity.setMealPackageEntities(mealPackageEntityList);
                     foodOptionEntity.setNumberOfMeals(foodOptionEntity.getNumberOfBreakfast() + foodOptionEntity.getNumberOfLunch() + foodOptionEntity.getNumberOfDinner());
-                    foodOptionEntity.setTotalOptionPrice(tourPackagePriceService.perPersonFoodOptionPrice(foodOptionRequest));
+                    foodOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonFoodOptionPrice(foodOptionRequest));
                     foodOptionEntity.setDayNumber(foodOptionRequest.getDayNumber());
                     foodOptionEntity.setIsDefault(foodOptionRequest.getIsDefault());
+                    log.info(foodOptionEntity.getIsDefault().toString());
                     return foodOptionEntity;
                 }).collect(Collectors.toList());
 

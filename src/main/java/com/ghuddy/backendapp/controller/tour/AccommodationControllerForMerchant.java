@@ -1,23 +1,21 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.tours.dto.request.accommodation.*;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
-import com.ghuddy.backendapp.tours.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
-//@Api(tags = "Tour - Accommodation Controller For Merchant", description = "This controller is used to manage tour accommodation by merchants.")
+// @Api(tags = "Tour - Accommodation Controller For Merchant", description = "This controller is used to manage tour accommodation by merchants.")
 public class AccommodationControllerForMerchant {
     private final AccommodationService accommodationService;
     private final TourPackageService tourPackageService;

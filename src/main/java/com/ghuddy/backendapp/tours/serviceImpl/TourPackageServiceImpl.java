@@ -1,17 +1,26 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
+import com.ghuddy.backendapp.tours.dto.data.ComponentCombinationData;
+import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.ComponentCombinationResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
+import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageData;
 import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageTypeData;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
+import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
+import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
+import com.ghuddy.backendapp.tours.model.entities.*;
 import com.ghuddy.backendapp.tours.repository.TourPackageRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageTypeRepository;
 import com.ghuddy.backendapp.tours.service.*;
@@ -23,7 +32,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -131,6 +143,7 @@ public class TourPackageServiceImpl implements TourPackageService {
 
     @Override
     public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages) {
+        log.info(tourPackages.toString());
         Set<Long> tourPackageTypeIDs = tourPackages.stream()
                 .map(TourPackageRequest::getTourPackageTypeID)
                 .collect(Collectors.toSet());
@@ -146,23 +159,20 @@ public class TourPackageServiceImpl implements TourPackageService {
                     tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName(), tourPackageTypeEntity.getPackageTypeName()));
                     tourPackageEntity.setDescription(tourPackageRequest.getTourPackageDescription());
 
+                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty())
+                        tourPackageEntity.setFoodOptionEntities(foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList()));
 
-                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty()) {
-                        try {
-                            tourPackageEntity.setFoodOptionEntities(foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList()));
-                        } catch (EmptyListException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
                     if (tourPackageRequest.getAccommodationOptionRequestList() != null && !tourPackageRequest.getAccommodationOptionRequestList().isEmpty())
                         tourPackageEntity.setAccommodationOptionEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationOptionRequestList()));
+
                     if (tourPackageRequest.getTransferOptionRequestList() != null && !tourPackageRequest.getTransferOptionRequestList().isEmpty())
                         tourPackageEntity.setTourTransferOptionEntities(transferService.setTourPackageTransferOptions(tourPackageEntity, tourPackageRequest.getTransferOptionRequestList()));
+
                     if (tourPackageRequest.getTransportationPackages() != null && !tourPackageRequest.getTransportationPackages().isEmpty())
                         tourPackageEntity.setTransportationPackageEntities(transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages()));
 
                     tourPackageEntity.setPackagePricePerPerson(tourPackagePriceService.perPersonDefaultPackagePrice(tourPackageRequest, tourPackageEntity.getTourPackageType().getSuitableFor()));
-                    tourPackageEntity.setTotalPackagePrice(new BigDecimal(0));
+                    tourPackageEntity.setTotalPackagePrice(tourPackagePriceService.perPersonDefaultPackagePrice(tourPackageRequest, tourPackageTypeEntity.getSuitableFor()));
 
                     return tourPackageEntity;
 
@@ -179,20 +189,80 @@ public class TourPackageServiceImpl implements TourPackageService {
     }
 
     /**
-     * @param tourOptionCheckRequest
+     * @param tourPackageOptionCheckRequest
      */
     @Override
-    public void checkTourPackageOptionCombination(TourOptionCheckRequest tourOptionCheckRequest) {
-        List<List<Object>> tourPackageCombinationToCheck = new LinkedList<>();
+    public ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
+        List<List<?>> tourPackageCombinationToCheck = new LinkedList<>();
 
-        if (tourOptionCheckRequest.getAccommodationOptionRequestList() != null && !tourOptionCheckRequest.getAccommodationOptionRequestList().isEmpty())
-            tourPackageCombinationToCheck.add(Collections.singletonList(tourOptionCheckRequest.getAccommodationOptionRequestList()));
-        if (tourOptionCheckRequest.getFoodOptionRequestList() != null && !tourOptionCheckRequest.getFoodOptionRequestList().isEmpty())
-            tourPackageCombinationToCheck.add(Collections.singletonList(tourOptionCheckRequest.getFoodOptionRequestList()));
-        if (tourOptionCheckRequest.getTransferOptionRequestList() != null && !tourOptionCheckRequest.getTransferOptionRequestList().isEmpty())
-            tourPackageCombinationToCheck.add(Collections.singletonList(tourOptionCheckRequest.getTransferOptionRequestList()));
-        if (tourOptionCheckRequest.getGuidePackageRequest() != null)
-            tourPackageCombinationToCheck.add(Collections.singletonList(tourOptionCheckRequest.getGuidePackageRequest()));
-        log.info(CombinationGenerator.generateCombinations(tourPackageCombinationToCheck).toString());
+        DefaultCombinationData defaultCombinationData = new DefaultCombinationData();
+
+        if (tourPackageOptionCheckRequest.getAccommodationOptionRequestList() != null && !tourPackageOptionCheckRequest.getAccommodationOptionRequestList().isEmpty())
+            tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getAccommodationOptionRequestList());
+        if (tourPackageOptionCheckRequest.getFoodOptionRequestList() != null && !tourPackageOptionCheckRequest.getFoodOptionRequestList().isEmpty())
+            tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getFoodOptionRequestList());
+        if (tourPackageOptionCheckRequest.getTransferOptionRequestList() != null && !tourPackageOptionCheckRequest.getTransferOptionRequestList().isEmpty())
+            tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getTransferOptionRequestList());
+        if (tourPackageOptionCheckRequest.getTransferOptionRequestList() != null && !tourPackageOptionCheckRequest.getTransportationPackages().isEmpty())
+            tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getTransportationPackages());
+
+        List<List<?>> combinations = CombinationGenerator.generateCombinations(tourPackageCombinationToCheck);
+        List<ComponentCombinationData> componentCombinationDataList = new LinkedList<>();
+
+        for (List<?> list : combinations) {
+            ComponentCombinationData componentCombinationData = new ComponentCombinationData();
+            componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getClass().isAssignableFrom(AccommodationOptionRequest.class)) {
+                    AccommodationOptionRequest accommodationOptionRequest = (AccommodationOptionRequest) list.get(i);
+                    AccommodationOptionEntity accommodationOptionEntity = accommodationService.setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
+                    AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
+                    componentCombinationData.setAccommodationOptionData(accommodationOptionData);
+                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson()));
+                    if (accommodationOptionEntity.getIsDefault())
+                        defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+
+                } else if (list.get(i).getClass().isAssignableFrom(FoodOptionRequest.class)) {
+                    FoodOptionRequest foodOptionRequest = (FoodOptionRequest) list.get(i);
+                    FoodOptionEntity foodOptionEntity = foodService.setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
+                    FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
+                    componentCombinationData.setFoodOptionData(foodOptionData);
+                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+                    if (foodOptionEntity.getIsDefault()) defaultCombinationData.setFoodOptionData(foodOptionData);
+
+                } else if (list.get(i).getClass().isAssignableFrom(TransferOptionRequest.class)) {
+                    TransferOptionRequest transferOptionRequest = (TransferOptionRequest) list.get(i);
+                    TransferOptionEntity transferOptionEntity = transferService.setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0);
+                    TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
+                    componentCombinationData.setTransferOptionData(transferOptionData);
+                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+                    if (transferOptionEntity.getIsDefault())
+                        defaultCombinationData.setTransferOptionData(transferOptionData);
+
+                } else if (list.get(i).getClass().isAssignableFrom(TransportationPackageRequest.class)) {
+                    TransportationPackageRequest transportationPackageRequest = (TransportationPackageRequest) list.get(i);
+                    TransportationPackageEntity transportationPackageEntity = transportationService.setTourPackageTransportations(tourPackageEntity, List.of(transportationPackageRequest)).get(0);
+                    TransportationPackageData transportationPackageData = new TransportationPackageData(transportationPackageEntity);
+                    componentCombinationData.setTransportationPackageData(transportationPackageData);
+                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transportationPackageData.getUnitPrice()));
+                }
+            }
+            componentCombinationDataList.add(componentCombinationData);
+        }
+
+        BigDecimal defaultFoodOptionPrice = BigDecimal.ZERO;
+        BigDecimal defaultAccommodationOptionPrice = BigDecimal.ZERO;
+        BigDecimal defaultTransferOptionPrice = BigDecimal.ZERO;
+
+        if (defaultCombinationData.getFoodOptionData() != null)
+            defaultFoodOptionPrice = defaultCombinationData.getFoodOptionData().getTotalOptionPricePerPerson();
+        if (defaultCombinationData.getAccommodationOptionData() != null)
+            defaultAccommodationOptionPrice = defaultCombinationData.getAccommodationOptionData().getTotalOptionPricePerPerson();
+        if (defaultCombinationData.getTransferOptionData() != null)
+            defaultTransferOptionPrice = defaultCombinationData.getTransferOptionData().getTotalOptionPricePerPerson();
+
+        defaultCombinationData.setDefaultOptionPricePerPerson(defaultFoodOptionPrice.add(defaultAccommodationOptionPrice).add(defaultTransferOptionPrice));
+
+        return new ComponentCombinationResponse(componentCombinationDataList, defaultCombinationData);
     }
 }

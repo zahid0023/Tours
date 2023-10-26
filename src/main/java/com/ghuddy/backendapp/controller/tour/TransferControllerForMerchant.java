@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/merchant")
+//@Api(tags = "Tour - Transfer Controller For Merchant", description = "This controller is used to manager transfer packages by merchants.")
 public class TransferControllerForMerchant {
     private final TourPackageService tourPackageService;
     private final TransferService transferService;

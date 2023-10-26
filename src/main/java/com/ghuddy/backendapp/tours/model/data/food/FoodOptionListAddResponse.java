@@ -2,13 +2,11 @@ package com.ghuddy.backendapp.tours.model.data.food;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.dto.response.BaseResponse;
-import com.ghuddy.backendapp.tours.dto.response.food.DefaultFoodOptionData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class FoodOptionListAddResponse extends BaseResponse {
@@ -46,7 +44,7 @@ public class FoodOptionListAddResponse extends BaseResponse {
         this.totalMeals = 0;
         // Iterate over the list and accumulate values
         for (FoodOptionData foodOptionData : foodOptionDataList) {
-            totalFoodPrice = totalFoodPrice.add(foodOptionData.getTotalOptionPrice());
+            totalFoodPrice = totalFoodPrice.add(foodOptionData.getTotalOptionPricePerPerson());
             totalBreakfast += foodOptionData.getNumberOfBreakFast();
             totalLunch += foodOptionData.getNumberOfLunch();
             totalDinner += foodOptionData.getNumberOfDinner();

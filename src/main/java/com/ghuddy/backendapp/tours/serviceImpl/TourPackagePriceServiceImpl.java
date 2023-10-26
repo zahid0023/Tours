@@ -1,12 +1,10 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
-import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
-import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,6 +37,7 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
                     .filter(FoodOptionRequest::getIsDefault)
                     .map(foodOptionRequest -> perPersonFoodOptionPrice(foodOptionRequest))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
+
         if (transferOptionRequestList != null) {
             totalPackagePrice.add(transferOptionRequestList.stream()
                     .filter(TransferOptionRequest::getIsDefault)
@@ -88,6 +86,6 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
      */
     @Override
     public BigDecimal perPersonTransportationPrice(TransportationPackageRequest transportationPackageRequest) {
-        return null;
+        return transportationPackageRequest.getUnitPrice();
     }
 }

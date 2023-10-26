@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/admin")
-//@Api(tags = "Tour - Food Controller For Admin", description = "This controller is used to manage tour foods by admins.")
+// @Api(tags = "Tour - Food Controller For Admin", description = "This controller is used to manage tour foods by admins.")
 public class FoodControllerForAdmin {
     private final FoodService foodService;
 
