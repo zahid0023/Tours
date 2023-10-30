@@ -6,6 +6,7 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionChec
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
@@ -88,5 +89,15 @@ public class TourPackageControllerForMerchant {
         TourPackageEntity tourPackageEntity = new TourPackageEntity();
         tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(tourPackageOptionCheckRequest.getTourPackageTypeId()));
         return new ResponseEntity<>(tourPackageService.checkTourPackageOptionCombination(tourPackageEntity, tourPackageOptionCheckRequest), HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/es/tour-package/get/all/by/{subscribed-tour-id}",method = RequestMethod.GET)
+    public ResponseEntity<?> getTourPackagesAsES(@PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
+        try {
+            SubscribedTourEntity subscribedTourEntity = tourSubscriptionService.getSubscribedTourEntityById(subscribedTourId);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (TourNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
     }
 }

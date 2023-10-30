@@ -84,7 +84,7 @@ public class TransferServiceImpl implements TransferService {
         List<TransferOptionEntity> transferOptionEntities = transferOptions.stream()
                 .map(transferOptionRequest -> {
                     TransferOptionEntity transferOptionEntity = new TransferOptionEntity();
-                    transferOptionEntity.setTourPackageEntity(tourPackageEntity);
+                    // transferOptionEntity.setTourPackageEntity(tourPackageEntity);
                     List<TransferPackageEntity> transferPackageEntityList = transferOptionRequest.getTransferPackageRequestList().stream()
                             .map(transferPackageRequest -> {
                                 TransferPackageEntity transferPackageEntity = new TransferPackageEntity();

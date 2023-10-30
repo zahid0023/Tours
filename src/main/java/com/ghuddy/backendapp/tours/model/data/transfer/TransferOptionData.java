@@ -23,7 +23,6 @@ public class TransferOptionData extends OptionData {
     private List<TransferPackageData> transferPackageDataList;
 
     public TransferOptionData(TransferOptionEntity transferOptionEntity) {
-        this.tourPackageId = transferOptionEntity.getTourPackageEntity().getId();
         this.transferOptionId = transferOptionEntity.getId();
         this.transferPackageDataList = transferOptionEntity.getTransferPackageEntities().stream()
                 .map(transferPackageEntity -> new TransferPackageData(transferPackageEntity))

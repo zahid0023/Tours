@@ -280,7 +280,6 @@ public class AccommodationServiceImpl implements AccommodationService {
         List<AccommodationOptionEntity> accommodationOptionEntities = accommodationOptions.stream()
                 .map(accommodationOptionRequest -> {
                     AccommodationOptionEntity accommodationOptionEntity = new AccommodationOptionEntity();
-                    accommodationOptionEntity.setTourPackageEntity(tourPackageEntity);
                     List<AccommodationPackageEntity> accommodationPackageEntities = accommodationOptionRequest.getTourPackageAccommodationRequestList().stream()
                             .map(accommodationPackageRequest -> {
                                 AccommodationPackageEntity accommodationPackageEntity = new AccommodationPackageEntity();

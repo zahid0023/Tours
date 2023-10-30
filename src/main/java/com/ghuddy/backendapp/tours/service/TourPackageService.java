@@ -11,6 +11,7 @@ import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListR
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 
 import java.util.List;
@@ -41,5 +42,7 @@ public interface TourPackageService {
     TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
 
     ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
+
+    List<TourPackageOptionEntity> setTourPackageOptions(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
 
 }

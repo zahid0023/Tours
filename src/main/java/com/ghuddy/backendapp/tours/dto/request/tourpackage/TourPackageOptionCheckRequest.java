@@ -36,5 +36,4 @@ public class TourPackageOptionCheckRequest {
     @JsonProperty("number_of_travellers")
     private Integer numberOfTravellers;
 
-
 }

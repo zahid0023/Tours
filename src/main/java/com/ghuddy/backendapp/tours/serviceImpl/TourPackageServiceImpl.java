@@ -32,10 +32,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -150,37 +147,7 @@ public class TourPackageServiceImpl implements TourPackageService {
 
         Map<Long, TourPackageTypeEntity> tourPackageTypeEntityMap = getTourPackageTypeEntitiesByPackageTypeIDs(tourPackageTypeIDs);
 
-        List<TourPackageEntity> tourPackageEntities = tourPackages.stream()
-                .map(tourPackageRequest -> {
-                    TourPackageEntity tourPackageEntity = new TourPackageEntity();
-                    tourPackageEntity.setSubscribedTourEntity(subscribedTourEntity);
-                    TourPackageTypeEntity tourPackageTypeEntity = tourPackageTypeEntityMap.get(tourPackageRequest.getTourPackageTypeID());
-                    tourPackageEntity.setTourPackageType(tourPackageTypeEntity);
-                    tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName(), tourPackageTypeEntity.getPackageTypeName()));
-                    tourPackageEntity.setDescription(tourPackageRequest.getTourPackageDescription());
-
-                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty())
-                        tourPackageEntity.setFoodOptionEntities(foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList()));
-
-                    if (tourPackageRequest.getAccommodationOptionRequestList() != null && !tourPackageRequest.getAccommodationOptionRequestList().isEmpty())
-                        tourPackageEntity.setAccommodationOptionEntities(accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationOptionRequestList()));
-
-                    if (tourPackageRequest.getTransferOptionRequestList() != null && !tourPackageRequest.getTransferOptionRequestList().isEmpty())
-                        tourPackageEntity.setTourTransferOptionEntities(transferService.setTourPackageTransferOptions(tourPackageEntity, tourPackageRequest.getTransferOptionRequestList()));
-
-                    if (tourPackageRequest.getTransportationPackages() != null && !tourPackageRequest.getTransportationPackages().isEmpty())
-                        tourPackageEntity.setTransportationPackageEntities(transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages()));
-
-                    tourPackageEntity.setPackagePricePerPerson(tourPackagePriceService.perPersonDefaultPackagePrice(tourPackageRequest, tourPackageEntity.getTourPackageType().getSuitableFor()));
-                    tourPackageEntity.setTotalPackagePrice(tourPackagePriceService.perPersonDefaultPackagePrice(tourPackageRequest, tourPackageTypeEntity.getSuitableFor()));
-
-                    return tourPackageEntity;
-
-                })
-                .toList();
-
-
-        return tourPackageEntities;
+        return null;
     }
 
     @Override
@@ -189,13 +156,13 @@ public class TourPackageServiceImpl implements TourPackageService {
     }
 
     /**
+     * @param tourPackageEntity
      * @param tourPackageOptionCheckRequest
+     * @return
      */
     @Override
-    public ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
+    public List<TourPackageOptionEntity> setTourPackageOptions(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
         List<List<?>> tourPackageCombinationToCheck = new LinkedList<>();
-
-        DefaultCombinationData defaultCombinationData = new DefaultCombinationData();
 
         if (tourPackageOptionCheckRequest.getAccommodationOptionRequestList() != null && !tourPackageOptionCheckRequest.getAccommodationOptionRequestList().isEmpty())
             tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getAccommodationOptionRequestList());
@@ -203,52 +170,69 @@ public class TourPackageServiceImpl implements TourPackageService {
             tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getFoodOptionRequestList());
         if (tourPackageOptionCheckRequest.getTransferOptionRequestList() != null && !tourPackageOptionCheckRequest.getTransferOptionRequestList().isEmpty())
             tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getTransferOptionRequestList());
-        if (tourPackageOptionCheckRequest.getTransferOptionRequestList() != null && !tourPackageOptionCheckRequest.getTransportationPackages().isEmpty())
-            tourPackageCombinationToCheck.add(tourPackageOptionCheckRequest.getTransportationPackages());
 
         List<List<?>> combinations = CombinationGenerator.generateCombinations(tourPackageCombinationToCheck);
-        List<ComponentCombinationData> componentCombinationDataList = new LinkedList<>();
 
-        for (List<?> list : combinations) {
-            ComponentCombinationData componentCombinationData = new ComponentCombinationData();
-            componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getClass().isAssignableFrom(AccommodationOptionRequest.class)) {
-                    AccommodationOptionRequest accommodationOptionRequest = (AccommodationOptionRequest) list.get(i);
-                    AccommodationOptionEntity accommodationOptionEntity = accommodationService.setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
-                    AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
-                    componentCombinationData.setAccommodationOptionData(accommodationOptionData);
-                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson()));
-                    if (accommodationOptionEntity.getIsDefault())
-                        defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+        List<TourPackageOptionEntity> tourPackageOptionEntityList = combinations.stream()
+                .map(option -> {
+                    TourPackageOptionEntity tourPackageOptionEntity = new TourPackageOptionEntity();
+                    option.forEach(component -> {
+                        if (component.getClass().isAssignableFrom(AccommodationOptionRequest.class)) {
+                            AccommodationOptionRequest accommodationOptionRequest = (AccommodationOptionRequest) component;
+                            tourPackageOptionEntity.setAccommodationOptionEntity(accommodationService.setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0));
+                        } else if (component.getClass().isAssignableFrom(FoodOptionRequest.class)) {
+                            FoodOptionRequest foodOptionRequest = (FoodOptionRequest) component;
+                            tourPackageOptionEntity.setFoodOptionEntity(foodService.setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0));
+                        } else if (component.getClass().isAssignableFrom(TransferOptionRequest.class)) {
+                            TransferOptionRequest transferOptionRequest = (TransferOptionRequest) component;
+                            tourPackageOptionEntity.setTransferOptionEntity(transferService.setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0));
+                        }
+                    });
+                    return tourPackageOptionEntity;
+                })
+                .toList();
+        return tourPackageOptionEntityList;
+    }
 
-                } else if (list.get(i).getClass().isAssignableFrom(FoodOptionRequest.class)) {
-                    FoodOptionRequest foodOptionRequest = (FoodOptionRequest) list.get(i);
-                    FoodOptionEntity foodOptionEntity = foodService.setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
-                    FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
-                    componentCombinationData.setFoodOptionData(foodOptionData);
-                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
-                    if (foodOptionEntity.getIsDefault()) defaultCombinationData.setFoodOptionData(foodOptionData);
+    /**
+     * @param tourPackageOptionCheckRequest
+     */
+    @Override
+    public ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
+        DefaultCombinationData defaultCombinationData = new DefaultCombinationData();
 
-                } else if (list.get(i).getClass().isAssignableFrom(TransferOptionRequest.class)) {
-                    TransferOptionRequest transferOptionRequest = (TransferOptionRequest) list.get(i);
-                    TransferOptionEntity transferOptionEntity = transferService.setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0);
-                    TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
-                    componentCombinationData.setTransferOptionData(transferOptionData);
-                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
-                    if (transferOptionEntity.getIsDefault())
-                        defaultCombinationData.setTransferOptionData(transferOptionData);
+        List<ComponentCombinationData> componentCombinationDataList = setTourPackageOptions(tourPackageEntity, tourPackageOptionCheckRequest).stream()
+                .map(tourPackageOptionEntity -> {
+                    ComponentCombinationData componentCombinationData = new ComponentCombinationData();
+                    componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
+                    AccommodationOptionEntity accommodationOptionEntity = tourPackageOptionEntity.getAccommodationOptionEntity();
+                    FoodOptionEntity foodOptionEntity = tourPackageOptionEntity.getFoodOptionEntity();
+                    TransferOptionEntity transferOptionEntity = tourPackageOptionEntity.getTransferOptionEntity();
+                    if (accommodationOptionEntity != null) {
+                        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
+                        componentCombinationData.setAccommodationOptionData(accommodationOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson()));
+                        if (accommodationOptionEntity.getIsDefault())
+                            defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+                    }
 
-                } else if (list.get(i).getClass().isAssignableFrom(TransportationPackageRequest.class)) {
-                    TransportationPackageRequest transportationPackageRequest = (TransportationPackageRequest) list.get(i);
-                    TransportationPackageEntity transportationPackageEntity = transportationService.setTourPackageTransportations(tourPackageEntity, List.of(transportationPackageRequest)).get(0);
-                    TransportationPackageData transportationPackageData = new TransportationPackageData(transportationPackageEntity);
-                    componentCombinationData.setTransportationPackageData(transportationPackageData);
-                    componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transportationPackageData.getUnitPrice()));
-                }
-            }
-            componentCombinationDataList.add(componentCombinationData);
-        }
+                    if (foodOptionEntity != null) {
+                        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
+                        componentCombinationData.setFoodOptionData(foodOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+                        if (foodOptionEntity.getIsDefault()) defaultCombinationData.setFoodOptionData(foodOptionData);
+                    }
+
+                    if (transferOptionEntity != null) {
+                        TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
+                        componentCombinationData.setTransferOptionData(transferOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+                        if (transferOptionEntity.getIsDefault())
+                            defaultCombinationData.setTransferOptionData(transferOptionData);
+                    }
+                    return componentCombinationData;
+                })
+                .toList();
 
         BigDecimal defaultFoodOptionPrice = BigDecimal.ZERO;
         BigDecimal defaultAccommodationOptionPrice = BigDecimal.ZERO;

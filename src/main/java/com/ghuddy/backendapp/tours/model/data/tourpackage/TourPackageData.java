@@ -7,10 +7,12 @@ import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -58,33 +60,38 @@ public class TourPackageData {
         this.defaultCombinationData = new DefaultCombinationData();
         defaultCombinationData.setDefaultOptionPricePerPerson(BigDecimal.ZERO);
         this.totalPackagePrice = tourPackageEntity.getTotalPackagePrice();
-        this.foodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
-                .map(foodOptionEntity -> {
-                    FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
-                    if (foodOptionEntity.getIsDefault()) {
-                        defaultCombinationData.setFoodOptionData(foodOptionData);
-                        defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionEntity.getTotalOptionPricePerPerson());
-                    }
-                    return foodOptionData;
-                }).toList();
-        this.accommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
-                .map(accommodationOptionEntity -> {
-                    AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
-                    if (accommodationOptionEntity.getIsDefault()) {
-                        defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
-                        defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson());
-                    }
-                    return accommodationOptionData;
-                }).toList();
-        this.transferOptionDataList = tourPackageEntity.getTourTransferOptionEntities().stream()
-                .map(transferOptionEntity -> {
-                    TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
-                    if (transferOptionEntity.getIsDefault()) {
-                        defaultCombinationData.setTransferOptionData(transferOptionData);
-                        defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionEntity.getPerPersonTransferOptionPrice());
-                    }
-                    return transferOptionData;
-                }).toList();
+        this.foodOptionDataList = new ArrayList<>();
+        this.accommodationOptionDataList = new ArrayList<>();
+        this.transferOptionDataList = new ArrayList<>();
+
+        for (TourPackageOptionEntity tourPackageOptionEntity : tourPackageEntity.getTourPackageOptionEntities()) {
+
+            // transform to individual component option list
+            if (tourPackageOptionEntity.getAccommodationOptionEntity() != null) {
+                AccommodationOptionData accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
+                this.accommodationOptionDataList.add(accommodationOptionData);
+                if (tourPackageOptionEntity.getAccommodationOptionEntity().getIsDefault()) {
+                    defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+                    defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson());
+                }
+            }
+            if (tourPackageOptionEntity.getFoodOptionEntity() != null) {
+                FoodOptionData foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
+                this.foodOptionDataList.add(foodOptionData);
+                if (tourPackageOptionEntity.getFoodOptionEntity().getIsDefault()) {
+                    defaultCombinationData.setFoodOptionData(foodOptionData);
+                    defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson());
+                }
+            }
+            if (tourPackageOptionEntity.getTransferOptionEntity() != null) {
+                TransferOptionData transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
+                this.transferOptionDataList.add(transferOptionData);
+                if (tourPackageOptionEntity.getTransferOptionEntity().getIsDefault()) {
+                    defaultCombinationData.setTransferOptionData(transferOptionData);
+                    defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson());
+                }
+            }
+        }
         this.transportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
                 .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity)).toList();
     }

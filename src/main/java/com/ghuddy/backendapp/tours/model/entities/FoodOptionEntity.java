@@ -16,12 +16,12 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "tour_food_option")
 public class FoodOptionEntity extends BaseEntity {
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_id")
-    private TourPackageEntity tourPackageEntity;
 
     @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MealPackageEntity> mealPackageEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourPackageOptionEntity> tourPackageOptionEntities = new ArrayList<>();
 
     @Column(name = "day_number")
     private Integer dayNumber;
@@ -45,5 +45,7 @@ public class FoodOptionEntity extends BaseEntity {
     private Boolean active = true;
     @Column(name = "is_default")
     private Boolean isDefault;
+
+
 
 }

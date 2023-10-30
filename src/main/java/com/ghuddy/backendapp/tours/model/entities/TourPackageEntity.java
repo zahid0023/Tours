@@ -35,6 +35,9 @@ public class TourPackageEntity extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourPackageOptionEntity> tourPackageOptionEntities = new LinkedList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportationPackageEntity> transportationPackageEntities = new ArrayList<>();
 
 
@@ -56,14 +59,6 @@ public class TourPackageEntity extends BaseEntity {
     @Column(name = "guide_price")
     private BigDecimal guidePrice;
 
-    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AccommodationOptionEntity> accommodationOptionEntities = new LinkedList<>();
-
-    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodOptionEntity> foodOptionEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferOptionEntity> tourTransferOptionEntities = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

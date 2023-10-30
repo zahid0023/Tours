@@ -263,7 +263,7 @@ public class FoodServiceImpl implements FoodService {
         List<FoodOptionEntity> foodOptionEntityList = foodOptions.stream()
                 .map(foodOptionRequest -> {
                     FoodOptionEntity foodOptionEntity = new FoodOptionEntity();
-                    foodOptionEntity.setTourPackageEntity(tourPackageEntity);
+                    // foodOptionEntity.setTourPackageEntity(tourPackageEntity);
                     List<MealPackageEntity> mealPackageEntityList = foodOptionRequest.getMealPackageRequestList().stream()
                             .map(mealPackageRequest -> {
                                 MealPackageEntity mealPackageEntity = new MealPackageEntity();
