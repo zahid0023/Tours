@@ -14,8 +14,6 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class ESMealPackage {
-    @JsonProperty("meal_package_name")
-    private String mealPackageName;
     @JsonProperty("meal_type_name")
     private String mealTypeName;
     @JsonProperty("food_items")
@@ -24,7 +22,6 @@ public class ESMealPackage {
     private BigDecimal unitPrice;
 
     public ESMealPackage(MealPackageEntity mealPackageEntity) {
-        this.mealPackageName = mealPackageEntity.getMealPackageName();
         this.mealTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
         this.foodItems = mealPackageEntity.getFoodItemEntities().stream()
                 .map(FoodItemEntity::getFoodItemName)

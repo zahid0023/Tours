@@ -286,8 +286,6 @@ public class FoodServiceImpl implements FoodService {
                                         .map(id -> foodItemEntityMap.get(id))
                                         .toList();
                                 mealPackageEntity.setFoodItemEntities(foodItemEntityList);
-                                Integer count = StringUtil.mealPackageCount(tourPackageEntity, mealPackageEntity, jdbcTemplate);
-                                mealPackageEntity.setMealPackageName(StringUtil.mealPackageName(tourPackageEntity, mealPackageEntity, count));
                                 return mealPackageEntity;
                             })
                             .collect(Collectors.toList());

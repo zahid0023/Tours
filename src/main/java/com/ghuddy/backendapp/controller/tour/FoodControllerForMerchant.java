@@ -6,6 +6,7 @@ import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.FoodService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
@@ -84,13 +85,21 @@ public class FoodControllerForMerchant {
 
     @RequestMapping(path = "/food/option/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageFoodOption(@RequestBody FoodOptionAddRequest foodOptionAddRequest) throws EmptyListException {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionAddRequest.getTourPackageID());
+            return new ResponseEntity<>(foodService.addTourPackageFoodOption(tourPackageEntity, foodOptionAddRequest.getFoodOptionRequest(), foodOptionAddRequest.getRequestId()), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), foodOptionAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/food/option/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageFoodOptions(@RequestBody FoodOptionListAddRequest foodOptionListAddRequest) throws EmptyListException {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, foodOptionListAddRequest.getFoodOptionRequestList(), foodOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(foodOptionListAddRequest.getTourPackageID());
+            return new ResponseEntity<>(foodService.addTourPackageFoodOptions(tourPackageEntity, foodOptionListAddRequest.getFoodOptionRequestList(), foodOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), foodOptionListAddRequest.getRequestId()),HttpStatus.NOT_FOUND);
+        }
     }
 }

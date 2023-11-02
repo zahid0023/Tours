@@ -34,6 +34,7 @@ public class TourPackageEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "text")
     private String description;
 
+
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourPackageOptionEntity> tourPackageOptionEntities = new LinkedList<>();
 

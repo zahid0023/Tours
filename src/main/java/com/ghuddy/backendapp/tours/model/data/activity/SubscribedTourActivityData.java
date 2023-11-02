@@ -17,6 +17,10 @@ public class SubscribedTourActivityData {
     @Schema(description = "The name of the activity", example = "Hiking in Keokradang")
     @JsonProperty("activity_name")
     private String activityName;
+
+    @Schema(description = "The short address of the activity")
+    @JsonProperty("short_address")
+    private String shortAddress;
     @Schema(description = "The day number on which the activity will be provided", example = "1")
     @JsonProperty("activity_day_number")
     private Integer dayNumber;
@@ -30,6 +34,7 @@ public class SubscribedTourActivityData {
     public SubscribedTourActivityData(SubscribedTourItineraryEntity subscribedTourItineraryEntity) {
         this.activityId = subscribedTourItineraryEntity.getActivityEntity().getId();
         this.activityName = subscribedTourItineraryEntity.getActivityEntity().getActivityName();
+        this.shortAddress = subscribedTourItineraryEntity.getActivityEntity().getShortLocation();
         this.dayNumber = subscribedTourItineraryEntity.getActivityDayNumber();
         this.startTime = subscribedTourItineraryEntity.getActivityStartTime();
         this.endTime = subscribedTourItineraryEntity.getActivityEndTime();

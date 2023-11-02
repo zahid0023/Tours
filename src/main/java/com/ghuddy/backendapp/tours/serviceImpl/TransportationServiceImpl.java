@@ -311,4 +311,13 @@ public class TransportationServiceImpl implements TransportationService {
     public Map<Long, TransportationProviderEntity> getTransportationProviderEntitiesByIDs(Set<Long> transportationProviderIDs) {
         return EntityUtil.findEntitiesByIds(transportationProviderIDs, transportationProviderRepository, TransportationProviderEntity::getId, "TransportationProviderEntity");
     }
+
+    /**
+     * @param tourPackageEntity
+     * @param transportationOptionCheckRequest
+     */
+    @Override
+    public void checkTransportationPackageCombination(TourPackageEntity tourPackageEntity, TransportationOptionCheckRequest transportationOptionCheckRequest) {
+
+    }
 }

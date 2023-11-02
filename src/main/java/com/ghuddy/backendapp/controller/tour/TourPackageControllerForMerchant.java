@@ -6,6 +6,7 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionChec
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
+import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
@@ -52,6 +53,18 @@ public class TourPackageControllerForMerchant {
     }
 
     // tour package
+
+    @RequestMapping(path = "/tour-package/option/check", method = RequestMethod.POST)
+    public ResponseEntity<?> checkTourPackageOptionsCombination(@RequestBody TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
+        TourPackageEntity tourPackageEntity = new TourPackageEntity();
+        tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(tourPackageOptionCheckRequest.getTourPackageTypeId()));
+        try {
+            return new ResponseEntity<>(tourPackageService.checkTourPackageOptionCombination(tourPackageEntity, tourPackageOptionCheckRequest), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageOptionCheckRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @RequestMapping(path = "/tour-package/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackage(@RequestBody TourPackageAddRequest tourPackageAddRequest) {
         try {
@@ -84,14 +97,28 @@ public class TourPackageControllerForMerchant {
         }
     }
 
-    @RequestMapping(path = "/tour-package/option/check", method = RequestMethod.POST)
-    public ResponseEntity<?> checkTourPackageOptionsCombination(@RequestBody TourPackageOptionCheckRequest tourPackageOptionCheckRequest) {
-        TourPackageEntity tourPackageEntity = new TourPackageEntity();
-        tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(tourPackageOptionCheckRequest.getTourPackageTypeId()));
-        return new ResponseEntity<>(tourPackageService.checkTourPackageOptionCombination(tourPackageEntity, tourPackageOptionCheckRequest), HttpStatus.OK);
+    @RequestMapping(value = "/tour-package/get/detail/by/{tour-package-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getTourPackageDetail(@PathVariable("tour-package-id") Long tourPackageId, String requestId) {
+        try {
+            return new ResponseEntity<>(tourPackageService.getTourPackageDetailByTourPackageId(tourPackageId, requestId), HttpStatus.OK);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
     }
 
-    @RequestMapping(path = "/es/tour-package/get/all/by/{subscribed-tour-id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/tour-package/summary/get/all/by/{subscribed-tour-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTourPackagesBySubscribedTourId(@PathVariable("subscribed-tour-id") Long subscribedTourId, String requestId) {
+        try {
+            SubscribedTourEntity subscribedTourEntity = tourSubscriptionService.getSubscribedTourEntityById(subscribedTourId);
+            return new ResponseEntity<>(tourPackageService.getTourPackageSummaryBySubscribedTourId(subscribedTourEntity, requestId), HttpStatus.OK);
+        } catch (TourNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/es/tour-package/get/all/by/{subscribed-tour-id}", method = RequestMethod.GET)
     public ResponseEntity<?> getTourPackagesAsES(@PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
         try {
             SubscribedTourEntity subscribedTourEntity = tourSubscriptionService.getSubscribedTourEntityById(subscribedTourId);

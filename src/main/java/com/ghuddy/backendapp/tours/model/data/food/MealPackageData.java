@@ -17,9 +17,6 @@ public class MealPackageData {
     @Schema(description = "The meal package id")
     @JsonProperty("meal_package_id")
     private Long mealPackageId;
-    @Schema(description = "The name of the meal package name")
-    @JsonProperty("meal_package_name")
-    private String mealPackageName;
     @Schema(description = "The meal type id of this specific meal package")
     @JsonProperty("meal_type_id")
     private Long mealTypeId;
@@ -36,7 +33,6 @@ public class MealPackageData {
 
     public MealPackageData(MealPackageEntity mealPackageEntity) {
         this.mealPackageId = mealPackageEntity.getId();
-        this.mealPackageName = mealPackageEntity.getMealPackageName();
         this.mealTypeId = mealPackageEntity.getMealTypeEntity().getId();
         this.mealTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
         this.foodItems = mealPackageEntity.getFoodItemEntities().stream()

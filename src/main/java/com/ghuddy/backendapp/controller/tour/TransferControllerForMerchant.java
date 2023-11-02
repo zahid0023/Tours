@@ -2,6 +2,8 @@ package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionListAddRequest;
+import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
+import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransferService;
@@ -27,13 +29,21 @@ public class TransferControllerForMerchant {
 
     @RequestMapping(path = "/transfer/option/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransferPackage(@RequestBody TransferOptionAddRequest transferOptionAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionAddRequest.getTourPackageId());
-        return new ResponseEntity<>(transferService.addTourPackageTransferOption(tourPackageEntity, transferOptionAddRequest.getTransferOptionRequest(), transferOptionAddRequest.getRequestId()), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionAddRequest.getTourPackageId());
+            return new ResponseEntity<>(transferService.addTourPackageTransferOption(tourPackageEntity, transferOptionAddRequest.getTransferOptionRequest(), transferOptionAddRequest.getRequestId()), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), transferOptionAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/transfer/option/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransferPackages(@RequestBody TransferOptionListAddRequest transferOptionListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionListAddRequest.getTourPackageId());
-        return new ResponseEntity<>(transferService.addTourPackageTransferOptions(tourPackageEntity, transferOptionListAddRequest.getTransferOptionRequestList(), transferOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(transferOptionListAddRequest.getTourPackageId());
+            return new ResponseEntity<>(transferService.addTourPackageTransferOptions(tourPackageEntity, transferOptionListAddRequest.getTransferOptionRequestList(), transferOptionListAddRequest.getRequestId()), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), transferOptionListAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
     }
 }

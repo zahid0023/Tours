@@ -66,4 +66,7 @@ public interface TransportationService {
 
     List<TransportationPackageEntity> setTourPackageTransportations(TourPackageEntity tourPackageEntity, List<TransportationPackageRequest> tourPackageTransportations);
 
+    // transportation option
+    void checkTransportationPackageCombination(TourPackageEntity tourPackageEntity, TransportationOptionCheckRequest transportationOptionCheckRequest);
+
 }

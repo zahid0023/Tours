@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.transportation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.enums.TripType;
 import com.ghuddy.backendapp.tours.model.entities.TransportationPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -39,7 +40,7 @@ public class TransportationPackageData {
     private String transportationProviderName;
     @Schema(description = "Is the trip round or one way")
     @JsonProperty("trip_type")
-    private String tripType;
+    private TripType tripType;
     @Schema(description = "Whether ac or not")
     @JsonProperty("is_ac")
     private boolean isAc;
@@ -58,7 +59,7 @@ public class TransportationPackageData {
         this.transportationBrandName = transportationPackageEntity.getTransportationBrandEntity().getBrandName();
         this.transportationProviderId = transportationPackageEntity.getTransportationProviderEntity().getId();
         this.transportationProviderName = transportationPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
-        this.tripType = transportationPackageEntity.getTripType().getDisplayName();
+        this.tripType = transportationPackageEntity.getTripType();
         this.isAc = transportationPackageEntity.getIsAc();
         this.unitPrice = transportationPackageEntity.getPerPersonTransportationPackagePrice();
     }

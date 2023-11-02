@@ -6,10 +6,13 @@ import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.activity.SubscribedTourActivityRequest;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourSubscriptionRequest;
 import com.ghuddy.backendapp.tours.dto.response.AddressResponse;
+import com.ghuddy.backendapp.tours.dto.response.tour.SubscribedTourCardDataListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.SubscribedTourListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourSubscriptionResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.enums.SubscribedTourFilterCriteria;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.MerchantNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.SubscribedTourData;
 import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
@@ -19,6 +22,8 @@ import com.ghuddy.backendapp.tours.repository.SubscribedTourRepository;
 import com.ghuddy.backendapp.tours.service.ActivityService;
 import com.ghuddy.backendapp.tours.service.TourService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -147,6 +152,80 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
         subscribedTourEntity.getSubscribedTourItineraryEntities().stream()
                 .forEach(subscribedTourItineraryEntity -> addresses.add(subscribedTourItineraryEntity.getActivityEntity().getShortLocation()));
         addresses.add(subscribedTourEntity.getTourReportingPlace());
-        return new AddressResponse(addresses,requestId);
+        return new AddressResponse(addresses, requestId);
+    }
+
+    /**
+     * @param merchantId
+     * @param requestId
+     * @return
+     * @throws EmptyListException
+     */
+    @Override
+    public SubscribedTourCardDataListResponse getAllSubscribedTourCardDataByMerchantId(Long merchantId, SubscribedTourFilterCriteria subscribedTourFilterCriteria, String requestId) throws EmptyListException, MerchantNotFoundException {
+        UserEntity merchantEntity = merchantRepository.findById(merchantId).orElseThrow(() -> new MerchantNotFoundException(ErrorCode.MERCHANT_NOT_FOUND));
+        List<SubscribedTourEntity> subscribedTourEntityList = subscribedTourRepository.getSubscribedTourEntitiesByMerchantEntityAndDeleted(merchantEntity, false);
+
+        if (subscribedTourEntityList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+
+        List<SubscribedTourData> subscribedTourDataList = getSubscribedTourDataList(subscribedTourFilterCriteria, subscribedTourEntityList);
+
+        return new SubscribedTourCardDataListResponse(subscribedTourDataList, requestId, 1, Long.valueOf(subscribedTourDataList.size()));
+    }
+
+    /**
+     * @param merchantId
+     * @param pageNumber
+     * @param pageSize
+     * @param requestId
+     * @return
+     * @throws EmptyListException
+     */
+    @Override
+    public SubscribedTourCardDataListResponse getAllSubscribedTourCardDataPaginatedByMerchantId(Long merchantId, SubscribedTourFilterCriteria subscribedTourFilterCriteria, Integer pageNumber, Integer pageSize, String requestId) throws EmptyListException, MerchantNotFoundException {
+        UserEntity merchantEntity = merchantRepository.findById(merchantId).orElseThrow(() -> new MerchantNotFoundException(ErrorCode.MERCHANT_NOT_FOUND));
+
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<SubscribedTourEntity> page = subscribedTourRepository.getSubscribedTourEntitiesByMerchantEntityAndDeleted(merchantEntity, false, pageRequest);
+        List<SubscribedTourEntity> subscribedTourEntityList = page.getContent();
+
+        if (subscribedTourEntityList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        List<SubscribedTourData> subscribedTourDataList = getSubscribedTourDataList(subscribedTourFilterCriteria, subscribedTourEntityList);
+        return new SubscribedTourCardDataListResponse(subscribedTourDataList, requestId, page.getTotalPages(), (long) page.getNumberOfElements());
+    }
+
+
+    private List<SubscribedTourData> getSubscribedTourDataList(SubscribedTourFilterCriteria subscribedTourFilterCriteria, List<SubscribedTourEntity> subscribedTourEntityList) throws EmptyListException {
+        List<SubscribedTourData> subscribedTourDataList = null;
+
+        if (subscribedTourFilterCriteria.equals(SubscribedTourFilterCriteria.SUBSCRIBED_TOUR_ALL))
+            subscribedTourDataList = getSubscribedTourCardDataList(subscribedTourEntityList);
+        else if (subscribedTourFilterCriteria.equals(SubscribedTourFilterCriteria.SUBSCRIBED_TOUR_WITHOUT_ANY_PACKAGE))
+            subscribedTourDataList = getSubscribedTourCardDataListWithoutAnyPackage(subscribedTourEntityList);
+        else if (subscribedTourFilterCriteria.equals(SubscribedTourFilterCriteria.SUBSCRIBED_TOUR_WITH_PACKAGE))
+            subscribedTourDataList = getSubscribedTourCardDataListWithPackage(subscribedTourEntityList);
+        if (subscribedTourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        return subscribedTourDataList;
+    }
+
+    private List<SubscribedTourData> getSubscribedTourCardDataList(List<SubscribedTourEntity> subscribedTourEntityList) {
+        return subscribedTourEntityList.stream()
+                .map(subscribedTourEntity -> new SubscribedTourData(subscribedTourEntity))
+                .toList();
+    }
+
+    private List<SubscribedTourData> getSubscribedTourCardDataListWithoutAnyPackage(List<SubscribedTourEntity> subscribedTourEntityList) {
+        return subscribedTourEntityList.stream()
+                .filter(subscribedTourEntity -> subscribedTourEntity.getTourPackageEntities().isEmpty())
+                .map(subscribedTourEntity -> new SubscribedTourData(subscribedTourEntity))
+                .toList();
+    }
+
+    private List<SubscribedTourData> getSubscribedTourCardDataListWithPackage(List<SubscribedTourEntity> subscribedTourEntityList) {
+        return subscribedTourEntityList.stream()
+                .filter(subscribedTourEntity -> !subscribedTourEntity.getTourPackageEntities().isEmpty())
+                .map(subscribedTourEntity -> new SubscribedTourData(subscribedTourEntity))
+                .toList();
     }
 }

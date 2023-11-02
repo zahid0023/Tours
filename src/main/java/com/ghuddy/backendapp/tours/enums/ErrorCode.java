@@ -24,6 +24,12 @@ public enum ErrorCode {
     ACTIVITY_NOT_FOUND("2004"),
     ACTIVITY_CAN_NOT_BE_SAVED("2005"),
 
+    // User Exceptions
+    MERCHANT_NOT_FOUND("30001"),
+
+    // Tour Package Exceptions
+    TOUR_PACKAGE_NOT_FOUND("40001"),
+
 
     // Generic Exceptions
     // Starts with 11

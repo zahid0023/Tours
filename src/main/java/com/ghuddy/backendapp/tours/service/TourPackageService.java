@@ -7,8 +7,11 @@ import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAd
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.ComponentCombinationResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageDetailResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageSummaryListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
@@ -16,6 +19,7 @@ import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public interface TourPackageService {
@@ -39,10 +43,14 @@ public interface TourPackageService {
 
     public List<TourPackageEntity> setTourPackages(SubscribedTourEntity subscribedTourEntity, List<TourPackageRequest> tourPackages);
 
-    TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID);
+    TourPackageEntity getTourPackageEntityByPackageID(Long tourPackageID) throws TourPackageNotFoundException;
 
-    ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
+    ComponentCombinationResponse checkTourPackageOptionCombination(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest) throws EmptyListException;
 
-    List<TourPackageOptionEntity> setTourPackageOptions(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
+    Optional<List<TourPackageOptionEntity>> setTourPackageOptions(TourPackageEntity tourPackageEntity, TourPackageOptionCheckRequest tourPackageOptionCheckRequest);
+
+    TourPackageDetailResponse getTourPackageDetailByTourPackageId(Long tourPackageId, String requestId) throws TourPackageNotFoundException;
+
+    TourPackageSummaryListResponse getTourPackageSummaryBySubscribedTourId(SubscribedTourEntity subscribedTourEntity, String requestId) throws EmptyListException;
 
 }

@@ -5,6 +5,8 @@ import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionD
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

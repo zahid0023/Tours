@@ -18,9 +18,6 @@ import java.util.Objects;
 @Table(name = "meal_packages")
 public class MealPackageEntity extends BaseEntity {
 
-    @Column(name = "meal_package_name", nullable = false)
-    private String mealPackageName;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "meal_type_id")
     private MealTypeEntity mealTypeEntity;

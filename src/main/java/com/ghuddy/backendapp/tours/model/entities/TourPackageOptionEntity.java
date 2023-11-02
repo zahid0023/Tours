@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,5 +28,8 @@ public class TourPackageOptionEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transfer_option_id")
     private TransferOptionEntity transferOptionEntity;
+
+    @Transient
+    private TransportationPackageEntity transportationPackageEntity;
 
 }

@@ -20,11 +20,15 @@ public class TourPackageRequest {
     @Schema(description = "The description of the tour package.", required = true, example = "tour package description")
     @JsonProperty("tour_package_description")
     private String tourPackageDescription;
-
-    @Schema(description = "The component options related to this tour package",required = true)
-    @JsonProperty("tour_package_options")
-    private List<TourPackageComponentOptionRequest> tourPackageComponentOptionRequestList;
-
+    @Schema(description = "The list of the food options belonging to this tour package.")
+    @JsonProperty("tour_package_food_options")
+    private List<FoodOptionRequest> foodOptionRequestList;
+    @Schema(description = "The list of the accommodation options belonging to this tour package.")
+    @JsonProperty("tour_package_accommodation_options")
+    private List<AccommodationOptionRequest> accommodationOptionRequestList;
+    @Schema(description = "The list of transfer options belonging to this tour package")
+    @JsonProperty("tour_package_transfer_options")
+    private List<TransferOptionRequest> transferOptionRequestList;
     @Schema(description = "The list of transportation packages belonging to this tour package.")
     @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageRequest> transportationPackages;

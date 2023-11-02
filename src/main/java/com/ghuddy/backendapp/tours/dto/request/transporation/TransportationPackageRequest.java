@@ -8,7 +8,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class TransportationPackageRequest {
+public class TransportationPackageRequest { // if we check by option this class will be redundant/ at least some of its field will be
     @Schema(description = "The id of the transportation route", required = true, example = "1")
     @JsonProperty("transportation_route_id")
     private Long transportationRouteID;

@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.dto.data.ComponentCombinationData;
 import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
@@ -29,17 +30,12 @@ public class TourPackageData {
     @Schema(description = "The description of the tour package")
     @JsonProperty("tour_package_description")
     private String tourPackageDescription;
-    @Schema(description = "The list of the food options belonging to this tour package")
-    @JsonProperty("tour_package_food_options")
-    private List<FoodOptionData> foodOptionDataList;
-    @Schema(description = "The list of the accommodation options belonging to this tour package")
-    @JsonProperty("tour_package_accommodation_options")
-    private List<AccommodationOptionData> accommodationOptionDataList;
-    @Schema(description = "The list of the transfer option belonging to this tour package")
-    @JsonProperty("tour_package_transfer_options")
-    private List<TransferOptionData> transferOptionDataList;
 
-    @Schema(description = "The list of the transportation packages belonging to this tour package")
+    @Schema(description = "The list of component combination/ options belonging to this tour package")
+    @JsonProperty("tour_package_options")
+    private List<ComponentCombinationData> componentCombinationDataList;
+
+    @Schema(description = "The list of transportation packages belonging to this tour package")
     @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageData> transportationPackageDataList;
 
@@ -60,39 +56,49 @@ public class TourPackageData {
         this.defaultCombinationData = new DefaultCombinationData();
         defaultCombinationData.setDefaultOptionPricePerPerson(BigDecimal.ZERO);
         this.totalPackagePrice = tourPackageEntity.getTotalPackagePrice();
-        this.foodOptionDataList = new ArrayList<>();
-        this.accommodationOptionDataList = new ArrayList<>();
-        this.transferOptionDataList = new ArrayList<>();
 
-        for (TourPackageOptionEntity tourPackageOptionEntity : tourPackageEntity.getTourPackageOptionEntities()) {
+        this.componentCombinationDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
+                .map(tourPackageOptionEntity -> {
+                    ComponentCombinationData componentCombinationData = new ComponentCombinationData();
+                    componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
 
-            // transform to individual component option list
-            if (tourPackageOptionEntity.getAccommodationOptionEntity() != null) {
-                AccommodationOptionData accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
-                this.accommodationOptionDataList.add(accommodationOptionData);
-                if (tourPackageOptionEntity.getAccommodationOptionEntity().getIsDefault()) {
-                    defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
-                    defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson());
-                }
-            }
-            if (tourPackageOptionEntity.getFoodOptionEntity() != null) {
-                FoodOptionData foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
-                this.foodOptionDataList.add(foodOptionData);
-                if (tourPackageOptionEntity.getFoodOptionEntity().getIsDefault()) {
-                    defaultCombinationData.setFoodOptionData(foodOptionData);
-                    defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson());
-                }
-            }
-            if (tourPackageOptionEntity.getTransferOptionEntity() != null) {
-                TransferOptionData transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
-                this.transferOptionDataList.add(transferOptionData);
-                if (tourPackageOptionEntity.getTransferOptionEntity().getIsDefault()) {
-                    defaultCombinationData.setTransferOptionData(transferOptionData);
-                    defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson());
-                }
-            }
-        }
+                    FoodOptionData foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
+                    if (foodOptionData != null) {
+                        componentCombinationData.setFoodOptionData(foodOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+                        if (foodOptionData.isDefault()) {
+                            defaultCombinationData.setFoodOptionData(foodOptionData);
+                            defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+                        }
+                    }
+
+                    AccommodationOptionData accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
+
+                    if (accommodationOptionData != null) {
+                        componentCombinationData.setAccommodationOptionData(accommodationOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson()));
+                        if (accommodationOptionData.isDefault()) {
+                            defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
+                            defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson()));
+                        }
+                    }
+
+                    TransferOptionData transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
+                    if (transferOptionData != null && transferOptionData.isDefault()) {
+                        componentCombinationData.setTransferOptionData(transferOptionData);
+                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+                        if (transferOptionData.isDefault()) {
+                            defaultCombinationData.setTransferOptionData(transferOptionData);
+                            defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+                        }
+                    }
+                    return componentCombinationData;
+                })
+                .toList();
+
         this.transportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
-                .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity)).toList();
+                .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity))
+                .toList();
+
     }
 }

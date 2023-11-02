@@ -11,10 +11,6 @@ import java.util.stream.Collectors;
 
 @Data
 public class TransferOptionData extends OptionData {
-
-    @Schema(description = "The tour package id")
-    @JsonProperty("tour_package_id")
-    private Long tourPackageId;
     @Schema(description = "The transfer option id")
     @JsonProperty("transfer_option_id")
     private Long transferOptionId;

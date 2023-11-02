@@ -2,8 +2,10 @@ package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.transporation.TourPackageTransportationAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TourPackageTransportationListAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
@@ -113,15 +115,30 @@ public class TransportationControllerForMerchant {
 
 
     // tour package transportation
-    @RequestMapping(path = "/admin/tour-package/transportation/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/tour-package/transportation/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransportation(@RequestBody TourPackageTransportationAddRequest tourPackageTransportationAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageTransportationAddRequest.getTourPackageID());
-        return new ResponseEntity<>(transportationService.addTourPackageTransportation(tourPackageEntity, tourPackageTransportationAddRequest.getTourPackageTransportation()), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageTransportationAddRequest.getTourPackageID());
+            return new ResponseEntity<>(transportationService.addTourPackageTransportation(tourPackageEntity, tourPackageTransportationAddRequest.getTourPackageTransportation()), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageTransportationAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
     }
 
-    @RequestMapping(path = "/admin/tour-package/transportation/list/add", method = RequestMethod.POST)
+    @RequestMapping(path = "/tour-package/transportation/list/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTourPackageTransportation(@RequestBody TourPackageTransportationListAddRequest tourPackageTransportationListAddRequest) {
-        TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageTransportationListAddRequest.getTourPackageID());
-        return new ResponseEntity<>(transportationService.addTourPackageTransportations(tourPackageEntity, tourPackageTransportationListAddRequest), HttpStatus.CREATED);
+        try {
+            TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageTransportationListAddRequest.getTourPackageID());
+            return new ResponseEntity<>(transportationService.addTourPackageTransportations(tourPackageEntity, tourPackageTransportationListAddRequest), HttpStatus.CREATED);
+        } catch (TourPackageNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageTransportationListAddRequest.getRequestId()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/tour-package/transportation/options/check", method = RequestMethod.POST)
+    public ResponseEntity<?> checkTourPackageTransportationOptions(@RequestBody TransportationOptionCheckRequest transportationOptionCheckRequest) {
+        TourPackageEntity tourPackageEntity = new TourPackageEntity();
+        tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(transportationOptionCheckRequest.getTourPackageTypeId()));
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

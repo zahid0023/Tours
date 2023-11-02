@@ -2,7 +2,9 @@ package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.tour.TourSubscriptionRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
+import com.ghuddy.backendapp.tours.enums.SubscribedTourFilterCriteria;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
+import com.ghuddy.backendapp.tours.exception.MerchantNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,7 @@ public class TourSubscriptionControllerForMerchant {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
+
     @RequestMapping(path = "/tour/subscribed/get/all/address/by/{merchant-id}/{subscribed-tour-id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAllSubscribedTourAddress(@PathVariable("merchant-id") Long merchantId, @PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
         try {
@@ -48,4 +51,25 @@ public class TourSubscriptionControllerForMerchant {
         }
     }
 
+    @RequestMapping(path = "/tour/subscribed/card-data/get/all/by/{merchant-id}/{criteria}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllSubscribedTourCardDataForMerchant(@PathVariable("merchant-id") Long merchantId, @PathVariable("criteria") SubscribedTourFilterCriteria subscribedTourFilterCriteria, String requestId) {
+        try {
+            return new ResponseEntity<>(tourSubscriptionService.getAllSubscribedTourCardDataByMerchantId(merchantId, subscribedTourFilterCriteria, requestId), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        } catch (MerchantNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(path = "/tour/subscribed/card-data/get/all/paginated/by/{merchant-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubscribedTourCardDataPaginatedForMerchant(@PathVariable("merchant-id") Long merchantId, SubscribedTourFilterCriteria subscribedTourFilterCriteria, Integer pageNumber, Integer pageSize, String requestId) {
+        try {
+            return new ResponseEntity<>(tourSubscriptionService.getAllSubscribedTourCardDataPaginatedByMerchantId(merchantId, subscribedTourFilterCriteria, pageNumber, pageSize, requestId), HttpStatus.OK);
+        } catch (EmptyListException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        } catch (MerchantNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        }
+    }
 }
