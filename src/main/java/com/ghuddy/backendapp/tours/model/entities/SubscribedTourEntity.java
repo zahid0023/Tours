@@ -20,7 +20,7 @@ import java.util.List;
 public class SubscribedTourEntity extends BaseEntity {
 
     @Column(name = "active")
-    private Boolean active;
+    private Boolean active = false;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -46,5 +46,13 @@ public class SubscribedTourEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "subscribedTourEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourPackageEntity> tourPackageEntities = new LinkedList<>();
+
+    @NotNull
+    @Column(name = "number_of_reviews", nullable = false)
+    private Integer numberOfReviews = 0;
+
+    @NotNull
+    @Column(name = "rating_in_stars", nullable = false)
+    private Double ratingInStars = 0.0;
 
 }

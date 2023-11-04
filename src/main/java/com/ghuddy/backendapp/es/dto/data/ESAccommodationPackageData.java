@@ -1,16 +1,13 @@
-package com.ghuddy.backendapp.es;
+package com.ghuddy.backendapp.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.AccommodationPackageEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
-public class ESAccommodationPackage {
+public class ESAccommodationPackageData {
     @JsonProperty("tour_package_accommodation_name")
     private String tourPackageAccommodationName;
     @JsonProperty("tour_package_room_category_name")
@@ -28,7 +25,7 @@ public class ESAccommodationPackage {
     @JsonProperty("night_number")
     private Integer nightNumber;
 
-    public ESAccommodationPackage(AccommodationPackageEntity accommodationPackageEntity){
+    public ESAccommodationPackageData(AccommodationPackageEntity accommodationPackageEntity){
         this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
         this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
         this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();

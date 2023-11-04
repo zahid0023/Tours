@@ -1,18 +1,15 @@
-package com.ghuddy.backendapp.es;
+package com.ghuddy.backendapp.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
 import com.ghuddy.backendapp.tours.model.entities.FoodOptionEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-public class ESFoodOption extends ESOption {
+public class ESFoodOptionData extends ESOptionData {
     @JsonProperty("meal_packages")
-    private List<ESMealPackage> mealPackageList;
+    private List<ESMealPackageData> mealPackageList;
     @JsonProperty("tour_package_meal_option_day")
     private Integer dayNumber;
     @JsonProperty("number_of_meals")
@@ -24,12 +21,15 @@ public class ESFoodOption extends ESOption {
     @JsonProperty("number_of_dinner")
     private Integer numberOfDinner;
 
-    public ESFoodOption(FoodOptionEntity foodOptionEntity) {
+    public ESFoodOptionData(FoodOptionEntity foodOptionEntity) {
         super(foodOptionEntity.getActive(), foodOptionEntity.getIsDefault(), foodOptionEntity.getTotalOptionPricePerPerson());
         this.mealPackageList = foodOptionEntity.getMealPackageEntities().stream()
-                .map(mealPackageEntity -> new ESMealPackage(mealPackageEntity))
+                .map(mealPackageEntity -> new ESMealPackageData(mealPackageEntity))
                 .toList();
         this.dayNumber = foodOptionEntity.getDayNumber();
         this.numberOfMeals = foodOptionEntity.getNumberOfMeals();
+        this.numberOfBreakFast = foodOptionEntity.getNumberOfBreakfast();
+        this.numberOfLunch = foodOptionEntity.getNumberOfLunch();
+        this.numberOfDinner = foodOptionEntity.getNumberOfDinner();
     }
 }

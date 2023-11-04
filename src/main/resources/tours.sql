@@ -161,12 +161,14 @@ create table if not exists public.subscribed_tours
     updated_at           timestamp,
     version              integer,
     active               boolean,
-    tour_id              bigint       not null
+    tour_id              bigint                       not null
         references public.tour,
-    merchant_id          bigint       not null
+    merchant_id          bigint                       not null
         references public.users,
-    tour_reporting_time  time         not null,
-    tour_reporting_place varchar(100) not null
+    tour_reporting_time  time                         not null,
+    tour_reporting_place varchar(100)                 not null,
+    number_of_reviews    integer          default 0   not null,
+    rating_in_stars      double precision default 0.0 not null
 );
 
 alter table public.subscribed_tours
@@ -236,7 +238,8 @@ create table if not exists public.tour_package
     default_food_option_price          numeric(10, 2),
     default_accommodation_option_price numeric(10, 2),
     default_transfer_option_price      numeric(10, 2),
-    guide_price                        numeric(10, 2)
+    guide_price                        numeric(10, 2),
+    thumb_image_url                    text
 );
 
 alter table public.tour_package
@@ -429,9 +432,8 @@ alter table public.transportation_route
 
 create table if not exists public.transportation_packages
 (
-    id                                      bigint default nextval('tour_package_transportation_package_id_seq'::regclass) not null
-        constraint tour_package_transportation_package_pkey
-            primary key,
+    id                                      bigserial
+        primary key,
     created_by                              varchar(255),
     created_at                              timestamp,
     deleted                                 boolean,
@@ -439,25 +441,24 @@ create table if not exists public.transportation_packages
     updated_at                              timestamp,
     version                                 integer,
     active                                  boolean,
-    tour_package_id                         bigint                                                                         not null
+    tour_package_id                         bigint         not null
         constraint tour_package_transportation_package_tour_package_id_fkey
             references public.tour_package,
-    transportation_route_id                 bigint                                                                         not null
+    transportation_route_id                 bigint         not null
         constraint tour_package_transportation_packag_transportation_route_id_fkey
             references public.transportation_route,
-    transportation_mode_id                  bigint                                                                         not null
+    transportation_mode_id                  bigint         not null
         constraint tour_package_transportation_package_transportation_mode_id_fkey
             references public.transportation_mode,
-    transportation_brand_id                 bigint                                                                         not null
+    transportation_brand_id                 bigint         not null
         constraint tour_package_transportation_packag_transportation_brand_id_fkey
             references public.transportation_brand,
-    transportation_provider_id              bigint                                                                         not null
+    transportation_provider_id              bigint         not null
         constraint tour_package_transportation_pac_transportation_provider_id_fkey
             references public.transportation_provider,
-    trip_type                               varchar(20)                                                                    not null,
-    is_ac                                   boolean                                                                        not null,
-    unit_price                              numeric(10, 2)                                                                 not null,
-    per_person_transportation_package_price numeric(10, 2)                                                                 not null
+    trip_type                               varchar(20)    not null,
+    is_ac                                   boolean        not null,
+    per_person_transportation_package_price numeric(10, 2) not null
 );
 
 alter table public.transportation_packages
@@ -489,19 +490,17 @@ alter table public.activity_images
 
 create table if not exists public.tour_accommodation_option
 (
-    id                 bigserial
+    id                            bigserial
         primary key,
-    created_by         varchar(255),
-    created_at         timestamp,
-    deleted            boolean,
-    last_modified_by   varchar(255),
-    updated_at         timestamp,
-    version            integer,
-    active             boolean,
-    tour_package_id    bigint
-        references public.tour_package,
-    is_default         boolean default false,
-    total_option_price numeric(10, 2)
+    created_by                    varchar(255),
+    created_at                    timestamp,
+    deleted                       boolean,
+    last_modified_by              varchar(255),
+    updated_at                    timestamp,
+    version                       integer,
+    active                        boolean,
+    is_default                    boolean default false,
+    total_option_price_per_person numeric(10, 2)
 );
 
 alter table public.tour_accommodation_option
@@ -509,9 +508,8 @@ alter table public.tour_accommodation_option
 
 create table if not exists public.accommodation_packages
 (
-    id                      bigint default nextval('tour_package_accommodation_package_id_seq'::regclass) not null
-        constraint tour_package_accommodation_package_pkey
-            primary key,
+    id                      bigserial
+        primary key,
     created_by              varchar(255),
     created_at              timestamp,
     deleted                 boolean,
@@ -519,24 +517,24 @@ create table if not exists public.accommodation_packages
     updated_at              timestamp,
     version                 integer,
     active                  boolean,
-    room_category_id        bigint                                                                        not null
+    room_category_id        bigint         not null
         constraint tour_package_accommodation_package_room_category_id_fkey
             references public.tour_room_category,
-    room_type_id            bigint                                                                        not null
+    room_type_id            bigint         not null
         constraint tour_package_accommodation_package_room_type_id_fkey
             references public.tour_room_type,
-    accommodation_id        bigint                                                                        not null
+    accommodation_id        bigint         not null
         constraint tour_package_accommodation_package_accommodation_id_fkey
             references public.tour_accommodation,
     is_shareable            boolean,
-    suitable_for_persons    integer                                                                       not null,
+    suitable_for_persons    integer        not null,
     bed_count               integer,
     bed_configuration       varchar(100),
-    per_night_room_price    numeric(10, 2)                                                                not null,
+    per_night_room_price    numeric(10, 2) not null,
     accommodation_option_id bigint
         constraint acommodation_packages_accommodation_option_id_fkey
             references public.tour_accommodation_option,
-    night_numbers           integer[]
+    night_number            integer
 );
 
 alter table public.accommodation_packages
@@ -553,8 +551,6 @@ create table if not exists public.tour_food_option
     updated_at          timestamp,
     version             integer,
     active              boolean,
-    tour_package_id     bigint
-        references public.tour_package,
     is_default          boolean default false,
     day_number          integer,
     number_of_meals     integer,
@@ -579,8 +575,6 @@ create table if not exists public.tour_transfer_option
     version            integer,
     active             boolean,
     is_default         boolean,
-    tour_package_id    bigint
-        references public.tour_package,
     total_option_price numeric(10, 2)
 );
 
@@ -589,21 +583,20 @@ alter table public.tour_transfer_option
 
 create table if not exists public.meal_packages
 (
-    id                bigserial
+    id               bigserial
         primary key,
-    created_by        varchar(255),
-    created_at        timestamp,
-    deleted           boolean,
-    last_modified_by  varchar(255),
-    updated_at        timestamp,
-    version           integer,
-    active            boolean,
-    meal_package_name varchar(255)   not null,
-    meal_type_id      bigint         not null
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean,
+    meal_type_id     bigint         not null
         constraint tour_package_meal_package_meal_type_id_fkey
             references public.meal_type,
-    per_meal_price    numeric(10, 2) not null,
-    food_option_id    bigint
+    per_meal_price   numeric(10, 2) not null,
+    food_option_id   bigint
         references public.tour_food_option
 );
 
@@ -649,5 +642,29 @@ create table if not exists public.transfer_packages
 );
 
 alter table public.transfer_packages
+    owner to postgres;
+
+create table if not exists public.tour_package_option
+(
+    id                      bigserial
+        primary key,
+    created_by              varchar(255),
+    created_at              timestamp,
+    deleted                 boolean,
+    last_modified_by        varchar(255),
+    updated_at              timestamp,
+    version                 integer,
+    active                  boolean,
+    tour_package_id         bigint
+        references public.tour_package,
+    food_option_id          bigint
+        references public.tour_food_option,
+    accommodation_option_id bigint
+        references public.tour_accommodation_option,
+    transfer_option_id      bigint
+        references public.tour_transfer_option
+);
+
+alter table public.tour_package_option
     owner to postgres;
 

@@ -1,4 +1,4 @@
-package com.ghuddy.backendapp.es;
+package com.ghuddy.backendapp.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.TransferOptionEntity;
@@ -8,14 +8,14 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ESTransferOption extends ESOption {
+public class ESTransferOptionData extends ESOptionData {
     @Schema(description = "The transfer packages belonging to this tour package")
     @JsonProperty("transfer_packages")
-    private List<ESTransferPackage> transferPackageList;
+    private List<ESTransferPackageData> transferPackageList;
 
-    public ESTransferOption(TransferOptionEntity transferOptionEntity) {
+    public ESTransferOptionData(TransferOptionEntity transferOptionEntity) {
         this.transferPackageList = transferOptionEntity.getTransferPackageEntities().stream()
-                .map(transferPackageEntity -> new ESTransferPackage(transferPackageEntity))
+                .map(transferPackageEntity -> new ESTransferPackageData(transferPackageEntity))
                 .toList();
         this.setDefault(transferOptionEntity.getIsDefault());
         this.setIsActive(transferOptionEntity.getActive());

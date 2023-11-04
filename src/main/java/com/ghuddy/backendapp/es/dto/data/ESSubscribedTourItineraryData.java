@@ -1,19 +1,14 @@
-package com.ghuddy.backendapp.tours.model.data.activity;
+package com.ghuddy.backendapp.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.es.dto.data.ESImageData;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-public class SubscribedTourActivityData {
+public class ESSubscribedTourItineraryData {
     @JsonProperty("activity_id")
     private Long activityId;
     @JsonProperty("activity_name")
@@ -26,11 +21,10 @@ public class SubscribedTourActivityData {
     private LocalTime startTime;
     @JsonProperty("activity_end_time")
     private LocalTime endTime;
-
     @JsonProperty("activity_images")
     private List<ESImageData> esImageDataList;
 
-    public SubscribedTourActivityData(SubscribedTourItineraryEntity subscribedTourItineraryEntity) {
+    public ESSubscribedTourItineraryData(SubscribedTourItineraryEntity subscribedTourItineraryEntity) {
         this.activityId = subscribedTourItineraryEntity.getActivityEntity().getId();
         this.activityName = subscribedTourItineraryEntity.getActivityEntity().getActivityName();
         this.shortAddress = subscribedTourItineraryEntity.getActivityEntity().getShortLocation();

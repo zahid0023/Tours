@@ -1,19 +1,17 @@
-package com.ghuddy.backendapp.es;
+package com.ghuddy.backendapp.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
 import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
-public class ESMealPackage {
+public class ESMealPackageData {
     @JsonProperty("meal_type_name")
     private String mealTypeName;
     @JsonProperty("food_items")
@@ -21,7 +19,7 @@ public class ESMealPackage {
     @JsonProperty("per_meal_package_price")
     private BigDecimal unitPrice;
 
-    public ESMealPackage(MealPackageEntity mealPackageEntity) {
+    public ESMealPackageData(MealPackageEntity mealPackageEntity) {
         this.mealTypeName = mealPackageEntity.getMealTypeEntity().getMealTypeName();
         this.foodItems = mealPackageEntity.getFoodItemEntities().stream()
                 .map(FoodItemEntity::getFoodItemName)
