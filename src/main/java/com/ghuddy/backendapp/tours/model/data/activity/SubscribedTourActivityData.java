@@ -1,10 +1,8 @@
 package com.ghuddy.backendapp.tours.model.data.activity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.es.dto.data.ESImageData;
+import com.ghuddy.backendapp.tours.es.dto.data.ESImageData;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

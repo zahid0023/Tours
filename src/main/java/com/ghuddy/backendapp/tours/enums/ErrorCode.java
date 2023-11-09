@@ -24,8 +24,13 @@ public enum ErrorCode {
     ACTIVITY_NOT_FOUND("2004"),
     ACTIVITY_CAN_NOT_BE_SAVED("2005"),
 
+
+    // Tour Package Option Exceptions
+    TOUR_PACKAGE_OPTION_DOES_NOT_EXIST("30001"),
+    TOUR_PACKAGE_OPTION_CAPACITY_DOES_NOT_EXIST("30002"),
+
     // User Exceptions
-    MERCHANT_NOT_FOUND("30001"),
+    MERCHANT_NOT_FOUND("50001"),
 
     // Tour Package Exceptions
     TOUR_PACKAGE_NOT_FOUND("40001"),

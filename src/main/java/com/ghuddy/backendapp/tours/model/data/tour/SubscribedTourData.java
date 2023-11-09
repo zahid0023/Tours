@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class SubscribedTourData {
+    @Schema(description = "The id of the created tour")
+    @JsonProperty("created_tour_id")
+    private Long createdTourId;
     @Schema(description = "The id of the subscribed tour")
     @JsonProperty("subscribed_tour_id")
     private Long subscribedTourId;
@@ -31,6 +34,7 @@ public class SubscribedTourData {
     private String tourReportingPlace;
 
     public SubscribedTourData(SubscribedTourEntity subscribedTourEntity) {
+        this.createdTourId =subscribedTourEntity.getTourEntity().getId();
         this.subscribedTourId = subscribedTourEntity.getId();
         this.subscribedTourName = subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName();
         this.subscribedTourActivityList = subscribedTourEntity.getSubscribedTourItineraryEntities().stream()

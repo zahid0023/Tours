@@ -34,4 +34,7 @@ public class ActivityEntity extends BaseEntity {
     @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActivityImageEntity> activityImageEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpotEntryEntity> spotEntryEntities = new ArrayList<>();
+
 }

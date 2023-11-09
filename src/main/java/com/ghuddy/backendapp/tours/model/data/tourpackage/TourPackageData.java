@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.dto.data.ComponentCombinationData;
+import com.ghuddy.backendapp.tours.dto.data.TourPackageAllComponentData;
 import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
@@ -18,6 +18,9 @@ import java.util.List;
 
 @Data
 public class TourPackageData {
+    @Schema(description = "The tour package type id")
+    @JsonProperty("tour_package_type_id")
+    private Long tourPackageTypeId;
     @Schema(description = "The id of the tour package")
     @JsonProperty("tour_package_id")
     private Long tourPackageId;
@@ -33,7 +36,7 @@ public class TourPackageData {
 
     @Schema(description = "The list of component combination/ options belonging to this tour package")
     @JsonProperty("tour_package_options")
-    private List<ComponentCombinationData> componentCombinationDataList;
+    private List<TourPackageAllComponentData> tourPackageAllComponentCombinationDataList;
 
     @Schema(description = "The list of transportation packages belonging to this tour package")
     @JsonProperty("tour_package_transportation_packages")
@@ -49,6 +52,7 @@ public class TourPackageData {
 
 
     public TourPackageData(TourPackageEntity tourPackageEntity) {
+        this.tourPackageTypeId = tourPackageEntity.getTourPackageType().getId();
         this.tourPackageId = tourPackageEntity.getId();
         this.tourPackageTypeName = tourPackageEntity.getTourPackageType().getPackageTypeName();
         this.tourPackageName = tourPackageEntity.getTourPackageName();
@@ -57,15 +61,15 @@ public class TourPackageData {
         defaultCombinationData.setDefaultOptionPricePerPerson(BigDecimal.ZERO);
         this.totalPackagePrice = tourPackageEntity.getTotalPackagePrice();
 
-        this.componentCombinationDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
+        this.tourPackageAllComponentCombinationDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
                 .map(tourPackageOptionEntity -> {
-                    ComponentCombinationData componentCombinationData = new ComponentCombinationData();
-                    componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
+                    TourPackageAllComponentData tourPackageAllComponentCombinationData = new TourPackageAllComponentData();
+                    tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
 
                     FoodOptionData foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
                     if (foodOptionData != null) {
-                        componentCombinationData.setFoodOptionData(foodOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+                        tourPackageAllComponentCombinationData.setFoodOptionData(foodOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
                         if (foodOptionData.isDefault()) {
                             defaultCombinationData.setFoodOptionData(foodOptionData);
                             defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
@@ -75,8 +79,8 @@ public class TourPackageData {
                     AccommodationOptionData accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
 
                     if (accommodationOptionData != null) {
-                        componentCombinationData.setAccommodationOptionData(accommodationOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson()));
+                        tourPackageAllComponentCombinationData.setAccommodationOptionData(accommodationOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson()));
                         if (accommodationOptionData.isDefault()) {
                             defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
                             defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(accommodationOptionData.getTotalOptionPricePerPerson()));
@@ -85,14 +89,14 @@ public class TourPackageData {
 
                     TransferOptionData transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
                     if (transferOptionData != null && transferOptionData.isDefault()) {
-                        componentCombinationData.setTransferOptionData(transferOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+                        tourPackageAllComponentCombinationData.setTransferOptionData(transferOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
                         if (transferOptionData.isDefault()) {
                             defaultCombinationData.setTransferOptionData(transferOptionData);
                             defaultCombinationData.setDefaultOptionPricePerPerson(defaultCombinationData.getDefaultOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
                         }
                     }
-                    return componentCombinationData;
+                    return tourPackageAllComponentCombinationData;
                 })
                 .toList();
 

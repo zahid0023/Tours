@@ -50,7 +50,7 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
     @Override
     public BigDecimal perPersonAccommodationOptionPrice(AccommodationOptionRequest accommodationOptionRequest) {
         return accommodationOptionRequest.getTourPackageAccommodationRequestList().stream()
-                .map(accommodationPackageRequest -> accommodationPackageRequest.getPerNightRoomPrice().divide(BigDecimal.valueOf(accommodationPackageRequest.getForPersons())))
+                .map(accommodationPackageRequest -> accommodationPackageRequest.getPerNightRoomPrice().divideToIntegralValue(BigDecimal.valueOf(accommodationPackageRequest.getForPersons())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -64,7 +64,7 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
                 .map(transferPackageRequest -> {
                     int suitableForPersons = transferPackageRequest.getSuitableForPersons();
                     BigDecimal perVehiclePerTripPrice = transferPackageRequest.getTransferUnitPrice();
-                    return perVehiclePerTripPrice.divide(BigDecimal.valueOf(suitableForPersons > numberOfTravellers ? numberOfTravellers : suitableForPersons));
+                    return perVehiclePerTripPrice.divideToIntegralValue(BigDecimal.valueOf(suitableForPersons > numberOfTravellers ? numberOfTravellers : suitableForPersons));
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

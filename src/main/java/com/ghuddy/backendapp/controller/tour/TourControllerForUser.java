@@ -1,7 +1,8 @@
 package com.ghuddy.backendapp.controller.tour;
 
-import com.ghuddy.backendapp.es.service.ESTourService;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
+import com.ghuddy.backendapp.tours.es.service.ESTourService;
+import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class TourControllerForUser {
             return new ResponseEntity<>(esTourService.getSubscribedTourById(subscribedTourId, requestId), HttpStatus.OK);
         } catch (TourNotFoundException ex) {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        } catch (EmptyListException e) {
+            throw new RuntimeException(e);
         }
     }
 }

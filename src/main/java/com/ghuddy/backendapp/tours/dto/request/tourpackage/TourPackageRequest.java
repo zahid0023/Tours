@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.guide.GuidePackageRequest;
+import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,6 +30,9 @@ public class TourPackageRequest {
     @Schema(description = "The list of transfer options belonging to this tour package")
     @JsonProperty("tour_package_transfer_options")
     private List<TransferOptionRequest> transferOptionRequestList;
+    @Schema(description = "the list of spot entry for which fee has to be paid")
+    @JsonProperty("spot_entries")
+    private List<SpotEntryRequest> spotEntryRequestList;
     @Schema(description = "The list of transportation packages belonging to this tour package.")
     @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageRequest> transportationPackages;

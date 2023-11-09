@@ -1,15 +1,14 @@
 package com.ghuddy.backendapp.tours.service;
 
+import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
+import com.ghuddy.backendapp.tours.dto.data.TourPackageCoreComponentData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.ComponentCombinationResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageDetailResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageSummaryListResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.*;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
@@ -52,5 +51,8 @@ public interface TourPackageService {
     TourPackageDetailResponse getTourPackageDetailByTourPackageId(Long tourPackageId, String requestId) throws TourPackageNotFoundException;
 
     TourPackageSummaryListResponse getTourPackageSummaryBySubscribedTourId(SubscribedTourEntity subscribedTourEntity, String requestId) throws EmptyListException;
+
+    // tour package options
+    TourPackageOptionListResponse getTourPackageCoreOptionsByTourPackageId(Long tourPackageId, String requestId) throws TourPackageNotFoundException;
 
 }

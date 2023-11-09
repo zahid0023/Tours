@@ -46,20 +46,22 @@ public class TourPackageEntity extends BaseEntity {
     private BigDecimal packagePricePerPerson;
 
     @Column(name = "total_package_price")
-    private BigDecimal totalPackagePrice;
+    private BigDecimal totalPackagePrice = BigDecimal.ZERO;
 
     @Column(name = "default_food_option_price")
-    private BigDecimal defaultFoodOptionPrice;
+    private BigDecimal defaultFoodOptionPrice = BigDecimal.ZERO;
 
     @Column(name = "default_accommodation_option_price")
-    private BigDecimal defaultAccommodationOptionPrice;
+    private BigDecimal defaultAccommodationOptionPrice = BigDecimal.ZERO;
 
     @Column(name = "default_transfer_option_price")
-    private BigDecimal defaultTransferOptionPrice;
+    private BigDecimal defaultTransferOptionPrice = BigDecimal.ZERO;
 
     @Column(name = "guide_price")
-    private BigDecimal guidePrice;
+    private BigDecimal guidePrice = BigDecimal.ZERO;
 
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpotEntryEntity> spotEntryEntities = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

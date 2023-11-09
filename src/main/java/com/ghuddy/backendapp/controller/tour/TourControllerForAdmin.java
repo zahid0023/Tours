@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/admin")
-// @Api(tags = "Tour - Tour Controller For Admin", description = "This controller is used to manage tours by admins.")
+//@Api(tags = "Tour - Tour Controller For Admin", description = "This controller is used to manage tours by admins.")
 public class TourControllerForAdmin {
     private final AddedTourService addedTourService;
     private final TourService tourService;

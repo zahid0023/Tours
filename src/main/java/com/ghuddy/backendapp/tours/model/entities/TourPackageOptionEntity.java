@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -31,5 +31,11 @@ public class TourPackageOptionEntity extends BaseEntity {
 
     @Transient
     private TransportationPackageEntity transportationPackageEntity;
+
+    @OneToOne(mappedBy = "tourPackageOptionEntity", cascade = CascadeType.ALL)
+    private TourPackageOptionCapacityPriceEntity tourPackageOptionCapacityPriceEntity;
+
+    @Column(name = "capacity_price_generated")
+    private boolean capacityPriceGenerated;
 
 }

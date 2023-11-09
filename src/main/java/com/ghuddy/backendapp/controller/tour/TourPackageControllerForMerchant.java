@@ -11,7 +11,6 @@ import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +58,7 @@ public class TourPackageControllerForMerchant {
         TourPackageEntity tourPackageEntity = new TourPackageEntity();
         tourPackageEntity.setTourPackageType(tourPackageService.getTourPackageTypeEntityByPackageTypeID(tourPackageOptionCheckRequest.getTourPackageTypeId()));
         try {
+            log.info(tourPackageOptionCheckRequest.toString());
             return new ResponseEntity<>(tourPackageService.checkTourPackageOptionCombination(tourPackageEntity, tourPackageOptionCheckRequest), HttpStatus.OK);
         } catch (EmptyListException ex) {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), tourPackageOptionCheckRequest.getRequestId()), HttpStatus.NOT_FOUND);
@@ -118,13 +118,18 @@ public class TourPackageControllerForMerchant {
         }
     }
 
-    @RequestMapping(path = "/es/tour-package/get/all/by/{subscribed-tour-id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTourPackagesAsES(@PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
+    @RequestMapping(value = "/tour-package/summary/get/core/option/all/by/{tour-package-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCoreTourPackageOptionByTourPackageId(@PathVariable("tour-package-id") Long tourPackageId, @RequestParam String requestId) {
         try {
-            SubscribedTourEntity subscribedTourEntity = tourSubscriptionService.getSubscribedTourEntityById(subscribedTourId);
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        } catch (TourNotFoundException ex) {
+            return new ResponseEntity<>(tourPackageService.getTourPackageCoreOptionsByTourPackageId(tourPackageId, requestId), HttpStatus.OK);
+        } catch (TourPackageNotFoundException ex) {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(value = "/tour-package/summary/get/core/option/all/by/{tour-package-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTourPackageComponentOptionsByTourPackageId(@PathVariable("tour-package-id") Long tourPackageId, @RequestParam String requestId) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+
     }
 }

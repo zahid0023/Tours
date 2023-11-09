@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/admin")
-// @Api(tags = "Tour - Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
+//@Api(tags = "Tour - Transportation Controller For Admin", description = "This controller is used to manage tour transportations by admins.")
 public class TransportationControllerForAdmin {
     private final TransportationService transportationService;
 

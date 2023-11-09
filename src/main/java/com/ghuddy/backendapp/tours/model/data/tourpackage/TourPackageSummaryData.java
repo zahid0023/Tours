@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 
 @Data
 public class TourPackageSummaryData {
-
+    @Schema(description = "The id of the tour package type")
+    @JsonProperty("tour_package_type_id")
+    private Long tourPackageTypeId;
     @Schema(description = "The id of the tour package")
     @JsonProperty("tour_package_id")
     private Long tourPackageId;
@@ -27,6 +29,7 @@ public class TourPackageSummaryData {
     private BigDecimal tourPackageDefaultOptionPricePerPerson;
 
     public TourPackageSummaryData(TourPackageEntity tourPackageEntity) {
+        this.tourPackageTypeId = tourPackageEntity.getTourPackageType().getId();
         this.tourPackageId = tourPackageEntity.getId();
         this.tourPackageTypeName = tourPackageEntity.getTourPackageType().getPackageTypeName();
         this.tourPackageDescription = tourPackageEntity.getDescription();

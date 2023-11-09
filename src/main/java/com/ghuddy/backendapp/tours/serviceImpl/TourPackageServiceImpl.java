@@ -1,20 +1,17 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dao.TourPackageDao;
-import com.ghuddy.backendapp.tours.dto.data.ComponentCombinationData;
+import com.ghuddy.backendapp.tours.dto.data.TourPackageAllComponentData;
 import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
+import com.ghuddy.backendapp.tours.dto.data.TourPackageCoreComponentData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
-import com.ghuddy.backendapp.tours.dto.request.transfer.TransferPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.ComponentCombinationResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageDetailResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageSummaryListResponse;
-import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageTypeListResponse;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.*;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
@@ -256,10 +253,10 @@ public class TourPackageServiceImpl implements TourPackageService {
         else tourPackageOptionEntityList = tourPackageOptionEntityListExists.get();
 
 
-        List<ComponentCombinationData> componentCombinationDataList = tourPackageOptionEntityList.stream()
+        List<TourPackageAllComponentData> tourPackageAllComponentCombinationDataList = tourPackageOptionEntityList.stream()
                 .map(tourPackageOptionEntity -> {
-                    ComponentCombinationData componentCombinationData = new ComponentCombinationData();
-                    componentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
+                    TourPackageAllComponentData tourPackageAllComponentCombinationData = new TourPackageAllComponentData();
+                    tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(BigDecimal.ZERO);
 
                     AccommodationOptionEntity accommodationOptionEntity = tourPackageOptionEntity.getAccommodationOptionEntity();
                     FoodOptionEntity foodOptionEntity = tourPackageOptionEntity.getFoodOptionEntity();
@@ -268,33 +265,41 @@ public class TourPackageServiceImpl implements TourPackageService {
 
                     if (accommodationOptionEntity != null) {
                         AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
-                        componentCombinationData.setAccommodationOptionData(accommodationOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson()));
+
+                        tourPackageAllComponentCombinationData.setAccommodationOptionData(accommodationOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(accommodationOptionEntity.getTotalOptionPricePerPerson()));
+
                         if (accommodationOptionEntity.getIsDefault())
                             defaultCombinationData.setAccommodationOptionData(accommodationOptionData);
                     }
 
                     if (foodOptionEntity != null) {
                         FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
-                        componentCombinationData.setFoodOptionData(foodOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+
+                        tourPackageAllComponentCombinationData.setFoodOptionData(foodOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(foodOptionData.getTotalOptionPricePerPerson()));
+
                         if (foodOptionEntity.getIsDefault()) defaultCombinationData.setFoodOptionData(foodOptionData);
                     }
 
                     if (transferOptionEntity != null) {
                         TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
-                        componentCombinationData.setTransferOptionData(transferOptionData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+
+                        tourPackageAllComponentCombinationData.setTransferOptionData(transferOptionData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(transferOptionData.getTotalOptionPricePerPerson()));
+
                         if (transferOptionEntity.getIsDefault())
                             defaultCombinationData.setTransferOptionData(transferOptionData);
                     }
 
                     if (transportationPackageEntity != null) {
                         TransportationPackageData transportationPackageData = new TransportationPackageData(transportationPackageEntity);
-                        componentCombinationData.setTransportationPackageData(transportationPackageData);
-                        componentCombinationData.setTotalOptionPricePerPerson(componentCombinationData.getTotalOptionPricePerPerson().add(transportationPackageData.getUnitPrice()));
+
+                        tourPackageAllComponentCombinationData.setTransportationPackageData(transportationPackageData);
+                        tourPackageAllComponentCombinationData.setTotalOptionPricePerPerson(tourPackageAllComponentCombinationData.getTotalOptionPricePerPerson().add(transportationPackageData.getUnitPrice()));
                     }
-                    return componentCombinationData;
+                    return tourPackageAllComponentCombinationData;
+
                 })
                 .toList();
 
@@ -311,7 +316,7 @@ public class TourPackageServiceImpl implements TourPackageService {
 
         defaultCombinationData.setDefaultOptionPricePerPerson(defaultFoodOptionPrice.add(defaultAccommodationOptionPrice).add(defaultTransferOptionPrice));
 
-        return new ComponentCombinationResponse(componentCombinationDataList, defaultCombinationData);
+        return new ComponentCombinationResponse(tourPackageAllComponentCombinationDataList, defaultCombinationData);
     }
 
     /**
@@ -335,5 +340,20 @@ public class TourPackageServiceImpl implements TourPackageService {
                 .map(tourPackageEntity -> new TourPackageSummaryData(tourPackageEntity))
                 .toList();
         return new TourPackageSummaryListResponse(tourPackageSummaryDataList, requestId);
+    }
+
+    /**
+     * @param tourPackageId
+     * @param requestId
+     * @return
+     * @throws TourPackageNotFoundException
+     */
+    @Override
+    public TourPackageOptionListResponse getTourPackageCoreOptionsByTourPackageId(Long tourPackageId, String requestId) throws TourPackageNotFoundException {
+        TourPackageEntity tourPackageEntity = getTourPackageEntityByPackageID(tourPackageId);
+        List<TourPackageCoreComponentData> tourPackageCoreComponentDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
+                .map(tourPackageOptionEntity -> new TourPackageCoreComponentData(tourPackageOptionEntity))
+                .toList();
+        return new TourPackageOptionListResponse(tourPackageCoreComponentDataList, requestId);
     }
 }

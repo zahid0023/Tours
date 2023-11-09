@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
-// @Api(tags = "Tour - Tour Subscription Controller For Merchant", description = "This controller is used to subscribe tour/tour packages by merchants.")
+//@Api(tags = "Tour - Tour Subscription Controller For Merchant", description = "This controller is used to subscribe tour/tour packages by merchants.")
 public class TourSubscriptionControllerForMerchant {
     private final TourSubscriptionService tourSubscriptionService;
 
