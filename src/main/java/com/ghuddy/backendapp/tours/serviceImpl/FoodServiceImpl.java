@@ -10,7 +10,11 @@ import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.food.FoodItemEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.MealTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.repository.FoodItemRepository;
 import com.ghuddy.backendapp.tours.repository.FoodOptioRepository;
 import com.ghuddy.backendapp.tours.repository.MealPackageRepository;
@@ -19,7 +23,6 @@ import com.ghuddy.backendapp.tours.service.FoodService;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import com.ghuddy.backendapp.tours.utils.CombinationGenerator;
 import com.ghuddy.backendapp.tours.utils.EntityUtil;
-import com.ghuddy.backendapp.tours.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -228,7 +231,7 @@ public class FoodServiceImpl implements FoodService {
     public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException {
         FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
         foodOptionEntity = foodOptionRepository.save(foodOptionEntity);
-        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity);
+        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity, true, false);
         return new InsertAcknowledgeResponse(foodOptionData, requestId);
     }
 
@@ -238,7 +241,7 @@ public class FoodServiceImpl implements FoodService {
         List<FoodOptionEntity> foodOptionEntities = setTourPackageFoodOptions(tourPackageEntity, foodOptions);
         foodOptionEntities = foodOptionRepository.saveAll(foodOptionEntities);
         List<FoodOptionData> foodOptionDataList = foodOptionEntities.stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity))
+                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, true, false))
                 .toList();
 
         return new InsertAcknowledgeListResponse(foodOptionDataList, requestId);
@@ -293,8 +296,6 @@ public class FoodServiceImpl implements FoodService {
                     foodOptionEntity.setNumberOfMeals(foodOptionEntity.getNumberOfBreakfast() + foodOptionEntity.getNumberOfLunch() + foodOptionEntity.getNumberOfDinner());
                     foodOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonFoodOptionPrice(foodOptionRequest));
                     foodOptionEntity.setDayNumber(foodOptionRequest.getDayNumber());
-                    foodOptionEntity.setIsDefault(foodOptionRequest.getIsDefault());
-                    log.info(foodOptionEntity.getIsDefault().toString());
                     return foodOptionEntity;
                 }).collect(Collectors.toList());
 
@@ -329,5 +330,14 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Map<Long, FoodItemEntity> getFoodItemEntitiesByIDs(Set<Long> foodItemIDs) {
         return EntityUtil.findEntitiesByIds(foodItemIDs, foodItemRepository, FoodItemEntity::getId, "FoodItemEntity");
+    }
+
+    /**
+     * @param mealPackageIds
+     * @return
+     */
+    @Override
+    public Map<Long, MealPackageEntity> getMealPackageEntitiesByIds(Set<Long> mealPackageIds) {
+        return EntityUtil.findEntitiesByIds(mealPackageIds, mealPackageRepository, MealPackageEntity::getId, "MealPackageEntity");
     }
 }

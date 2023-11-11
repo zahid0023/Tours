@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.entities;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageOptionEntity;
 import lombok.Getter;
 import lombok.Setter;
 

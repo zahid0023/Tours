@@ -1,14 +1,15 @@
 package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
+import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAvailabilitySetRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
 import lombok.extern.slf4j.Slf4j;
@@ -125,11 +126,5 @@ public class TourPackageControllerForMerchant {
         } catch (TourPackageNotFoundException ex) {
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
-    }
-
-    @RequestMapping(value = "/tour-package/summary/get/core/option/all/by/{tour-package-id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllTourPackageComponentOptionsByTourPackageId(@PathVariable("tour-package-id") Long tourPackageId, @RequestParam String requestId) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
-
     }
 }

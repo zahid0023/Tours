@@ -4,7 +4,7 @@ import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.SpotEntryService;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import org.springframework.http.HttpStatus;

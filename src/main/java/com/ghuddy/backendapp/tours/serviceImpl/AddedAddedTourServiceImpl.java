@@ -12,7 +12,7 @@ import com.ghuddy.backendapp.tours.exception.LocationNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.AddedTourData;
 import com.ghuddy.backendapp.tours.model.data.tour.AddedTourDataOptimized;
-import com.ghuddy.backendapp.tours.model.entities.AddedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.AddedTourEntity;
 import com.ghuddy.backendapp.tours.repository.AddedTourRespository;
 import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.utils.StringUtil;

@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourRoomCategoryEntity;
+import com.ghuddy.backendapp.tours.model.entities.accommodation.TourRoomCategoryEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;

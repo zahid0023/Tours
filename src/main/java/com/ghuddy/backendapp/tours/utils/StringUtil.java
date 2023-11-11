@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.utils;
 
-import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 

@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.transfer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.OptionData;
-import com.ghuddy.backendapp.tours.model.entities.TransferOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -18,13 +18,12 @@ public class TransferOptionData extends OptionData {
     @JsonProperty("transfer_packages")
     private List<TransferPackageData> transferPackageDataList;
 
-    public TransferOptionData(TransferOptionEntity transferOptionEntity) {
+    public TransferOptionData(TransferOptionEntity transferOptionEntity, Boolean isActive, Boolean isDefault) {
+        super(isActive, isDefault, transferOptionEntity.getPerPersonTransferOptionPrice());
         this.transferOptionId = transferOptionEntity.getId();
         this.transferPackageDataList = transferOptionEntity.getTransferPackageEntities().stream()
                 .map(transferPackageEntity -> new TransferPackageData(transferPackageEntity))
                 .collect(Collectors.toList());
-        this.setDefault(transferOptionEntity.getIsDefault());
-        this.setIsActive(transferOptionEntity.getActive());
         this.setTotalOptionPricePerPerson(transferOptionEntity.getPerPersonTransferOptionPrice());
     }
 }

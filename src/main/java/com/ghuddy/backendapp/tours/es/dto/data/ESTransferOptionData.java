@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TransferOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -19,8 +19,8 @@ public class ESTransferOptionData extends ESOptionData {
         this.transferPackageList = transferOptionEntity.getTransferPackageEntities().stream()
                 .map(transferPackageEntity -> new ESTransferPackageData(transferPackageEntity))
                 .toList();
-        this.setDefault(transferOptionEntity.getIsDefault());
-        this.setIsActive(transferOptionEntity.getActive());
+        //this.setDefault(transferOptionEntity.getIsDefault());
+        //this.setIsActive(transferOptionEntity.getActive());
         this.setTotalOptionPricePerPerson(transferOptionEntity.getPerPersonTransferOptionPrice());
     }
 }

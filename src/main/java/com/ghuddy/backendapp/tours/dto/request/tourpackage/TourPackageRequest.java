@@ -3,6 +3,7 @@ package com.ghuddy.backendapp.tours.dto.request.tourpackage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.guide.GuideOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.guide.GuidePackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
@@ -30,18 +31,13 @@ public class TourPackageRequest {
     @Schema(description = "The list of transfer options belonging to this tour package")
     @JsonProperty("tour_package_transfer_options")
     private List<TransferOptionRequest> transferOptionRequestList;
-    @Schema(description = "the list of spot entry for which fee has to be paid")
-    @JsonProperty("spot_entries")
-    private List<SpotEntryRequest> spotEntryRequestList;
     @Schema(description = "The list of transportation packages belonging to this tour package.")
     @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageRequest> transportationPackages;
-
-    @Schema(description = "The guide belonging to this tour package")
-    @JsonProperty("tour_package_guide")
-    private GuidePackageRequest guidePackageRequest;
-
-    @Schema(description = "The final price of the package which is the sum of all the default component package price", required = true, example = "300")
-    @JsonProperty("package_total_price")
-    private BigDecimal totalPackagePrice;
+    @Schema(description = "The list of guide option belonging to this tour package.")
+    @JsonProperty("tour_package_guide_options")
+    private List<GuideOptionRequest> guideOptionRequestList;
+    @Schema(description = "the list of spot entry for which fee has to be paid")
+    @JsonProperty("spot_entries")
+    private List<SpotEntryRequest> spotEntryRequestList;
 }

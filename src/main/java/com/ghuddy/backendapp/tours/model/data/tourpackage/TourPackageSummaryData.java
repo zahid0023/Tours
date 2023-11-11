@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.tourpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -33,7 +33,7 @@ public class TourPackageSummaryData {
         this.tourPackageId = tourPackageEntity.getId();
         this.tourPackageTypeName = tourPackageEntity.getTourPackageType().getPackageTypeName();
         this.tourPackageDescription = tourPackageEntity.getDescription();
-        this.tourPackageTotalOptions = tourPackageEntity.getTourPackageOptionEntities().size();
-        this.tourPackageDefaultOptionPricePerPerson = tourPackageEntity.getPackagePricePerPerson();
+        //this.tourPackageTotalOptions = tourPackageEntity.getTourPackageOptionEntities().size();
+        //this.tourPackageDefaultOptionPricePerPerson = tourPackageEntity.getPackagePricePerPerson();
     }
 }

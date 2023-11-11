@@ -10,14 +10,15 @@ import java.util.List;
 
 @Data
 public class GuidePackageRequest extends OptionRequest {
-    @Schema(description = "The price of the guide per day", required = true, example = "700")
-    @JsonProperty("tour_guide_price_per_day")
-    private BigDecimal perDayGuidePrice;
+    @Schema(description = "The number of days the guide service will be provided", required = true, example = "[1,2]")
+    @JsonProperty("day_number")
+    private Integer dayNumber;
 
     @Schema(description = "The number of guide provided for this guide package")
     @JsonProperty("number_of_guides")
     private Integer numberOfGuides;
-    @Schema(description = "The number of days the guide service will be provided", required = true, example = "[1,2]")
-    @JsonProperty("tour_guide_provided_in_days")
-    private List<Integer> guideProvidedInDays;
+    @Schema(description = "The price of the guide per day", required = true, example = "700")
+    @JsonProperty("tour_guide_price_per_day")
+    private BigDecimal perDayGuidePrice;
+
 }

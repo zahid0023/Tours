@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.enums.TripType;
-import com.ghuddy.backendapp.tours.model.entities.TransferPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferPackageEntity;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
 

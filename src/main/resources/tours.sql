@@ -218,28 +218,22 @@ alter table public.tour_package_type
 
 create table if not exists public.tour_package
 (
-    id                                 bigserial
+    id                   bigserial
         primary key,
-    created_by                         varchar(255),
-    created_at                         timestamp,
-    deleted                            boolean,
-    last_modified_by                   varchar(255),
-    updated_at                         timestamp,
-    version                            integer,
-    active                             boolean,
-    tour_package_name                  varchar(255) not null,
-    subscribed_tour_id                 bigint       not null
+    created_by           varchar(255),
+    created_at           timestamp,
+    deleted              boolean,
+    last_modified_by     varchar(255),
+    updated_at           timestamp,
+    version              integer,
+    active               boolean,
+    tour_package_name    varchar(255) not null,
+    subscribed_tour_id   bigint       not null
         references public.subscribed_tours,
-    tour_package_type_id               bigint       not null
+    tour_package_type_id bigint       not null
         references public.tour_package_type,
-    description                        text         not null,
-    package_price_per_person           numeric(10, 2),
-    total_package_price                numeric,
-    default_food_option_price          numeric(10, 2),
-    default_accommodation_option_price numeric(10, 2),
-    default_transfer_option_price      numeric(10, 2),
-    guide_price                        numeric(10, 2),
-    thumb_image_url                    text
+    description          text         not null,
+    thumb_image_url      text
 );
 
 alter table public.tour_package
@@ -490,17 +484,17 @@ alter table public.activity_images
 
 create table if not exists public.tour_accommodation_option
 (
-    id                            bigserial
+    id                 bigserial
         primary key,
-    created_by                    varchar(255),
-    created_at                    timestamp,
-    deleted                       boolean,
-    last_modified_by              varchar(255),
-    updated_at                    timestamp,
-    version                       integer,
-    active                        boolean,
-    is_default                    boolean default false,
-    total_option_price_per_person numeric(10, 2)
+    created_by         varchar(255),
+    created_at         timestamp,
+    deleted            boolean,
+    last_modified_by   varchar(255),
+    updated_at         timestamp,
+    version            integer,
+    tour_package_id    bigint
+        references public.tour_package,
+    total_option_price numeric(10, 2)
 );
 
 alter table public.tour_accommodation_option
@@ -550,14 +544,14 @@ create table if not exists public.tour_food_option
     last_modified_by    varchar(255),
     updated_at          timestamp,
     version             integer,
-    active              boolean,
-    is_default          boolean default false,
     day_number          integer,
     number_of_meals     integer,
     number_of_breakfast integer,
     number_of_lunch     integer,
     number_of_dinner    integer,
-    total_option_price  numeric(10, 2)
+    total_option_price  numeric(10, 2),
+    tour_package_id     bigint
+        references public.tour_package
 );
 
 alter table public.tour_food_option
@@ -573,9 +567,9 @@ create table if not exists public.tour_transfer_option
     last_modified_by   varchar(255),
     updated_at         timestamp,
     version            integer,
-    active             boolean,
-    is_default         boolean,
-    total_option_price numeric(10, 2)
+    total_option_price numeric(10, 2),
+    tour_package_id    bigint
+        references public.tour_package
 );
 
 alter table public.tour_transfer_option
@@ -646,25 +640,521 @@ alter table public.transfer_packages
 
 create table if not exists public.tour_package_option
 (
-    id                      bigserial
+    id                       bigserial
         primary key,
-    created_by              varchar(255),
-    created_at              timestamp,
-    deleted                 boolean,
-    last_modified_by        varchar(255),
-    updated_at              timestamp,
-    version                 integer,
-    active                  boolean,
-    tour_package_id         bigint
+    created_by               varchar(255),
+    created_at               timestamp,
+    deleted                  boolean,
+    last_modified_by         varchar(255),
+    updated_at               timestamp,
+    version                  integer,
+    active                   boolean,
+    tour_package_id          bigint
         references public.tour_package,
-    food_option_id          bigint
+    food_option_id           bigint
         references public.tour_food_option,
-    accommodation_option_id bigint
+    accommodation_option_id  bigint
         references public.tour_accommodation_option,
-    transfer_option_id      bigint
-        references public.tour_transfer_option
+    transfer_option_id       bigint
+        references public.tour_transfer_option,
+    capacity_price_generated boolean default false not null
 );
 
 alter table public.tour_package_option
+    owner to postgres;
+
+create table if not exists public.spot_entry
+(
+    id               bigint  default nextval('sport_entry_id_seq'::regclass) not null
+        constraint sport_entry_pkey
+            primary key,
+    created_by       varchar(255),
+    created_at       timestamp,
+    deleted          boolean,
+    last_modified_by varchar(255),
+    updated_at       timestamp,
+    version          integer,
+    active           boolean default true,
+    tour_package_id  bigint                                                  not null
+        constraint sport_entry_tour_package_id_fkey
+            references public.tour_package,
+    activity_id      bigint                                                  not null
+        constraint sport_entry_activity_id_fkey
+            references public.activity,
+    price_per_person numeric(10, 2)                                          not null,
+    remark           text
+);
+
+alter table public.spot_entry
+    owner to postgres;
+
+create table if not exists public.tour_package_option_capacity_price
+(
+    id                              bigserial
+        primary key,
+    created_by                      varchar(255),
+    last_modified_by                varchar(255),
+    created_at                      timestamp,
+    updated_at                      timestamp,
+    version                         integer,
+    deleted                         boolean,
+    rack_rate                       numeric,
+    corporate_rate                  numeric,
+    corporate_rate_discount_percent numeric,
+    ghuddy_commission_percent       numeric,
+    ghuddy_commission_amount        numeric,
+    shurjo_commission_amount        numeric,
+    shurjo_commission_percent       numeric,
+    ghuddy_website_black_price      numeric,
+    ghuddy_subsidy_amount           numeric,
+    ghuddy_subsidy_percent          numeric,
+    ghuddy_website_red_price        numeric,
+    total_discount_percent          numeric,
+    total_shurjo_commission_amount  numeric,
+    total_ghuddy_commission_amount  numeric,
+    total_ghuddy_commission_percent numeric,
+    total_seats                     bigint,
+    bookable_seats                  bigint,
+    tour_package_option_id          bigint
+        constraint tour_package_option_capacity_price_package_option_id_fkey
+            references public.tour_package_option
+);
+
+alter table public.tour_package_option_capacity_price
+    owner to postgres;
+
+create table if not exists public.tour_package_option_capacity_price_filter
+(
+    id                                          bigserial
+        primary key,
+    created_by                                  varchar(255),
+    last_modified_by                            varchar(255),
+    created_at                                  timestamp,
+    updated_at                                  timestamp,
+    version                                     integer,
+    deleted                                     boolean,
+    policy_name                                 text,
+    tour_date                                   date,
+    capacity_price_id                           integer
+        constraint tour_package_option_capacity_price_filte_capacity_price_id_fkey
+            references public.tour_package_option_capacity_price,
+    policy_type                                 varchar(255),
+    delta_rack_rate                             numeric,
+    delta_corporate_rate                        numeric,
+    delta_corporate_rate_discount_percent_point numeric,
+    delta_ghuddy_commission_percent_point       numeric,
+    delta_ghuddy_commission_amount              numeric,
+    delta_shurjo_commission_percent_point       numeric,
+    delta_shurjo_commission_amount              numeric,
+    delta_ghuddy_website_black_price            numeric,
+    delta_ghuddy_website_red_price              numeric,
+    delta_total_discount_percent_point          numeric,
+    delta_ghuddy_subsidy_amount                 numeric,
+    delta_ghuddy_subsidy_percent_point          numeric,
+    delta_total_ghuddy_commission_amount        numeric,
+    delta_total_ghuddy_commission_percent_point numeric,
+    delta_total_shurjo_commission_amount        numeric,
+    delta_total_seats                           bigint,
+    delta_bookable_seats                        bigint
+);
+
+alter table public.tour_package_option_capacity_price_filter
+    owner to postgres;
+
+create table if not exists public.tour_package_option_capacity_price_daily
+(
+    package_option_id bigint,
+    price_id          bigint,
+    date              date,
+    total_seats       bigint,
+    bookable_seats    bigint,
+    black_price       numeric,
+    red_price         numeric,
+    discount_percent  numeric,
+    policy_type       varchar(50),
+    constraint tour_package_option_capacity_price_daily_pk
+        unique (price_id, date)
+);
+
+alter table public.tour_package_option_capacity_price_daily
+    owner to postgres;
+
+create table if not exists public.tour_package_guide_options
+(
+    id                 bigserial
+        primary key,
+    created_by         varchar(255),
+    created_at         timestamp,
+    deleted            boolean,
+    last_modified_by   varchar(255),
+    updated_at         timestamp,
+    version            integer,
+    tour_package_id    bigint not null
+        references public.tour_package,
+    total_option_price numeric(10, 2)
+);
+
+alter table public.tour_package_guide_options
+    owner to postgres;
+
+create table if not exists public.guide_packages
+(
+    id                        bigserial
+        primary key,
+    created_by                varchar(255),
+    created_at                timestamp,
+    deleted                   boolean,
+    last_modified_by          varchar(255),
+    updated_at                timestamp,
+    version                   integer,
+    day_number                integer not null,
+    number_of_guide_for_day   integer,
+    total_guide_price_for_day numeric(10, 2),
+    guide_option_id           bigint  not null
+        references public.tour_package_guide_options
+);
+
+alter table public.guide_packages
+    owner to postgres;
+
+create table if not exists public.tour_package_availability
+(
+    id                              bigserial
+        primary key,
+    created_by                      varchar(255),
+    created_at                      timestamp,
+    deleted                         boolean,
+    last_modified_by                varchar(255),
+    updated_at                      timestamp,
+    version                         integer,
+    tour_package_id                 bigint
+        references public.tour_package,
+    default_accommodation_option_id bigint
+        references public.tour_accommodation_option,
+    default_food_option_id          bigint
+        references public.tour_food_option,
+    default_transfer_option_id      bigint
+        references public.tour_transfer_option,
+    default_guide_option_id         bigint
+        references public.tour_package_guide_options,
+    default_spot_entry_id           bigint
+        references public.spot_entry,
+    tour_start_date                 date    not null,
+    total_seats                     integer not null,
+    bookable_seats                  integer not null
+);
+
+alter table public.tour_package_availability
+    owner to postgres;
+
+create table if not exists public.availability_generated_transportation_packages
+(
+    id                                      bigserial
+        primary key,
+    created_by                              varchar(255),
+    created_at                              timestamp,
+    deleted                                 boolean,
+    last_modified_by                        varchar(255),
+    updated_at                              timestamp,
+    version                                 integer,
+    transportation_package_id               bigint         not null
+        constraint availability_generated_transport_transportation_package_id_fkey
+            references public.meal_packages,
+    transportation_package_price_per_person numeric(10, 2) not null,
+    tour_package_availability_id            bigint         not null
+        constraint availability_generated_transp_tour_package_availability_id_fkey
+            references public.tour_package_availability
+);
+
+alter table public.availability_generated_transportation_packages
+    owner to postgres;
+
+create table if not exists public.availability_generated_accommodation_options
+(
+    id                            bigserial
+        primary key,
+    created_by                    varchar(255),
+    created_at                    timestamp,
+    deleted                       boolean,
+    last_modified_by              varchar(255),
+    updated_at                    timestamp,
+    version                       integer,
+    tour_package_availability_id  bigint         not null
+        constraint availability_generated_accom_tour_package_availability_id_fkey1
+            references public.tour_package_availability,
+    total_option_price_per_person numeric(10, 2) not null,
+    is_default                    boolean        not null
+);
+
+alter table public.availability_generated_accommodation_options
+    owner to postgres;
+
+create table if not exists public.availability_generated_accommodation_packages
+(
+    id                                             bigserial
+        primary key,
+    created_by                                     varchar(255),
+    created_at                                     timestamp,
+    deleted                                        boolean,
+    last_modified_by                               varchar(255),
+    updated_at                                     timestamp,
+    version                                        integer,
+    accommodation_package_id                       bigint         not null
+        constraint availability_generated_accommodat_accommodation_package_id_fkey
+            references public.accommodation_packages,
+    per_night_room_price                           numeric(10, 2) not null,
+    availability_generated_accommodation_option_id bigint         not null
+        constraint availability_generated_accomm_availability_generated_accom_fkey
+            references public.availability_generated_accommodation_options
+);
+
+alter table public.availability_generated_accommodation_packages
+    owner to postgres;
+
+create table if not exists public.availability_generated_food_options
+(
+    id                            bigserial
+        primary key,
+    created_by                    varchar(255),
+    created_at                    timestamp,
+    deleted                       boolean,
+    last_modified_by              varchar(255),
+    updated_at                    timestamp,
+    version                       integer,
+    tour_package_availability_id  bigint         not null
+        constraint availability_generated_food_o_tour_package_availability_id_fkey
+            references public.tour_package_availability,
+    total_option_price_per_person numeric(10, 2) not null,
+    is_default                    boolean        not null
+);
+
+alter table public.availability_generated_food_options
+    owner to postgres;
+
+create table if not exists public.availability_generated_meal_packages
+(
+    id                                    bigserial
+        primary key,
+    created_by                            varchar(255),
+    created_at                            timestamp,
+    deleted                               boolean,
+    last_modified_by                      varchar(255),
+    updated_at                            timestamp,
+    version                               integer,
+    meal_package_id                       bigint         not null
+        references public.meal_packages,
+    meal_package_price                    numeric(10, 2) not null,
+    availability_generated_food_option_id bigint         not null
+        constraint availability_generated_meal_p_availability_generated_food__fkey
+            references public.availability_generated_food_options
+);
+
+alter table public.availability_generated_meal_packages
+    owner to postgres;
+
+create table if not exists public.availability_generated_transfer_options
+(
+    id                            bigserial
+        primary key,
+    created_by                    varchar(255),
+    created_at                    timestamp,
+    deleted                       boolean,
+    last_modified_by              varchar(255),
+    updated_at                    timestamp,
+    version                       integer,
+    tour_package_availability_id  bigint         not null
+        constraint availability_generated_trans_tour_package_availability_id_fkey1
+            references public.tour_package_availability,
+    total_option_price_per_person numeric(10, 2) not null,
+    is_default                    boolean        not null
+);
+
+alter table public.availability_generated_transfer_options
+    owner to postgres;
+
+create table if not exists public.availability_generated_transfer_packages
+(
+    id                                        bigserial
+        primary key,
+    created_by                                varchar(255),
+    created_at                                timestamp,
+    deleted                                   boolean,
+    last_modified_by                          varchar(255),
+    updated_at                                timestamp,
+    version                                   integer,
+    transfer_package_id                       bigint         not null
+        constraint availability_generated_transfer_packag_transfer_package_id_fkey
+            references public.transfer_packages,
+    per_vehicle_per_trip_price                numeric(10, 2) not null,
+    availability_generated_transfer_option_id bigint         not null
+        constraint availability_generated_transf_availability_generated_trans_fkey
+            references public.availability_generated_transfer_options
+);
+
+alter table public.availability_generated_transfer_packages
+    owner to postgres;
+
+create table if not exists public.availability_generated_guide_options
+(
+    id                            bigserial
+        primary key,
+    created_by                    varchar(255),
+    created_at                    timestamp,
+    deleted                       boolean,
+    last_modified_by              varchar(255),
+    updated_at                    timestamp,
+    version                       integer,
+    tour_package_availability_id  bigint         not null
+        constraint availability_generated_guide_tour_package_availability_id_fkey1
+            references public.tour_package_availability,
+    total_option_price_per_person numeric(10, 2) not null,
+    is_default                    boolean        not null
+);
+
+alter table public.availability_generated_guide_options
+    owner to postgres;
+
+create table if not exists public.availability_generated_guide_packages
+(
+    id                                     bigserial
+        primary key,
+    created_by                             varchar(255),
+    created_at                             timestamp,
+    deleted                                boolean,
+    last_modified_by                       varchar(255),
+    updated_at                             timestamp,
+    version                                integer,
+    guide_package_id                       bigint         not null
+        references public.guide_packages,
+    day_number                             integer        not null,
+    number_of_guides                       integer        not null,
+    total_guide_package_price              numeric(10, 2) not null,
+    availability_generated_guide_option_id bigint         not null
+        constraint availability_generated_guide__availability_generated_guide_fkey
+            references public.availability_generated_guide_options
+);
+
+alter table public.availability_generated_guide_packages
+    owner to postgres;
+
+create table if not exists public.availability_generated_spot_entries
+(
+    id                           bigserial
+        primary key,
+    created_by                   varchar(255),
+    created_at                   timestamp,
+    deleted                      boolean,
+    last_modified_by             varchar(255),
+    updated_at                   timestamp,
+    version                      integer,
+    spot_entry_id                bigint         not null
+        references public.spot_entry,
+    tour_package_availability_id bigint         not null
+        constraint availability_generated_spot_e_tour_package_availability_id_fkey
+            references public.tour_package_availability,
+    spot_entry_price_per_person  numeric(10, 2) not null,
+    is_default                   boolean        not null
+);
+
+alter table public.availability_generated_spot_entries
+    owner to postgres;
+
+create table if not exists public.availability_generated_tour_package_options_with_transportation
+(
+    id                                               bigint default nextval('availability_generated_tour_package_options_id_seq'::regclass) not null
+        constraint availability_generated_tour_package_options_pkey
+            primary key,
+    created_by                                       varchar(255),
+    created_at                                       timestamp,
+    deleted                                          boolean,
+    last_modified_by                                 varchar(255),
+    updated_at                                       timestamp,
+    version                                          integer,
+    tour_package_availability_id                     bigint                                                                                 not null
+        constraint availability_generated_tour_p_tour_package_availability_id_fkey
+            references public.tour_package_availability,
+    availability_generated_accommodation_option_id   bigint
+        constraint availability_generated_tour_p_availability_generated_accom_fkey
+            references public.availability_generated_accommodation_options,
+    availability_generated_food_option_id            bigint
+        constraint availability_generated_tour_p_availability_generated_food__fkey
+            references public.availability_generated_food_options,
+    availability_generated_transfer_option_id        bigint
+        constraint availability_generated_tour_p_availability_generated_trans_fkey
+            references public.availability_generated_transfer_options,
+    availability_generated_transportation_package_id bigint
+        constraint availability_generated_tour__availability_generated_trans_fkey1
+            references public.availability_generated_transportation_packages,
+    availability_generated_guide_option_id           bigint
+        constraint availability_generated_tour_p_availability_generated_guide_fkey
+            references public.availability_generated_guide_options,
+    availability_generated_spot_entry_id             bigint
+        constraint availability_generated_tour_p_availability_generated_spot__fkey
+            references public.availability_generated_spot_entries,
+    rack_rate                                        numeric(10, 2)                                                                         not null,
+    corporate_rate                                   numeric(10, 2),
+    corporate_rate_discount_percent                  numeric(10, 2),
+    ghuddy_commission_amount                         numeric(10, 2),
+    ghuddy_commission_percent                        numeric(10, 2),
+    shurjo_commission_percent                        numeric(10, 2),
+    ghuddy_website_black_price                       numeric(10, 2),
+    ghuddy_subsidy_amount                            numeric(10, 2),
+    ghuddy_subsidy_percent                           numeric(10, 2),
+    ghuddy_website_red_price                         numeric(10, 2),
+    total_discount_percent                           numeric(10, 2),
+    net_shurjo_commission_amount                     numeric(10, 2),
+    net_ghuddy_commission_amount                     numeric(10, 2),
+    net_ghuddy_commission_percent                    numeric(10, 2)
+);
+
+alter table public.availability_generated_tour_package_options_with_transportation
+    owner to postgres;
+
+create table if not exists public.availability_generated_tour_package_options_wo_transportation
+(
+    id                                             bigint default nextval('availability_generated_tour_package_options_wo_transport_id_seq'::regclass) not null
+        constraint availability_generated_tour_package_options_wo_transportat_pkey
+            primary key,
+    created_by                                     varchar(255),
+    created_at                                     timestamp,
+    deleted                                        boolean,
+    last_modified_by                               varchar(255),
+    updated_at                                     timestamp,
+    version                                        integer,
+    tour_package_availability_id                   bigint                                                                                              not null
+        constraint availability_generated_tour__tour_package_availability_id_fkey1
+            references public.tour_package_availability,
+    availability_generated_accommodation_option_id bigint
+        constraint availability_generated_tour__availability_generated_accom_fkey1
+            references public.availability_generated_accommodation_options,
+    availability_generated_food_option_id          bigint
+        constraint availability_generated_tour__availability_generated_food__fkey1
+            references public.availability_generated_food_options,
+    availability_generated_transfer_option_id      bigint
+        constraint availability_generated_tour__availability_generated_trans_fkey2
+            references public.availability_generated_transfer_options,
+    availability_generated_guide_option_id         bigint
+        constraint availability_generated_tour__availability_generated_guide_fkey1
+            references public.availability_generated_guide_options,
+    availability_generated_spot_entry_id           bigint
+        constraint availability_generated_tour__availability_generated_spot__fkey1
+            references public.availability_generated_spot_entries,
+    ghuddy_platform_calculated_option_price        numeric(10, 2)                                                                                      not null,
+    merchant_subsidy_amount                        numeric(10, 2),
+    corporate_rate_discount_percent                numeric(10, 2),
+    ghuddy_commission_amount                       numeric(10, 2),
+    ghuddy_commission_percent                      numeric(10, 2),
+    shurjo_commission_percent                      numeric(10, 2),
+    ghuddy_website_black_price                     numeric(10, 2),
+    ghuddy_subsidy_amount                          numeric(10, 2),
+    ghuddy_subsidy_percent                         numeric(10, 2),
+    ghuddy_website_red_price                       numeric(10, 2),
+    total_discount_percent                         numeric(10, 2),
+    net_shurjo_commission_amount                   numeric(10, 2),
+    net_ghuddy_commission_amount                   numeric(10, 2),
+    net_ghuddy_commission_percent                  numeric(10, 2)
+);
+
+alter table public.availability_generated_tour_package_options_wo_transportation
     owner to postgres;
 

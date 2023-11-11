@@ -17,7 +17,7 @@ import com.ghuddy.backendapp.tours.model.data.availability.TourPackageOptionCapa
 import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageOptionCapacityPriceDailyData;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionCapacityPriceEntity;
 import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionCapacityPriceFilterEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageOptionEntity;
 import com.ghuddy.backendapp.tours.repository.TourPackageOptionCapacityPriceFilterRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageOptionCapacityPriceRepository;
 import com.ghuddy.backendapp.tours.repository.TourPackageOptionRepository;

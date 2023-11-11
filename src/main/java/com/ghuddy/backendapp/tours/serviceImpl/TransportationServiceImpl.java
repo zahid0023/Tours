@@ -17,7 +17,8 @@ import com.ghuddy.backendapp.tours.model.data.transportation.TransportationBrand
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationModeData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationProviderData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationRouteData;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.*;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
@@ -319,5 +320,14 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public void checkTransportationPackageCombination(TourPackageEntity tourPackageEntity, TransportationOptionCheckRequest transportationOptionCheckRequest) {
 
+    }
+
+    /**
+     * @param transportationPackageIds
+     * @return
+     */
+    @Override
+    public Map<Long, TransportationPackageEntity> getTransferPackageEntitiesById(Set<Long> transportationPackageIds) {
+        return EntityUtil.findEntitiesByIds(transportationPackageIds,transportationPackageRepository, TransportationPackageEntity::getId,"TransportationPackageEntity");
     }
 }

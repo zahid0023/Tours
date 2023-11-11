@@ -3,8 +3,8 @@ import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.es.dto.data.ESSubscribedTourItineraryData;
 import com.ghuddy.backendapp.tours.es.service.ESTourItineraryService;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourItineraryEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

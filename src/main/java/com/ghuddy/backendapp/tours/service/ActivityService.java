@@ -6,10 +6,10 @@ import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityListResponse;
 import com.ghuddy.backendapp.tours.dto.response.activity.ActivityTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.entities.ActivityEntity;
-import com.ghuddy.backendapp.tours.model.entities.ActivityTypeEntity;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourItineraryEntity;
+import com.ghuddy.backendapp.tours.model.entities.activity.ActivityEntity;
+import com.ghuddy.backendapp.tours.model.entities.activity.ActivityTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourItineraryEntity;
 
 import java.util.List;
 import java.util.Map;

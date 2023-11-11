@@ -4,7 +4,7 @@ import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionAddRequest
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionListAddRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransferService;
 import org.springframework.http.HttpStatus;

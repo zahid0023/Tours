@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.tour;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityImageData;
-import com.ghuddy.backendapp.tours.model.entities.TourItineraryEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.TourItineraryEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -6,7 +6,7 @@ import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationOptio
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackageService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.spot.entry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
-import com.ghuddy.backendapp.tours.model.entities.SpotEntryEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

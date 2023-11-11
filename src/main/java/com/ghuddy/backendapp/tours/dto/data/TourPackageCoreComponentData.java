@@ -3,9 +3,8 @@ package com.ghuddy.backendapp.tours.dto.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
-import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryData;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,9 +32,9 @@ public class TourPackageCoreComponentData {
     private BigDecimal totalOptionPricePerPerson;
 
     public TourPackageCoreComponentData(TourPackageOptionEntity tourPackageOptionEntity){
-        this.optionId = tourPackageOptionEntity.getId();
-        this.accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
-        this.foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
-        this.transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
+        //this.optionId = tourPackageOptionEntity.getId();
+        //this.accommodationOptionData = new AccommodationOptionData(tourPackageOptionEntity.getAccommodationOptionEntity());
+        //this.foodOptionData = new FoodOptionData(tourPackageOptionEntity.getFoodOptionEntity());
+        //this.transferOptionData = new TransferOptionData(tourPackageOptionEntity.getTransferOptionEntity());
     }
 }

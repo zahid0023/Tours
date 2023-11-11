@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.food;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.OptionData;
-import com.ghuddy.backendapp.tours.model.entities.FoodOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -34,8 +34,8 @@ public class FoodOptionData extends OptionData {
     @JsonProperty("number_of_dinner")
     private Integer numberOfDinner;
 
-    public FoodOptionData(FoodOptionEntity foodOptionEntity) {
-        super(true, foodOptionEntity.getIsDefault(), foodOptionEntity.getTotalOptionPricePerPerson());
+    public FoodOptionData(FoodOptionEntity foodOptionEntity, Boolean isActive, Boolean isDefault) {
+        super(isActive, isDefault, foodOptionEntity.getTotalOptionPricePerPerson());
         this.mealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
                 .collect(Collectors.toList());

@@ -10,7 +10,7 @@ import com.ghuddy.backendapp.tours.es.service.ESTourPackageService;
 import com.ghuddy.backendapp.tours.es.service.ESTourService;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
 import org.springframework.stereotype.Service;
 

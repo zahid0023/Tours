@@ -1,8 +1,8 @@
 package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.FoodItemEntity;
-import com.ghuddy.backendapp.tours.model.entities.MealPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.FoodItemEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.MealPackageEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Field;

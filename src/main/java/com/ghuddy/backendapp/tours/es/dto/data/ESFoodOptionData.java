@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.FoodOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
 
@@ -29,7 +29,6 @@ public class ESFoodOptionData extends ESOptionData {
     private Integer numberOfDinner;
 
     public ESFoodOptionData(FoodOptionEntity foodOptionEntity) {
-        super(foodOptionEntity.getActive(), foodOptionEntity.getIsDefault(), foodOptionEntity.getTotalOptionPricePerPerson());
         this.mealPackageList = foodOptionEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity -> new ESMealPackageData(mealPackageEntity))
                 .toList();

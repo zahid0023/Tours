@@ -11,7 +11,8 @@ import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListRe
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.accommodation.*;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.accommodation.*;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.repository.*;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
@@ -243,7 +244,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     public InsertAcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest, String requestId) {
         AccommodationOptionEntity accommodationOptionEntity = setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
         accommodationOptionEntity = accommodationOptionRepository.save(accommodationOptionEntity);
-        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity);
+        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity, true, false);
         return new InsertAcknowledgeResponse(accommodationOptionData, requestId);
     }
 
@@ -252,7 +253,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         List<AccommodationOptionEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList);
         System.out.println("ok");
         List<AccommodationOptionData> accommodationOptionDataList = accommodationOptionRepository.saveAll(tourPackageAccommodationEntities).stream()
-                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity))
+                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity, true, false))
                 .toList();
         return new InsertAcknowledgeListResponse(accommodationOptionDataList, requestId);
     }
@@ -296,7 +297,7 @@ public class AccommodationServiceImpl implements AccommodationService {
                                 return accommodationPackageEntity;
                             }).toList();
                     accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);
-                    accommodationOptionEntity.setIsDefault(accommodationOptionRequest.getIsDefault());
+                    //accommodationOptionEntity.setIsDefault(accommodationOptionRequest.getIsDefault());
                     accommodationOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonAccommodationOptionPrice(accommodationOptionRequest));
                     return accommodationOptionEntity;
                 })
@@ -328,5 +329,15 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     public Map<Long, TourAccommodationEntity> getAccommodationEntitiesByIDs(Set<Long> accommodationIDs) {
         return EntityUtil.findEntitiesByIds(accommodationIDs, tourAccommodationRepository, TourAccommodationEntity::getId, "TourAccommodationEntity");
+    }
+
+    /**
+     * @param accommodationPackageIds
+     * @return
+     * @throws EmptyListException
+     */
+    @Override
+    public Map<Long, AccommodationPackageEntity> getAccommodationPackageEntitiesById(Set<Long> accommodationPackageIds) {
+       return EntityUtil.findEntitiesByIds(accommodationPackageIds,accommodationPackageRepository,AccommodationPackageEntity::getId,"AccommodationPackageEntity");
     }
 }

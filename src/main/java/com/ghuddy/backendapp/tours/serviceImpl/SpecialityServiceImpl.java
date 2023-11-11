@@ -1,8 +1,8 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.tour.TourSpecialityRequest;
-import com.ghuddy.backendapp.tours.model.entities.TourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourSpecialityEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.TourSpecialityEntity;
 import com.ghuddy.backendapp.tours.repository.TourSpecialityRepository;
 import com.ghuddy.backendapp.tours.service.SpecialityService;
 import org.springframework.stereotype.Service;

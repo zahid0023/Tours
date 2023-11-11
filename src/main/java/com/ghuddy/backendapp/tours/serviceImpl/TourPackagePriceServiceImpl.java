@@ -1,11 +1,15 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
+import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationPackageEntity;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,6 +59,17 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
     }
 
     /**
+     * @param foodOptionRequest
+     * @return
+     */
+    @Override
+    public BigDecimal perPersonFoodOptionPrice(FoodOptionRequest foodOptionRequest) {
+        return foodOptionRequest.getMealPackageRequestList().stream()
+                .map(MealPackageRequest::getPerMealPackagePrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
      * @param transferOptionRequest
      * @return
      */
@@ -69,23 +84,4 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    /**
-     * @param foodOptionRequest
-     * @return
-     */
-    @Override
-    public BigDecimal perPersonFoodOptionPrice(FoodOptionRequest foodOptionRequest) {
-        return foodOptionRequest.getMealPackageRequestList().stream()
-                .map(MealPackageRequest::getPerMealPackagePrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    /**
-     * @param transportationPackageRequest
-     * @return
-     */
-    @Override
-    public BigDecimal perPersonTransportationPrice(TransportationPackageRequest transportationPackageRequest) {
-        return transportationPackageRequest.getUnitPrice();
-    }
 }

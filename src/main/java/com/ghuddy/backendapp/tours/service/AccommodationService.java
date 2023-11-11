@@ -8,7 +8,8 @@ import com.ghuddy.backendapp.tours.dto.response.accommodation.TourAccommodationT
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomCategoryListResponse;
 import com.ghuddy.backendapp.tours.dto.response.accommodation.TourRoomTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.accommodation.*;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -72,4 +73,6 @@ public interface AccommodationService {
     InsertAcknowledgeListResponse addTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptionRequestList, String requestId);
 
     List<AccommodationOptionEntity> setTourPackageAccommodations(TourPackageEntity tourPackageEntity, List<AccommodationOptionRequest> accommodationOptions);
+
+    Map<Long, AccommodationPackageEntity> getAccommodationPackageEntitiesById(Set<Long> accommodationPackageIds);
 }

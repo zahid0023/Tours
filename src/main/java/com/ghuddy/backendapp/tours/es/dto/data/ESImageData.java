@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.ActivityImageEntity;
+import com.ghuddy.backendapp.tours.model.entities.activity.ActivityImageEntity;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
 

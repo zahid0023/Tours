@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.transfer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.enums.TripType;
-import com.ghuddy.backendapp.tours.model.entities.TransferPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -6,7 +6,7 @@ import com.ghuddy.backendapp.tours.dto.response.tour.TourListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.TourData;
-import com.ghuddy.backendapp.tours.model.entities.TourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
 
 public interface TourService {
     InsertAcknowledgeResponse<TourData> createTour(TourCreateRequest tourCreateRequest) throws TourNotFoundException;

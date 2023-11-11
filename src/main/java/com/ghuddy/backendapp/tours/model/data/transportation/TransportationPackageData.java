@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.transportation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.enums.TripType;
-import com.ghuddy.backendapp.tours.model.entities.TransportationPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -49,7 +49,11 @@ public class TransportationPackageData {
     @JsonProperty("transportation_package_unit_price")
     private BigDecimal unitPrice;
 
-    public TransportationPackageData(TransportationPackageEntity transportationPackageEntity) {
+    @Schema(description = "Whether is active")
+    @JsonProperty("transportation_package_is_active")
+    private Boolean isActive;
+
+    public TransportationPackageData(TransportationPackageEntity transportationPackageEntity, Boolean isActive) {
         this.transportationPackageId = transportationPackageEntity.getId();
         this.transportationRouteId = transportationPackageEntity.getTransportationRouteEntity().getId();
         this.transportationRouteName = transportationPackageEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + transportationPackageEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
@@ -62,5 +66,6 @@ public class TransportationPackageData {
         this.tripType = transportationPackageEntity.getTripType();
         this.isAc = transportationPackageEntity.getIsAc();
         this.unitPrice = transportationPackageEntity.getPerPersonTransportationPackagePrice();
+        this.isActive = isActive;
     }
 }

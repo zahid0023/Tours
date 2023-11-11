@@ -1,7 +1,5 @@
 package com.ghuddy.backendapp.tours.service;
 
-import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
-import com.ghuddy.backendapp.tours.dto.data.TourPackageCoreComponentData;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageTypeAddRequest;
@@ -11,10 +9,10 @@ import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.*;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageOptionEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageTypeEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageTypeEntity;
 
 import java.util.List;
 import java.util.Map;

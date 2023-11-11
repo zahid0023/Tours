@@ -4,12 +4,17 @@ import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.transfer.TransferPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationModeEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationProviderEntity;
 import com.ghuddy.backendapp.tours.repository.TransferOptionRepository;
 import com.ghuddy.backendapp.tours.repository.TransferPackageRepository;
 import com.ghuddy.backendapp.tours.service.TourPackagePriceService;
 import com.ghuddy.backendapp.tours.service.TransferService;
 import com.ghuddy.backendapp.tours.service.TransportationService;
+import com.ghuddy.backendapp.tours.utils.EntityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,7 +46,7 @@ public class TransferServiceImpl implements TransferService {
     public InsertAcknowledgeResponse addTourPackageTransferOption(TourPackageEntity tourPackageEntity, TransferOptionRequest transferOptionRequest, String requestId) {
         TransferOptionEntity transferOptionEntity = setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0);
         transferOptionEntity = transferOptionRepository.save(transferOptionEntity);
-        TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity);
+        TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity, true, false);
         return new InsertAcknowledgeResponse<>(transferOptionData, requestId);
     }
 
@@ -55,7 +60,7 @@ public class TransferServiceImpl implements TransferService {
         List<TransferOptionEntity> transferOptionEntities = setTourPackageTransferOptions(tourPackageEntity, transferOptions);
         transferOptionEntities = transferOptionRepository.saveAll(transferOptionEntities);
         List<TransferOptionData> transferOptionDataList = transferOptionEntities.stream()
-                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity))
+                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity, true, false))
                 .collect(Collectors.toList());
 
         return new InsertAcknowledgeListResponse<>(transferOptionDataList, requestId);
@@ -100,7 +105,7 @@ public class TransferServiceImpl implements TransferService {
                             })
                             .collect(Collectors.toList());
                     transferOptionEntity.setTransferPackageEntities(transferPackageEntityList);
-                    transferOptionEntity.setIsDefault(transferOptionRequest.getIsDefault());
+                    // transferOptionEntity.setIsDefault(transferOptionRequest.getIsDefault());
                     transferOptionEntity.setPerPersonTransferOptionPrice(tourPackagePriceService.perPersonTransferOptionPrice(transferOptionRequest, tourPackageEntity.getTourPackageType().getSuitableFor()));
                     return transferOptionEntity;
 
@@ -108,5 +113,14 @@ public class TransferServiceImpl implements TransferService {
                 .collect(Collectors.toList());
 
         return transferOptionEntities;
+    }
+
+    /**
+     * @param transferPackageIds
+     * @return
+     */
+    @Override
+    public Map<Long, TransferPackageEntity> getTransferPackageEntitiesById(Set<Long> transferPackageIds) {
+        return EntityUtil.findEntitiesByIds(transferPackageIds, transferPackageRepository, TransferPackageEntity::getId, "TransferPackageEntity");
     }
 }

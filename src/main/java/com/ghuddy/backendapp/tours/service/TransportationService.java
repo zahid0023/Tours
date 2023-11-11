@@ -9,7 +9,8 @@ import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationMod
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationProviderListResponse;
 import com.ghuddy.backendapp.tours.dto.response.transportation.TransportationRouteResponseList;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
-import com.ghuddy.backendapp.tours.model.entities.*;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -69,4 +70,5 @@ public interface TransportationService {
     // transportation option
     void checkTransportationPackageCombination(TourPackageEntity tourPackageEntity, TransportationOptionCheckRequest transportationOptionCheckRequest);
 
+    Map<Long, TransportationPackageEntity> getTransferPackageEntitiesById(Set<Long> transportationPackageIds);
 }

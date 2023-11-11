@@ -3,8 +3,8 @@ package com.ghuddy.backendapp.tours.service;
 import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
-import com.ghuddy.backendapp.tours.model.entities.SpotEntryEntity;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 
 import java.util.List;
 

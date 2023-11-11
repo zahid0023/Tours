@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.es.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.TourPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,9 +40,9 @@ public class ESTourPackageData {
         this.tourPackageTypeId = tourPackageEntity.getTourPackageType().getId();
         this.tourPackageName = tourPackageEntity.getTourPackageName();
         this.suitableForPersons = tourPackageEntity.getTourPackageType().getSuitableFor();
-        this.esComponentCombinationDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
-                .map(tourPackageOptionEntity -> new ESComponentCombinationData(tourPackageOptionEntity))
-                .toList();
+        //this.esComponentCombinationDataList = tourPackageEntity.getTourPackageOptionEntities().stream()
+               // .map(tourPackageOptionEntity -> new ESComponentCombinationData(tourPackageOptionEntity))
+               // .toList();
         this.esTransportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
                 .map(transportationPackageEntity -> new ESTransportationPackageData(transportationPackageEntity))
                 .toList();

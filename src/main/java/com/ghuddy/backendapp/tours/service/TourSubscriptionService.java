@@ -9,7 +9,7 @@ import com.ghuddy.backendapp.tours.enums.SubscribedTourFilterCriteria;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.MerchantNotFoundException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.SubscribedTourEntity;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 
 import javax.persistence.EntityNotFoundException;
 

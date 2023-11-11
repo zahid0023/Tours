@@ -2,7 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.OptionData;
-import com.ghuddy.backendapp.tours.model.entities.AccommodationOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationOptionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +17,11 @@ public class AccommodationOptionData extends OptionData {
     @JsonProperty("tour_package_accommodation_packages")
     private List<AccommodationPackageData> accommodationPackageDataList;
 
-    public AccommodationOptionData(AccommodationOptionEntity accommodationOptionEntity) {
+    public AccommodationOptionData(AccommodationOptionEntity accommodationOptionEntity, Boolean isActive, Boolean isDefault) {
+        super(isActive, isDefault, accommodationOptionEntity.getTotalOptionPricePerPerson());
         this.accommodationPackageDataList = accommodationOptionEntity.getAccommodationPackageEntities().stream()
                 .map(accommodationPackageEntity -> new AccommodationPackageData(accommodationPackageEntity))
                 .collect(Collectors.toList());
-        this.setIsActive(accommodationOptionEntity.getActive());
-        this.setDefault(accommodationOptionEntity.getIsDefault());
         this.setTotalOptionPricePerPerson(accommodationOptionEntity.getTotalOptionPricePerPerson());
     }
 }
