@@ -244,7 +244,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     public InsertAcknowledgeResponse addTourPackageAccommodation(TourPackageEntity tourPackageEntity, AccommodationOptionRequest accommodationOptionRequest, String requestId) {
         AccommodationOptionEntity accommodationOptionEntity = setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
         accommodationOptionEntity = accommodationOptionRepository.save(accommodationOptionEntity);
-        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity, true, false);
+        AccommodationOptionData accommodationOptionData = new AccommodationOptionData(accommodationOptionEntity, accommodationOptionEntity.getIsActive());
         return new InsertAcknowledgeResponse(accommodationOptionData, requestId);
     }
 
@@ -253,7 +253,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         List<AccommodationOptionEntity> tourPackageAccommodationEntities = setTourPackageAccommodations(tourPackageEntity, accommodationOptionRequestList);
         System.out.println("ok");
         List<AccommodationOptionData> accommodationOptionDataList = accommodationOptionRepository.saveAll(tourPackageAccommodationEntities).stream()
-                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity, true, false))
+                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity, accommodationOptionEntity.getIsActive()))
                 .toList();
         return new InsertAcknowledgeListResponse(accommodationOptionDataList, requestId);
     }
@@ -297,8 +297,9 @@ public class AccommodationServiceImpl implements AccommodationService {
                                 return accommodationPackageEntity;
                             }).toList();
                     accommodationOptionEntity.setAccommodationPackageEntities(accommodationPackageEntities);
-                    //accommodationOptionEntity.setIsDefault(accommodationOptionRequest.getIsDefault());
                     accommodationOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonAccommodationOptionPrice(accommodationOptionRequest));
+                    accommodationOptionEntity.setIsActive(true);
+                    accommodationOptionEntity.setTourPackageEntity(tourPackageEntity);
                     return accommodationOptionEntity;
                 })
                 .toList();

@@ -36,7 +36,7 @@ public class SpotEntryServiceImpl implements SpotEntryService {
     @Override
     public InsertAcknowledgeResponse addTourPackageSpotEntry(TourPackageEntity tourPackageEntity, SpotEntryRequest spotEntryRequest, String requestId) {
         SpotEntryEntity spotEntryEntity = setTourPackageSpotEntries(tourPackageEntity, List.of(spotEntryRequest), requestId).get(0);
-        SpotEntryData spotEntryData = new SpotEntryData(spotEntryRepository.save(spotEntryEntity));
+        SpotEntryData spotEntryData = new SpotEntryData(spotEntryRepository.save(spotEntryEntity), true);
         return new InsertAcknowledgeResponse(spotEntryData, requestId);
     }
 
@@ -50,7 +50,7 @@ public class SpotEntryServiceImpl implements SpotEntryService {
     public InsertAcknowledgeListResponse addTourPackageSpotEntries(TourPackageEntity tourPackageEntity, List<SpotEntryRequest> spotEntryRequestList, String requestId) {
         List<SpotEntryEntity> spotEntryEntityList = setTourPackageSpotEntries(tourPackageEntity, spotEntryRequestList, requestId);
         List<SpotEntryData> spotEntryDataList = spotEntryRepository.saveAll(spotEntryEntityList).stream()
-                .map(spotEntryEntity -> new SpotEntryData(spotEntryEntity))
+                .map(spotEntryEntity -> new SpotEntryData(spotEntryEntity, spotEntryEntity.getActive()))
                 .toList();
         return new InsertAcknowledgeListResponse(spotEntryDataList, requestId);
     }

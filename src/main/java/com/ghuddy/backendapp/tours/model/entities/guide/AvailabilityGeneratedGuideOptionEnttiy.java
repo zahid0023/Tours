@@ -27,4 +27,8 @@ public class AvailabilityGeneratedGuideOptionEnttiy extends BaseEntity {
     @NotNull
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

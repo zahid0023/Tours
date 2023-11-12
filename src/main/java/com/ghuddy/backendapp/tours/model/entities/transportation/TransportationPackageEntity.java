@@ -19,6 +19,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "transportation_packages")
 public class TransportationPackageEntity extends BaseEntity {
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "tour_package_id", nullable = false)
+    private TourPackageEntity tourPackageEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "transportation_route_id", nullable = false)
@@ -44,16 +47,15 @@ public class TransportationPackageEntity extends BaseEntity {
     @Column(name = "is_ac", nullable = false)
     private Boolean isAc;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "tour_package_id", nullable = false)
-    private TourPackageEntity tourPackageEntity;
-    
     @NotNull
     @Column(name = "per_person_transportation_package_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perPersonTransportationPackagePrice;
 
     @OneToMany(mappedBy = "transportationPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedTransportationPackageEntity> availabilityGeneratedTransportationPackageEntities = new ArrayList<>();
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 
     @Override

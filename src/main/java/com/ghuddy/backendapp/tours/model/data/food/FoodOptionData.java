@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 @Data
 public class FoodOptionData extends OptionData {
 
+    @Schema(description = "The food option id")
+    @JsonProperty("food_option_id")
+    private Long foodOptionId;
+
     @Schema(description = "The meal packages belonging to this food option")
     @JsonProperty("meal_packages")
     private List<MealPackageData> mealPackageDataList;
@@ -34,8 +38,9 @@ public class FoodOptionData extends OptionData {
     @JsonProperty("number_of_dinner")
     private Integer numberOfDinner;
 
-    public FoodOptionData(FoodOptionEntity foodOptionEntity, Boolean isActive, Boolean isDefault) {
-        super(isActive, isDefault, foodOptionEntity.getTotalOptionPricePerPerson());
+    public FoodOptionData(FoodOptionEntity foodOptionEntity, Boolean isActive) {
+        super(isActive, foodOptionEntity.getTotalOptionPricePerPerson());
+        this.foodOptionId = foodOptionEntity.getId();
         this.mealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
                 .collect(Collectors.toList());

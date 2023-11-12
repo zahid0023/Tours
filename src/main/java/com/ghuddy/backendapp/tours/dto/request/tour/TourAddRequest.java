@@ -10,7 +10,7 @@ import lombok.Data;
 public class TourAddRequest extends BaseRequest {
     @Schema(required = true,
             description = "The ID of the Location",
-            example = "1L")
+            example = "1")
     @JsonProperty("destination_location_id")
     private Long locationID;
     @Schema(required = true,

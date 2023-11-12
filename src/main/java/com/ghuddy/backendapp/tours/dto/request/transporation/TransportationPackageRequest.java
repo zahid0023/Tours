@@ -30,7 +30,4 @@ public class TransportationPackageRequest { // if we check by option this class 
     @Schema(description = "The price of this transportation package", required = true, example = "120")
     @JsonProperty("transportation_package_per_unit_price")
     private BigDecimal unitPrice;
-    @Schema(description = "Whether this is transportation package comes with the tour package or optional, i.e. the user can choose this for this the price will vary", required = true, example = "true")
-    @JsonProperty("transportation_package_is_default")
-    private Boolean isDefault;
 }

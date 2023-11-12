@@ -13,15 +13,17 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class AccommodationOptionData extends OptionData {
+
+    private Long accommodationOptionId;
     @Schema(description = "The accommodation packages belonging to this tour package")
     @JsonProperty("tour_package_accommodation_packages")
     private List<AccommodationPackageData> accommodationPackageDataList;
 
-    public AccommodationOptionData(AccommodationOptionEntity accommodationOptionEntity, Boolean isActive, Boolean isDefault) {
-        super(isActive, isDefault, accommodationOptionEntity.getTotalOptionPricePerPerson());
+    public AccommodationOptionData(AccommodationOptionEntity accommodationOptionEntity, Boolean isActive) {
+        super(isActive, accommodationOptionEntity.getTotalOptionPricePerPerson());
+        this.accommodationOptionId = accommodationOptionEntity.getId();
         this.accommodationPackageDataList = accommodationOptionEntity.getAccommodationPackageEntities().stream()
                 .map(accommodationPackageEntity -> new AccommodationPackageData(accommodationPackageEntity))
                 .collect(Collectors.toList());
-        this.setTotalOptionPricePerPerson(accommodationOptionEntity.getTotalOptionPricePerPerson());
     }
 }

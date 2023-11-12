@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AccommodationOptionRequest extends OptionRequest {
+public class AccommodationOptionRequest {
     @Schema(description = "The accommodation that will be associated with the tour package given in the id", required = true)
     @JsonProperty("tour_package_accommodations_package_list")
     private List<AccommodationPackageRequest> tourPackageAccommodationRequestList;

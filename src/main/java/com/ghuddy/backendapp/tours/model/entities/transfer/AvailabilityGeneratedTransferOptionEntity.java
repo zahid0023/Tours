@@ -27,4 +27,12 @@ public class AvailabilityGeneratedTransferOptionEntity extends BaseEntity {
     @NotNull
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transfer_option_id")
+    private TransferOptionEntity transferOptionEntity;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

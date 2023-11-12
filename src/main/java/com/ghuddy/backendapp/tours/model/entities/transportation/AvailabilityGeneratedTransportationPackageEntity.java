@@ -23,4 +23,8 @@ public class AvailabilityGeneratedTransportationPackageEntity extends BaseEntity
     @NotNull
     @Column(name = "transportation_package_price_per_person", nullable = false, precision = 10, scale = 2)
     private BigDecimal transportationPackagePrice;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

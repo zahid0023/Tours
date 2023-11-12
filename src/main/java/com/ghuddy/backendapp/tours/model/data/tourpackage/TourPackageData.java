@@ -61,22 +61,22 @@ public class TourPackageData {
         this.tourPackageName = tourPackageEntity.getTourPackageName();
         this.tourPackageDescription = tourPackageEntity.getDescription();
         this.accommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
-                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity,true,false))
+                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity,true))
                 .toList();
         this.foodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity,true,false))
+                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity,true))
                 .toList();
         this.transferOptionDataList = tourPackageEntity.getTransferOptionEntities().stream()
-                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity,true,false))
+                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity,true))
                 .toList();
         this.transportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
                 .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity,true))
                 .toList();
         this.guideOptionDataList = tourPackageEntity.getGuideOptionEntityList().stream()
-                .map(guideOptionEntity -> new GuideOptionData(guideOptionEntity,true,false))
+                .map(guideOptionEntity -> new GuideOptionData(guideOptionEntity,true))
                 .toList();
         this.spotEntryDataList = tourPackageEntity.getSpotEntryEntities().stream()
-                .map(spotEntryEntity -> new SpotEntryData(spotEntryEntity))
+                .map(spotEntryEntity -> new SpotEntryData(spotEntryEntity,true))
                 .toList();
 
     }

@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FoodOptionRequest extends OptionRequest {
+public class FoodOptionRequest {
     @Schema(description = "The meal packages belonging to this option", required = true)
     @JsonProperty("tour_package_meal_packages")
     private List<MealPackageRequest> mealPackageRequestList;

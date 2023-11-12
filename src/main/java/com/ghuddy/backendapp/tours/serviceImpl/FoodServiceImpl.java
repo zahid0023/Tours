@@ -231,7 +231,7 @@ public class FoodServiceImpl implements FoodService {
     public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException {
         FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
         foodOptionEntity = foodOptionRepository.save(foodOptionEntity);
-        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity, true, false);
+        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity, foodOptionEntity.getIsActive());
         return new InsertAcknowledgeResponse(foodOptionData, requestId);
     }
 
@@ -241,7 +241,7 @@ public class FoodServiceImpl implements FoodService {
         List<FoodOptionEntity> foodOptionEntities = setTourPackageFoodOptions(tourPackageEntity, foodOptions);
         foodOptionEntities = foodOptionRepository.saveAll(foodOptionEntities);
         List<FoodOptionData> foodOptionDataList = foodOptionEntities.stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, true, false))
+                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, foodOptionEntity.getIsActive()))
                 .toList();
 
         return new InsertAcknowledgeListResponse(foodOptionDataList, requestId);
@@ -296,6 +296,8 @@ public class FoodServiceImpl implements FoodService {
                     foodOptionEntity.setNumberOfMeals(foodOptionEntity.getNumberOfBreakfast() + foodOptionEntity.getNumberOfLunch() + foodOptionEntity.getNumberOfDinner());
                     foodOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonFoodOptionPrice(foodOptionRequest));
                     foodOptionEntity.setDayNumber(foodOptionRequest.getDayNumber());
+                    foodOptionEntity.setIsActive(true);
+                    foodOptionEntity.setTourPackageEntity(tourPackageEntity);
                     return foodOptionEntity;
                 }).collect(Collectors.toList());
 

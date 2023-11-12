@@ -1,5 +1,6 @@
 package com.ghuddy.backendapp.tours.utils;
 
+import com.ghuddy.backendapp.tours.dto.data.OptionPriceData;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,28 +14,54 @@ public class OptionPriceCalculator {
     private static final BigDecimal GHUDDY_COMMISSION_PERCENTAGE = BigDecimal.valueOf(15); // Replace with your actual percentage
     private static final BigDecimal PAYMENT_GATEWAY_COMMISSION_DIVIDER = BigDecimal.valueOf(0.975); // Replace with your actual multiplier
 
-    public static BigDecimal getBlackPrice(BigDecimal ghuddyPlatformCalculatedOptionPrice, BigDecimal merchantSubsidiaryAmount) {
+    public static OptionPriceData getBlackPrice(BigDecimal ghuddyPlatformCalculatedOptionPrice, BigDecimal merchantSubsidiaryAmount) {
 
-        // Step 1: Calculate Net Option Price
-        BigDecimal netOptionPrice = calculateNetOptionPrice(ghuddyPlatformCalculatedOptionPrice, merchantSubsidiaryAmount);
-        log.info("Net Option Price: " + netOptionPrice);
+        OptionPriceData optionPriceData = new OptionPriceData();
+        optionPriceData.setGhuddyPlatformCalculatedOptionPrice(ghuddyPlatformCalculatedOptionPrice);
+        optionPriceData.setMerchantSubsidyAmount(merchantSubsidiaryAmount);
+
+        // Step 1: Calculate the option price after merchant subsidy
+        BigDecimal netOptionPriceAfterMerchantSubsidy = calculateNetOptionPriceAfterSubsidy(ghuddyPlatformCalculatedOptionPrice, merchantSubsidiaryAmount);
+        optionPriceData.setNetOptionPriceAfterMerchantSubsidy(netOptionPriceAfterMerchantSubsidy);
+        log.info("Net Option Price After Merchant Subsidy: " + netOptionPriceAfterMerchantSubsidy);
 
         // Step 2: Calculate Ghuddy Commission Amount
-        BigDecimal ghuddyCommissionAmount = calculateGhuddyCommissionAmount(netOptionPrice);
+        BigDecimal ghuddyCommissionAmount = calculateGhuddyCommissionAmount(netOptionPriceAfterMerchantSubsidy);
+        optionPriceData.setGhuddyPlatformCommissionAmount(ghuddyCommissionAmount);
         log.info("Ghuddy Commission Amount: " + ghuddyCommissionAmount);
 
         // Step 3: Calculate Option Price After Ghuddy Commission
-        BigDecimal optionPriceAfterGhuddy = calculateOptionPriceAfterGhuddyCommission(netOptionPrice, ghuddyCommissionAmount);
-        log.info("Option Price After Ghuddy Commission: " + optionPriceAfterGhuddy);
+        BigDecimal optionPriceAfterGhuddyCommission = calculateOptionPriceAfterGhuddyCommission(netOptionPriceAfterMerchantSubsidy, ghuddyCommissionAmount);
+        optionPriceData.setNetOptionPriceAfterGhuddyCommission(optionPriceAfterGhuddyCommission);
+        log.info("Option Price After Ghuddy Commission: " + optionPriceAfterGhuddyCommission);
 
         // Step 4: Calculate Black Price (Price user has to pay to cover payment gateway commission)
-        BigDecimal blackPrice = calculateBlackPrice(optionPriceAfterGhuddy);
+        BigDecimal blackPrice = calculateBlackPrice(optionPriceAfterGhuddyCommission);
+        optionPriceData.setGhuddyWebsiteBlackPrice(blackPrice);
         log.info("Black Price: " + blackPrice);
-        return blackPrice;
+        return optionPriceData;
     }
 
-    private static BigDecimal calculateNetOptionPrice(BigDecimal ghuddyPlatFormCalculatedPrice, BigDecimal merchantSubsidiaryAmount) {
-        return ghuddyPlatFormCalculatedPrice.add(merchantSubsidiaryAmount);
+    public static OptionPriceData getRedPrice(BigDecimal optionPriceAfterGhuddyCommission, BigDecimal ghuddySubsidyAmount, OptionPriceData optionPriceData) {
+        optionPriceData.setGhuddySubsidyAmount(ghuddySubsidyAmount);
+
+        // Step 1: Calculate the option price after ghuddy subsidy
+        BigDecimal netOptionPriceAfterGhuddySubsidy = calculateNetOptionPriceAfterSubsidy(optionPriceAfterGhuddyCommission, ghuddySubsidyAmount);
+        optionPriceData.setNetOptionPriceAfterGhuddySubsidy(netOptionPriceAfterGhuddySubsidy);
+        log.info("Net Option Price After Ghuddy Subsidy: " + netOptionPriceAfterGhuddySubsidy);
+
+        // Step 2: Calculate red Price (Price user has to pay to cover payment gateway commission)
+        BigDecimal redPrice = calculateRedPrice(netOptionPriceAfterGhuddySubsidy);
+        optionPriceData.setGhuddyWebsiteRedPrice(redPrice);
+        optionPriceData.setPaymentGateWayAmount(redPrice.subtract(netOptionPriceAfterGhuddySubsidy));
+        log.info("Red Price: " + redPrice);
+        return optionPriceData;
+    }
+
+
+
+    private static BigDecimal calculateNetOptionPriceAfterSubsidy(BigDecimal basePrice, BigDecimal subsidyAmount) {
+        return basePrice.add(subsidyAmount);
     }
 
     private static BigDecimal calculateGhuddyCommissionAmount(BigDecimal netOptionPrice) {
@@ -52,5 +79,9 @@ public class OptionPriceCalculator {
 
     private static BigDecimal calculateBlackPrice(BigDecimal optionPriceAfterGhuddyCommission) {
         return optionPriceAfterGhuddyCommission.divide(PAYMENT_GATEWAY_COMMISSION_DIVIDER, 2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    private static BigDecimal calculateRedPrice(BigDecimal optionPriceAfterGhuddySubsidy) {
+        return optionPriceAfterGhuddySubsidy.divide(PAYMENT_GATEWAY_COMMISSION_DIVIDER, 2, BigDecimal.ROUND_HALF_UP);
     }
 }

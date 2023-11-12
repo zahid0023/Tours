@@ -19,6 +19,7 @@ public class AvailabilityGeneratedAccommodationOptionEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tour_package_availability_id")
     private TourPackageAvailabilityEntity tourPackageAvailabilityEntity;
+
     @OneToMany(mappedBy = "availabilityGeneratedAccommodationOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedAccommodationPackageEntity> availabilityGeneratedAccommodationPackageEntities = new ArrayList<>();
     @NotNull
@@ -27,5 +28,12 @@ public class AvailabilityGeneratedAccommodationOptionEntity extends BaseEntity {
     @NotNull
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accommodation_option_id")
+    private AccommodationOptionEntity accommodationOptionEntity;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 }

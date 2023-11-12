@@ -286,6 +286,7 @@ public class TransportationServiceImpl implements TransportationService {
                     transportationPackageEntity.setIsAc(tourPackageTransportationRequest.getIsAC());
                     transportationPackageEntity.setTripType(tourPackageTransportationRequest.getTripType());
                     transportationPackageEntity.setPerPersonTransportationPackagePrice(tourPackageTransportationRequest.getUnitPrice());
+                    transportationPackageEntity.setIsActive(true);
                     return transportationPackageEntity;
                 })
                 .collect(Collectors.toList());

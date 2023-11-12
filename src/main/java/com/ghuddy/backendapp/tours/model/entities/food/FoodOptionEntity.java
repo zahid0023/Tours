@@ -18,12 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "tour_food_option")
 public class FoodOptionEntity extends BaseEntity {
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tour_package_id")
+    private TourPackageEntity tourPackageEntity;
 
     @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MealPackageEntity> mealPackageEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageOptionEntity> tourPackageOptionEntities = new ArrayList<>();
 
     @Column(name = "day_number")
     private Integer dayNumber;
@@ -43,8 +43,10 @@ public class FoodOptionEntity extends BaseEntity {
     @Column(name = "total_option_price")
     private BigDecimal totalOptionPricePerPerson;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_id")
-    private TourPackageEntity tourPackageEntity;
+    @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedFoodOptionEntity> availabilityGeneratedFoodOptionEntities = new ArrayList<>();
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 }

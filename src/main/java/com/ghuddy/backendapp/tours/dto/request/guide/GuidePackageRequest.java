@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class GuidePackageRequest extends OptionRequest {
+public class GuidePackageRequest {
     @Schema(description = "The number of days the guide service will be provided", required = true, example = "[1,2]")
     @JsonProperty("day_number")
     private Integer dayNumber;

@@ -46,7 +46,7 @@ public class TransferServiceImpl implements TransferService {
     public InsertAcknowledgeResponse addTourPackageTransferOption(TourPackageEntity tourPackageEntity, TransferOptionRequest transferOptionRequest, String requestId) {
         TransferOptionEntity transferOptionEntity = setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0);
         transferOptionEntity = transferOptionRepository.save(transferOptionEntity);
-        TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity, true, false);
+        TransferOptionData transferOptionData = new TransferOptionData(transferOptionEntity, transferOptionEntity.getIsActive());
         return new InsertAcknowledgeResponse<>(transferOptionData, requestId);
     }
 
@@ -60,7 +60,7 @@ public class TransferServiceImpl implements TransferService {
         List<TransferOptionEntity> transferOptionEntities = setTourPackageTransferOptions(tourPackageEntity, transferOptions);
         transferOptionEntities = transferOptionRepository.saveAll(transferOptionEntities);
         List<TransferOptionData> transferOptionDataList = transferOptionEntities.stream()
-                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity, true, false))
+                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity, transferOptionEntity.getIsActive()))
                 .collect(Collectors.toList());
 
         return new InsertAcknowledgeListResponse<>(transferOptionDataList, requestId);
@@ -89,7 +89,7 @@ public class TransferServiceImpl implements TransferService {
         List<TransferOptionEntity> transferOptionEntities = transferOptions.stream()
                 .map(transferOptionRequest -> {
                     TransferOptionEntity transferOptionEntity = new TransferOptionEntity();
-                    // transferOptionEntity.setTourPackageEntity(tourPackageEntity);
+                    transferOptionEntity.setTourPackageEntity(tourPackageEntity);
                     List<TransferPackageEntity> transferPackageEntityList = transferOptionRequest.getTransferPackageRequestList().stream()
                             .map(transferPackageRequest -> {
                                 TransferPackageEntity transferPackageEntity = new TransferPackageEntity();
@@ -101,11 +101,11 @@ public class TransferServiceImpl implements TransferService {
                                 transferPackageEntity.setUnitPrice(transferPackageRequest.getTransferUnitPrice());
                                 transferPackageEntity.setTransferRoute(transferPackageRequest.getTransferRoute());
                                 transferPackageEntity.setTripType(transferPackageRequest.getTripType());
+                                transferOptionEntity.setIsActive(true);
                                 return transferPackageEntity;
                             })
                             .collect(Collectors.toList());
                     transferOptionEntity.setTransferPackageEntities(transferPackageEntityList);
-                    // transferOptionEntity.setIsDefault(transferOptionRequest.getIsDefault());
                     transferOptionEntity.setPerPersonTransferOptionPrice(tourPackagePriceService.perPersonTransferOptionPrice(transferOptionRequest, tourPackageEntity.getTourPackageType().getSuitableFor()));
                     return transferOptionEntity;
 

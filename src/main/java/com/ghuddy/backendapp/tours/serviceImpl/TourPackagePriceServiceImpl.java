@@ -32,19 +32,19 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
         BigDecimal totalPackagePrice = BigDecimal.ZERO;
         if (accommodationOptionRequestList != null)
             totalPackagePrice.add(accommodationOptionRequestList.stream()
-                    .filter(AccommodationOptionRequest::getIsDefault)
+                    //.filter(AccommodationOptionRequest::getIsDefault)
                     .map(accommodationOptionRequest -> perPersonAccommodationOptionPrice(accommodationOptionRequest))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         if (foodOptionRequestList != null)
             totalPackagePrice.add(foodOptionRequestList.stream()
-                    .filter(FoodOptionRequest::getIsDefault)
+                    //.filter(FoodOptionRequest::getIsDefault)
                     .map(foodOptionRequest -> perPersonFoodOptionPrice(foodOptionRequest))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         if (transferOptionRequestList != null) {
             totalPackagePrice.add(transferOptionRequestList.stream()
-                    .filter(TransferOptionRequest::getIsDefault)
+                    //.filter(TransferOptionRequest::getIsDefault)
                     .map(transferOptionRequest -> perPersonTransferOptionPrice(transferOptionRequest, numberOfTravellers))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
         }

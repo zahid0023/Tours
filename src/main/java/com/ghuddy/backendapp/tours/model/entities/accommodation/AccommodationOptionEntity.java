@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,5 +26,11 @@ public class AccommodationOptionEntity extends BaseEntity {
 
     @Column(name = "total_option_price")
     private BigDecimal totalOptionPricePerPerson;
+
+    @OneToMany(mappedBy = "accommodationOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedAccommodationOptionEntity> availabilityGeneratedAccommodationOptionEntities = new ArrayList<>();
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 }

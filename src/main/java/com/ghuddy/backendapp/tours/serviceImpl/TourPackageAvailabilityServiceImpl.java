@@ -1,10 +1,12 @@
 package com.ghuddy.backendapp.tours.serviceImpl;
 
+import com.ghuddy.backendapp.tours.dto.data.OptionPriceData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAvailabilitySetRequest;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequestForAvailability;
+import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageAllComponentListResponse;
 import com.ghuddy.backendapp.tours.dto.response.tourpackage.TourPackageAvailabilityResponse;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageOptionsWoTransportationEntity;
@@ -56,6 +58,18 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
         this.transferService = transferService;
         this.transportationService = transportationService;
         this.tourPackageService = tourPackageService;
+    }
+
+
+    /**
+     * @param tourPackageEntity
+     * @param requestId
+     * @return
+     */
+    @Override
+    public TourPackageAllComponentListResponse getAllComponentOptionsByTourPackage(TourPackageEntity tourPackageEntity, String requestId) {
+        TourPackageAllComponentListResponse tourPackageAllComponentListResponse = new TourPackageAllComponentListResponse(tourPackageEntity, requestId);
+        return tourPackageAllComponentListResponse;
     }
 
     /**
@@ -297,7 +311,18 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
                         }
                     });
                     coreComponentsOptionsCombinationEntity.setTourPackageAvailabilityEntity(tourPackageAvailabilityEntity);
-                    coreComponentsOptionsCombinationEntity.setGhuddyWebsiteBlackPrice(OptionPriceCalculator.getBlackPrice(coreComponentsOptionsCombinationEntity.getGhuddyPlatformCalculatedRate(), BigDecimal.ZERO));
+                    OptionPriceData optionPriceData = OptionPriceCalculator.getBlackPrice(coreComponentsOptionsCombinationEntity.getGhuddyPlatformCalculatedRate(), BigDecimal.ZERO);
+                    optionPriceData = OptionPriceCalculator.getRedPrice(optionPriceData.getNetOptionPriceAfterGhuddyCommission(), BigDecimal.ZERO, optionPriceData);
+                    coreComponentsOptionsCombinationEntity.setGhuddyPlatformCalculatedRate(optionPriceData.getGhuddyPlatformCalculatedOptionPrice());
+                    coreComponentsOptionsCombinationEntity.setMerchantSubsidyAmount(optionPriceData.getMerchantSubsidyAmount());
+                    coreComponentsOptionsCombinationEntity.setNetOptionPriceAfterMerchantSubsidy(optionPriceData.getNetOptionPriceAfterMerchantSubsidy());
+                    coreComponentsOptionsCombinationEntity.setGhuddyPlatformCommissionAmount(optionPriceData.getGhuddyPlatformCommissionAmount());
+                    coreComponentsOptionsCombinationEntity.setNetOptionPriceAfterGhuddyCommission(optionPriceData.getNetOptionPriceAfterGhuddyCommission());
+                    coreComponentsOptionsCombinationEntity.setGhuddyWebsiteBlackPrice(optionPriceData.getGhuddyWebsiteBlackPrice());
+                    coreComponentsOptionsCombinationEntity.setGhuddySubsidyAmount(optionPriceData.getGhuddySubsidyAmount());
+                    coreComponentsOptionsCombinationEntity.setNetOptionPriceAfterGhuddySubsidy(optionPriceData.getNetOptionPriceAfterGhuddySubsidy());
+                    coreComponentsOptionsCombinationEntity.setGhuddyWebsiteRedPrice(optionPriceData.getGhuddyWebsiteRedPrice());
+                    coreComponentsOptionsCombinationEntity.setPaymentGatewayAmount(optionPriceData.getPaymentGateWayAmount());
                     return coreComponentsOptionsCombinationEntity;
                 })
                 .toList();

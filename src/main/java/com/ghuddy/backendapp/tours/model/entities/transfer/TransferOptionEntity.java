@@ -18,6 +18,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class TransferOptionEntity extends BaseEntity {
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tour_package_id")
+    private TourPackageEntity tourPackageEntity;
 
     @OneToMany(mappedBy = "transferOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransferPackageEntity> transferPackageEntities = new ArrayList<>();
@@ -26,10 +29,9 @@ public class TransferOptionEntity extends BaseEntity {
     private BigDecimal perPersonTransferOptionPrice;
 
     @OneToMany(mappedBy = "transferOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TourPackageOptionEntity> tourPackageOptionEntities = new ArrayList<>();
+    private List<AvailabilityGeneratedTransferOptionEntity> availabilityGeneratedTransferOptionEntities = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_id")
-    private TourPackageEntity tourPackageEntity;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 }

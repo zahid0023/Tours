@@ -18,12 +18,11 @@ public class TransferOptionData extends OptionData {
     @JsonProperty("transfer_packages")
     private List<TransferPackageData> transferPackageDataList;
 
-    public TransferOptionData(TransferOptionEntity transferOptionEntity, Boolean isActive, Boolean isDefault) {
-        super(isActive, isDefault, transferOptionEntity.getPerPersonTransferOptionPrice());
+    public TransferOptionData(TransferOptionEntity transferOptionEntity, Boolean isActive) {
+        super(isActive,  transferOptionEntity.getPerPersonTransferOptionPrice());
         this.transferOptionId = transferOptionEntity.getId();
         this.transferPackageDataList = transferOptionEntity.getTransferPackageEntities().stream()
                 .map(transferPackageEntity -> new TransferPackageData(transferPackageEntity))
                 .collect(Collectors.toList());
-        this.setTotalOptionPricePerPerson(transferOptionEntity.getPerPersonTransferOptionPrice());
     }
 }

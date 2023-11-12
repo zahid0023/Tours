@@ -29,4 +29,11 @@ public class AvailabilityGeneratedFoodOptionEntity extends BaseEntity {
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "food_option_id")
+    private FoodOptionEntity foodOptionEntity;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }
