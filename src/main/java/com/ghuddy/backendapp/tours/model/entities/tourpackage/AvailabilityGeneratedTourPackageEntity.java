@@ -80,7 +80,7 @@ public class AvailabilityGeneratedTourPackageEntity extends BaseEntity {
     @OneToMany(mappedBy = "tourPackageAvailabilityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedTourPackageInclusiveOptionEntity> availabilityGeneratedTourPackageInclusiveOptionEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "availabilityGeneratedTourPackage", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "availabilityGeneratedTourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedTourPackageAllOptionEntity> availabilityGeneratedTourPackageAllOptionEntities = new ArrayList<>();
 
 }

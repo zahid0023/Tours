@@ -330,10 +330,10 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
                             inclusiveOptionsCombinationEntity.setAvailabilityGeneratedTransferOptionEntity(transferOptionEntity);
                             inclusiveOptionsCombinationEntity.setGhuddyPlatformCalculatedRate(inclusiveOptionsCombinationEntity.getGhuddyPlatformCalculatedRate().add(transferOptionEntity.getTotalOptionPricePerPerson()));
 
-                        } //else if (component.getClass().isAssignableFrom(AvailabilityGeneratedSpotEntryOptionEntity.class)) {
-                            //AvailabilityGeneratedSpotEntryOptionEntity availabilityGeneratedSpotEntryOptionEntity = (AvailabilityGeneratedSpotEntryOptionEntity) component;
-                            //inclusiveOptionsCombinationEntity.setGhuddyPlatformCalculatedRate(inclusiveOptionsCombinationEntity.getGhuddyPlatformCalculatedRate().add(availabilityGeneratedSpotEntryOptionEntity.getTotalOptionPricePerPerson()));
-                        //}
+                        } else if (component.getClass().isAssignableFrom(AvailabilityGeneratedSpotEntryOptionEntity.class)) {
+                            AvailabilityGeneratedSpotEntryOptionEntity availabilityGeneratedSpotEntryOptionEntity = (AvailabilityGeneratedSpotEntryOptionEntity) component;
+                            inclusiveOptionsCombinationEntity.setGhuddyPlatformCalculatedRate(inclusiveOptionsCombinationEntity.getGhuddyPlatformCalculatedRate().add(availabilityGeneratedSpotEntryOptionEntity.getTotalOptionPricePerPerson()));
+                        }
                     });
                     inclusiveOptionsCombinationEntity.setTourPackageAvailabilityEntity(availabilityGeneratedTourPackageEntity);
                     OptionPriceData optionPriceData = OptionPriceCalculator.getBlackPrice(inclusiveOptionsCombinationEntity.getGhuddyPlatformCalculatedRate(), BigDecimal.ZERO);
@@ -413,11 +413,12 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
                             allOptionsCombinationEntity.setAvailabilityGeneratedTransportationPackageEntity(transportationPackageEntity);
                             allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice().add(transportationPackageEntity.getTransportationPackagePrice()));
                         } else if (component.getClass().isAssignableFrom(AvailabilityGeneratedSpotEntryOptionEntity.class)) {
-                            AvailabilityGeneratedSpotEntryOptionEntity availabilityGeneratedSpotEntryOptionEntity = (AvailabilityGeneratedSpotEntryOptionEntity) component;
-                            allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice().add(availabilityGeneratedSpotEntryOptionEntity.getTotalOptionPricePerPerson()));
+                            AvailabilityGeneratedSpotEntryOptionEntity spotEntryOptionEntity = (AvailabilityGeneratedSpotEntryOptionEntity) component;
+                            allOptionsCombinationEntity.setAvailabilityGeneratedSpotEntryOptionEntity(spotEntryOptionEntity);
+                            allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice().add(spotEntryOptionEntity.getTotalOptionPricePerPerson()));
                         }
                     });
-                    allOptionsCombinationEntity.setAvailabilityGeneratedTourPackage(availabilityGeneratedTourPackageEntity);
+                    allOptionsCombinationEntity.setAvailabilityGeneratedTourPackageEntity(availabilityGeneratedTourPackageEntity);
                     OptionPriceData optionPriceData = OptionPriceCalculator.getBlackPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice(), BigDecimal.ZERO);
                     optionPriceData = OptionPriceCalculator.getRedPrice(optionPriceData.getNetOptionPriceAfterGhuddyCommission(), BigDecimal.ZERO, optionPriceData);
                     allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(optionPriceData.getGhuddyPlatformCalculatedOptionPrice());

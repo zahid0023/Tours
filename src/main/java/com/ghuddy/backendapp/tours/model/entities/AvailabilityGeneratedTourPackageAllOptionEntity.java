@@ -25,9 +25,10 @@ public class AvailabilityGeneratedTourPackageAllOptionEntity extends BaseEntity 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "availability_generated_tour_package_id")
-    private AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackage;
-
-
+    private AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_generated_accommodation_option_id")
+    private AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOptionEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "availability_generated_food_option_id")
@@ -85,8 +86,8 @@ public class AvailabilityGeneratedTourPackageAllOptionEntity extends BaseEntity 
     private BigDecimal paymentGatewayAmount;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "availability_generated_accommodation_option_id")
-    private AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOptionEntity;
+    @JoinColumn(name = "availability_generated_spot_entry_option_id")
+    private AvailabilityGeneratedSpotEntryOptionEntity availabilityGeneratedSpotEntryOptionEntity;
 
     @Override
     public final boolean equals(Object o) {

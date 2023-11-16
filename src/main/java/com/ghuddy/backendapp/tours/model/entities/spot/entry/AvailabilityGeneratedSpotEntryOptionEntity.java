@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.entities.spot.entry;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
+import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageAllOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageInclusiveOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.tourpackage.AvailabilityGeneratedTourPackageEntity;
 import lombok.Getter;
@@ -30,5 +31,8 @@ public class AvailabilityGeneratedSpotEntryOptionEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "availabilityGeneratedSpotEntryOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedTourPackageInclusiveOptionEntity> availabilityGeneratedTourPackageInclusiveOptionEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "availabilityGeneratedSpotEntryOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedTourPackageAllOptionEntity> availabilityGeneratedTourPackageAllOptionEntities = new ArrayList<>();
 
 }
