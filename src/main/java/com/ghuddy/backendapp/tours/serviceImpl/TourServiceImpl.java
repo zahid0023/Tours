@@ -3,15 +3,14 @@ package com.ghuddy.backendapp.tours.serviceImpl;
 import com.ghuddy.backendapp.tours.dao.TourDAO;
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourDetailsPageResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourListResponse;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.TourData;
-import com.ghuddy.backendapp.tours.model.entities.tour.AddedTourEntity;
-import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
-import com.ghuddy.backendapp.tours.model.entities.tour.TourItineraryEntity;
-import com.ghuddy.backendapp.tours.model.entities.tour.TourSpecialityEntity;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.AvailabilityGeneratedTourPackageData;
+import com.ghuddy.backendapp.tours.model.entities.tour.*;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
 import com.ghuddy.backendapp.tours.service.AddedTourService;
 import com.ghuddy.backendapp.tours.service.SpecialityService;
@@ -113,5 +112,21 @@ public class TourServiceImpl implements TourService {
         List<TourData> tourDataList = tourDAO.getAllCreatedTours(pageSize, pageNumber);
         if (tourDataList == null || tourDataList.isEmpty()) throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
         return new TourListResponse(tourDataList, requestId);
+    }
+
+    /**
+     * @param subscribedTourEntity
+     * @param requestId
+     * @return
+     */
+    @Override
+    public TourDetailsPageResponse getSubscribedTourDetails(SubscribedTourEntity subscribedTourEntity, String requestId) {
+        subscribedTourEntity.getTourPackageEntities().stream()
+                .map(tourPackageEntity -> tourPackageEntity.getAvailabilityGeneratedTourPackages().stream()
+                        .map(availabilityGeneratedTourPackageEntity -> {
+                            AvailabilityGeneratedTourPackageData availabilityGeneratedTourPackageData = new AvailabilityGeneratedTourPackageData();
+                        })
+                        .toList())
+                .toList();
     }
 }

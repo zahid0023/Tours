@@ -18,7 +18,7 @@ public class TourControllerForUser {
     }
 
     @RequestMapping(path = "/tours/get/tour/by/{subscribed-tour-id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTourByTourId(@PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
+    public ResponseEntity<?> getTourDetails(@PathVariable("subscribed-tour-id") Long subscribedTourId, @RequestParam String requestId) {
         try {
             return new ResponseEntity<>(esTourService.getSubscribedTourById(subscribedTourId, requestId), HttpStatus.OK);
         } catch (TourNotFoundException ex) {

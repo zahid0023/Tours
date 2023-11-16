@@ -2,10 +2,12 @@ package com.ghuddy.backendapp.tours.service;
 
 import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
+import com.ghuddy.backendapp.tours.dto.response.tour.TourDetailsPageResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.TourData;
+import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
 
 public interface TourService {
@@ -18,5 +20,7 @@ public interface TourService {
     TourListResponse getAllCreatedTours(String requestId) throws EmptyListException;
 
     TourListResponse getAllCreatedToursPaginated(Integer pageSize, Integer pageNumber, String requestId) throws EmptyListException;
+
+    TourDetailsPageResponse getSubscribedTourDetails(SubscribedTourEntity subscribedTourEntity, String requestId);
 
 }
