@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.dto.response.spot.entry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryData;
+import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryPackageData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,5 +12,5 @@ public class SpotEntryResponse {
     private Long tourPackageId;
     @Schema(description = "The spot entry")
     @JsonProperty("spot_entry")
-    private SpotEntryData spotEntryData;
+    private SpotEntryPackageData spotEntryPackageData;
 }

@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Data
 public class MealPackageRequestForAvailability {
     @Schema(description = "The meal package id", required = true, example = "1")
-    @JsonProperty("meal_package_id")
+    @JsonProperty("tour_package_meal_package_id")
     private Long mealPackageId;
     @Schema(description = "The meal package price", required = true, example = "200")
-    @JsonProperty("meal_package_price")
+    @JsonProperty("per_meal_package_price")
     private BigDecimal mealPackagePrice;
 }

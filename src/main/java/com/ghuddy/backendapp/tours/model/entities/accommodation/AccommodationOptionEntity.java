@@ -24,11 +24,8 @@ public class AccommodationOptionEntity extends BaseEntity {
     @OneToMany(mappedBy = "accommodationOptionEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<AccommodationPackageEntity> accommodationPackageEntities = new LinkedList<>();
 
-    @Column(name = "total_option_price")
+    @Column(name = "total_option_price_per_person")
     private BigDecimal totalOptionPricePerPerson;
-
-    @OneToMany(mappedBy = "accommodationOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AvailabilityGeneratedAccommodationOptionEntity> availabilityGeneratedAccommodationOptionEntities = new ArrayList<>();
 
     @Column(name = "is_active")
     private Boolean isActive;

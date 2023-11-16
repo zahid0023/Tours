@@ -18,7 +18,7 @@ public interface TourSubscriptionService {
 
     SubscribedTourEntity getSubscribedTourEntityById(Long id) throws TourNotFoundException;
 
-    SubscribedTourListResponse getAllSubscribedToursByMerchantId(Long merchantId, String requestId) throws EmptyListException;
+    SubscribedTourListResponse getAllSubscribedToursByMerchantId(Long merchantId, String requestId) throws EmptyListException, MerchantNotFoundException;
 
     SubscribedTourListResponse getAllSubscribedToursPaginatedByMerchantId(Integer pageSize, Integer pageNumber, Long merchantId, String requestId) throws EmptyListException;
 

@@ -1,7 +1,9 @@
 package com.ghuddy.backendapp.tours.model.entities.food;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageAvailabilityEntity;
+import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageAllOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageInclusiveOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.AvailabilityGeneratedTourPackageEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,22 +20,21 @@ import java.util.List;
 public class AvailabilityGeneratedFoodOptionEntity extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_availability_id")
-    private TourPackageAvailabilityEntity tourPackageAvailabilityEntity;
+    @JoinColumn(name = "availability_generated_tour_package_id")
+    private AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity;
     @OneToMany(mappedBy = "availabilityGeneratedFoodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntities = new ArrayList<>();
     @NotNull
     @Column(name = "total_option_price_per_person", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalOptionPricePerPerson;
-    @NotNull
-    @Column(name = "is_default", nullable = false)
-    private Boolean isDefault = false;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "food_option_id")
-    private FoodOptionEntity foodOptionEntity;
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "availabilityGeneratedFoodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedTourPackageAllOptionEntity> availabilityGeneratedTourPackageAllOptionEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "availabilityGeneratedFoodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedTourPackageInclusiveOptionEntity> availabilityGeneratedTourPackageInclusiveOptionEntities = new ArrayList<>();
 
 }

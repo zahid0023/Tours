@@ -27,4 +27,7 @@ public class GuideOptionEntity extends BaseEntity {
     @OneToMany(mappedBy = "guideOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GuidePackageEntity> guidePackageEntities = new ArrayList<>();
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

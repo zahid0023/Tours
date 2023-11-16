@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.tours.model.entities.spot.entry;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.activity.ActivityEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,16 +14,8 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "spot_entry")
-public class SpotEntryEntity extends BaseEntity {
-
-    @Column(name = "active")
-    private Boolean active;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tour_package_id", nullable = false)
-    private TourPackageEntity tourPackageEntity;
+@Table(name = "spot_entry_packages")
+public class SpotEntryPackageEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "activity_id")
     private ActivityEntity activityEntity;
@@ -37,8 +28,15 @@ public class SpotEntryEntity extends BaseEntity {
     @Column(name = "remark", nullable = false)
     private String remark;
 
-    @OneToMany(mappedBy = "spotEntryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AvailabilityGeneratedSpotEntry> availabilityGeneratedSpotEntries = new LinkedList<>();
+    @Column(name = "active")
+    private Boolean active;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tour_package_spot_entry_option_id")
+    private SpotEntryOptionEntity spotEntryOptionEntity;
+
+    @OneToMany(mappedBy = "spotEntryPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailabilityGeneratedSpotEntryPackageEntity> availabilityGeneratedSpotEntryPackageEntities = new ArrayList<>();
 
 
     @Override
@@ -48,7 +46,7 @@ public class SpotEntryEntity extends BaseEntity {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        SpotEntryEntity that = (SpotEntryEntity) o;
+        SpotEntryPackageEntity that = (SpotEntryPackageEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

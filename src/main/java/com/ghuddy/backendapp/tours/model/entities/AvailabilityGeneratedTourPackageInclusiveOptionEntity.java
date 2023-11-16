@@ -3,9 +3,9 @@ package com.ghuddy.backendapp.tours.model.entities;
 import com.ghuddy.backendapp.model.db.BaseEntity;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AvailabilityGeneratedAccommodationOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.food.AvailabilityGeneratedFoodOptionEntity;
-import com.ghuddy.backendapp.tours.model.entities.guide.AvailabilityGeneratedGuideOptionEnttiy;
-import com.ghuddy.backendapp.tours.model.entities.spot.entry.AvailabilityGeneratedSpotEntry;
-import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageAvailabilityEntity;
+import com.ghuddy.backendapp.tours.model.entities.guide.AvailabilityGeneratedGuideOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.AvailabilityGeneratedSpotEntryOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.AvailabilityGeneratedTourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.transfer.AvailabilityGeneratedTransferOptionEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,32 +17,12 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "availability_generated_tour_package_options_wo_transportation")
-public class AvailabilityGeneratedTourPackageOptionsWoTransportationEntity extends BaseEntity {
+@Table(name = "availability_generated_tour_package_inclusive_options")
+public class AvailabilityGeneratedTourPackageInclusiveOptionEntity extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tour_package_availability_id", nullable = false)
-    private TourPackageAvailabilityEntity tourPackageAvailabilityEntity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "availability_generated_accommodation_option_id")
-    private AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOption;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "availability_generated_food_option_id")
-    private AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOption;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "availability_generated_transfer_option_id")
-    private AvailabilityGeneratedTransferOptionEntity availabilityGeneratedTransferOption;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "availability_generated_guide_option_id")
-    private AvailabilityGeneratedGuideOptionEnttiy availabilityGeneratedGuideOption;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "availability_generated_spot_entry_id")
-    private AvailabilityGeneratedSpotEntry availabilityGeneratedSpotEntry;
+    @JoinColumn(name = "availability_generated_tour_package_id", nullable = false)
+    private AvailabilityGeneratedTourPackageEntity tourPackageAvailabilityEntity;
 
     @NotNull
     @Column(name = "ghuddy_platform_calculated_option_price", nullable = false, precision = 10, scale = 2)
@@ -65,5 +45,26 @@ public class AvailabilityGeneratedTourPackageOptionsWoTransportationEntity exten
     private BigDecimal ghuddyWebsiteRedPrice = BigDecimal.ZERO;
     @Column(name = "payment_gateway_amount", precision = 10, scale = 2)
     private BigDecimal paymentGatewayAmount;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_generated_accommodation_option_id")
+    private AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOptionEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_generated_food_option_id")
+    private AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_generated_transfer_option_id")
+    private AvailabilityGeneratedTransferOptionEntity availabilityGeneratedTransferOptionEntity;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "availability_generated_guide_option_id")
+    private AvailabilityGeneratedGuideOptionEntity availabilityGeneratedGuideOptionEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "availability_generated_spot_entry_option_id")
+    private AvailabilityGeneratedSpotEntryOptionEntity availabilityGeneratedSpotEntryOptionEntity;
 
 }

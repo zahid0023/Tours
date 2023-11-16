@@ -8,11 +8,11 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class SpotEntryPackageRequestForAvailability extends OptionRequest {
+public class SpotEntryPackageRequestForAvailability {
     @Schema(description = "The spot entry id", required = true, example = "1")
-    @JsonProperty("spot_entry_id")
+    @JsonProperty("tour_package_spot_entry_package_id")
     private Long spotEntryId;
     @Schema(description = "The spot entry price", required = true, example = "140")
-    @JsonProperty("spot_entry_price")
+    @JsonProperty("spot_entry_price_per_person")
     private BigDecimal spotEntryPrice;
 }

@@ -38,6 +38,8 @@ public class TourSubscriptionControllerForMerchant {
         } catch (EmptyListException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
+        } catch (MerchantNotFoundException ex) {
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
 

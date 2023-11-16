@@ -24,6 +24,8 @@ import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPacka
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.guide.GuideOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageOptionEntity;
@@ -56,6 +58,7 @@ public class TourPackageServiceImpl implements TourPackageService {
     private final TourPackagePriceService tourPackagePriceService;
     private final TransferService transferService;
     private final GuideService guideService;
+    private final SpotEntryService spotEntryService;
 
     public TourPackageServiceImpl(TourPackageTypeRepository tourPackageTypeRepository,
                                   TourPackageRepository tourPackageRepository,
@@ -65,7 +68,8 @@ public class TourPackageServiceImpl implements TourPackageService {
                                   TourPackageDao tourPackageDao,
                                   TourPackagePriceService tourPackagePriceService,
                                   TransferService transferService,
-                                  GuideService guideService) {
+                                  GuideService guideService,
+                                  SpotEntryService spotEntryService) {
         this.tourPackageTypeRepository = tourPackageTypeRepository;
         this.tourPackageRepository = tourPackageRepository;
         this.foodService = foodService;
@@ -75,6 +79,7 @@ public class TourPackageServiceImpl implements TourPackageService {
         this.tourPackagePriceService = tourPackagePriceService;
         this.transferService = transferService;
         this.guideService = guideService;
+        this.spotEntryService = spotEntryService;
     }
 
     // tour package type
@@ -168,20 +173,41 @@ public class TourPackageServiceImpl implements TourPackageService {
                     tourPackageEntity.setDescription(tourPackageRequest.getTourPackageDescription());
                     tourPackageEntity.setTourPackageName(StringUtil.tourPackageName(subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName(), tourPackageEntity.getTourPackageType().getPackageTypeName()));
 
-                    List<AccommodationOptionEntity> accommodationOptionEntityList = accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationOptionRequestList());
-                    tourPackageEntity.setAccommodationOptionEntities(accommodationOptionEntityList);
+                    if (tourPackageRequest.getAccommodationOptionRequestList() != null && !tourPackageRequest.getAccommodationOptionRequestList().isEmpty()) {
+                        List<AccommodationOptionEntity> accommodationOptionEntityList = accommodationService.setTourPackageAccommodations(tourPackageEntity, tourPackageRequest.getAccommodationOptionRequestList());
+                        tourPackageEntity.setAccommodationOptionEntities(accommodationOptionEntityList);
+                    }
 
-                    List<FoodOptionEntity> foodOptionEntityList = foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList());
-                    tourPackageEntity.setFoodOptionEntities(foodOptionEntityList);
+                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty()) {
+                        List<FoodOptionEntity> foodOptionEntityList = foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList());
+                        tourPackageEntity.setFoodOptionEntities(foodOptionEntityList);
+                    }
 
-                    List<TransferOptionEntity> transferOptionEntityList = transferService.setTourPackageTransferOptions(tourPackageEntity, tourPackageRequest.getTransferOptionRequestList());
-                    tourPackageEntity.setTransferOptionEntities(transferOptionEntityList);
+                    if (tourPackageRequest.getTransferOptionRequestList() != null && !tourPackageRequest.getTransferOptionRequestList().isEmpty()) {
+                        List<TransferOptionEntity> transferOptionEntityList = transferService.setTourPackageTransferOptions(tourPackageEntity, tourPackageRequest.getTransferOptionRequestList());
+                        tourPackageEntity.setTransferOptionEntities(transferOptionEntityList);
+                    }
 
-                    List<TransportationPackageEntity> transportationPackageEntityList = transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages());
-                    tourPackageEntity.setTransportationPackageEntities(transportationPackageEntityList);
+                    if (tourPackageRequest.getTransportationPackages() != null && !tourPackageRequest.getTransportationPackages().isEmpty()) {
+                        List<TransportationPackageEntity> transportationPackageEntityList = transportationService.setTourPackageTransportations(tourPackageEntity, tourPackageRequest.getTransportationPackages());
+                        tourPackageEntity.setTransportationPackageEntities(transportationPackageEntityList);
+                    }
 
-                    List<GuideOptionEntity> guideOptionEntityList = guideService.setTourPackageGuideOptions(tourPackageEntity, tourPackageRequest.getGuideOptionRequestList());
-                    tourPackageEntity.setGuideOptionEntityList(guideOptionEntityList);
+                    if (tourPackageRequest.getGuideOptionRequestList() != null && !tourPackageRequest.getGuideOptionRequestList().isEmpty()) {
+                        List<GuideOptionEntity> guideOptionEntityList = guideService.setTourPackageGuideOptions(tourPackageEntity, tourPackageRequest.getGuideOptionRequestList());
+                        tourPackageEntity.setGuideOptionEntityList(guideOptionEntityList);
+                    }
+
+                    if (tourPackageRequest.getSpotEntryRequestList() != null && !tourPackageRequest.getSpotEntryRequestList().isEmpty()) {
+                        SpotEntryOptionEntity spotEntryOptionEntity = new SpotEntryOptionEntity();
+                        spotEntryOptionEntity.setTourPackageEntity(tourPackageEntity);
+                        List<SpotEntryPackageEntity> spotEntryPackageEntityList = spotEntryService.setTourPackageSpotEntries(spotEntryOptionEntity, tourPackageRequest.getSpotEntryRequestList());
+                        spotEntryOptionEntity.setSpotEntryPackageEntities(spotEntryPackageEntityList);
+                        spotEntryOptionEntity.setTotalOptionPricePerPerson(spotEntryOptionEntity.getSpotEntryPackageEntities().stream()
+                                .map(spotEntryPackageEntity -> spotEntryPackageEntity.getPricePerPerson())
+                                .reduce(BigDecimal.ZERO, BigDecimal::add));
+                        tourPackageEntity.setTourPackageSpotEntryOptionEntities(List.of(spotEntryOptionEntity));
+                    }
 
                     return tourPackageEntity;
                 })

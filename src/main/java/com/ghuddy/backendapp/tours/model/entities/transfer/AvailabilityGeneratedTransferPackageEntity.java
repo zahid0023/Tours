@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "availability_generated_transfer_packages")
 public class AvailabilityGeneratedTransferPackageEntity extends BaseEntity {
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transfer_package_id")
     private TransferPackageEntity transferPackageEntity;
@@ -22,4 +23,5 @@ public class AvailabilityGeneratedTransferPackageEntity extends BaseEntity {
     @NotNull
     @Column(name = "per_vehicle_per_trip_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perVehiclePerTripPrice;
+
 }

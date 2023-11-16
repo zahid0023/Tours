@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class AccommodationPackageRequestForAvailability {
     @Schema(description = "The accommodation package id", required = true, example = "1")
-    @JsonProperty("accommodation_package_id")
+    @JsonProperty("tour_package_accommodation_package_id")
     private Long accommodationPackageId;
     @Schema(description = "The price for this accommodation package", required = true, example = "1000")
     @JsonProperty("per_night_room_price")

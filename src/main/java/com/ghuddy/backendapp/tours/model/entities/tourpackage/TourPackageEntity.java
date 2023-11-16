@@ -1,12 +1,12 @@
 package com.ghuddy.backendapp.tours.model.entities.tourpackage;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.transfer.TransferOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.guide.GuideOptionEntity;
-import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryEntity;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,8 +43,12 @@ public class TourPackageEntity extends BaseEntity {
     private List<TransportationPackageEntity> transportationPackageEntities = new ArrayList<>();
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GuideOptionEntity> guideOptionEntityList = new LinkedList<>();
+
     @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SpotEntryEntity> spotEntryEntities = new ArrayList<>();
+    private List<AvailabilityGeneratedTourPackageEntity> availabilityGeneratedTourPackages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpotEntryOptionEntity> tourPackageSpotEntryOptionEntities = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

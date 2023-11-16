@@ -118,10 +118,14 @@ public class TourSubscriptionServiceImpl implements TourSubscriptionService {
      * @return SubscribedTourListResponse
      */
     @Override
-    public SubscribedTourListResponse getAllSubscribedToursByMerchantId(Long merchantId, String requestId) throws EmptyListException {
-        List<SubscribedTourData> subscribedTourDataList = tourDAO.getAllSubscribedToursForMerchant(0, 0, merchantId);
-        if (subscribedTourDataList == null || subscribedTourDataList.isEmpty())
+    public SubscribedTourListResponse getAllSubscribedToursByMerchantId(Long merchantId, String requestId) throws EmptyListException, MerchantNotFoundException {
+        UserEntity merchantEntity = merchantRepository.findById(merchantId).orElseThrow(()->new MerchantNotFoundException(ErrorCode.MERCHANT_NOT_FOUND));
+        List<SubscribedTourEntity> subscribedTourEntityList = subscribedTourRepository.getSubscribedTourEntitiesByMerchantEntityAndDeleted(merchantEntity,false);
+        if (subscribedTourEntityList == null || subscribedTourEntityList.isEmpty())
             throw new EmptyListException(ErrorCode.LIST_IS_EMPTY);
+        List<SubscribedTourData> subscribedTourDataList = subscribedTourEntityList.stream()
+                .map(subscribedTourEntity -> new SubscribedTourData(subscribedTourEntity))
+                .toList();
         return new SubscribedTourListResponse(subscribedTourDataList, requestId);
     }
 

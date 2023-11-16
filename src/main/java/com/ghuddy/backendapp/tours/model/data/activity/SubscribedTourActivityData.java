@@ -26,7 +26,7 @@ public class SubscribedTourActivityData {
     private LocalTime endTime;
 
     @JsonProperty("activity_images")
-    private List<ESImageData> esImageDataList;
+    private List<ActivityImageData> activityImageDataList;
 
     public SubscribedTourActivityData(SubscribedTourItineraryEntity subscribedTourItineraryEntity) {
         this.activityId = subscribedTourItineraryEntity.getActivityEntity().getId();
@@ -35,8 +35,8 @@ public class SubscribedTourActivityData {
         this.dayNumber = subscribedTourItineraryEntity.getActivityDayNumber();
         this.startTime = subscribedTourItineraryEntity.getActivityStartTime();
         this.endTime = subscribedTourItineraryEntity.getActivityEndTime();
-        this.esImageDataList = subscribedTourItineraryEntity.getActivityEntity().getActivityImageEntities().stream()
-                .map(activityImageEntity -> new ESImageData(activityImageEntity))
+        this.activityImageDataList = subscribedTourItineraryEntity.getActivityEntity().getActivityImageEntities().stream()
+                .map(activityImageEntity -> new ActivityImageData(activityImageEntity))
                 .toList();
     }
 }

@@ -18,11 +18,18 @@ public class AvailabilityGeneratedGuidePackageEntity extends BaseEntity {
     private GuidePackageEntity guidePackageEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "availability_generated_guide_option_id")
-    private AvailabilityGeneratedGuideOptionEnttiy availabilityGeneratedGuideOptionEnttiy;
+    private AvailabilityGeneratedGuideOptionEntity availabilityGeneratedGuideOptionEntity;
     @NotNull
     @Column(name = "total_guide_package_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalGuidePackagePrice;
 
 
+    @NotNull
+    @Column(name = "day_number", nullable = false)
+    private Integer dayNumber;
+
+    @NotNull
+    @Column(name = "number_of_guides_for_day", nullable = false)
+    private Integer numberOfGuidesForDay;
 
 }

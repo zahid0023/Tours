@@ -12,6 +12,8 @@ import java.util.List;
 
 @Data
 public class AvailabilityGeneratedFoodOptionData extends OptionData {
+    @Schema(description = "The food option id")
+    @JsonProperty("tour_package_food_option_id")
     private Long foodOptionId;
     @Schema(description = "The day in which this meal option belongs")
     @JsonProperty("tour_package_meal_option_day")
@@ -30,6 +32,9 @@ public class AvailabilityGeneratedFoodOptionData extends OptionData {
     @Schema(description = "if dinner is included its 1 otherwise 0")
     @JsonProperty("number_of_dinner")
     private Integer numberOfDinner;
+
+    @Schema(description = "The meal packages")
+    @JsonProperty("tour_package_meal_packages")
     private List<AvailabilityGeneratedMealPackageData> availabilityGeneratedMealPackageDataList;
 
     private AvailabilityGeneratedFoodOptionData(FoodOptionData foodOptionData){
@@ -41,19 +46,12 @@ public class AvailabilityGeneratedFoodOptionData extends OptionData {
         this.numberOfDinner = foodOptionData.getNumberOfDinner();
     }
 
-    public AvailabilityGeneratedFoodOptionData(AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity) {
-        this(new FoodOptionData(availabilityGeneratedFoodOptionEntity.getFoodOptionEntity(),availabilityGeneratedFoodOptionEntity.getIsActive()));
-        this.availabilityGeneratedMealPackageDataList = availabilityGeneratedFoodOptionEntity.getAvailabilityGeneratedMealPackageEntities().stream()
-                .map(availabilityGeneratedMealPackageEntity -> new AvailabilityGeneratedMealPackageData(availabilityGeneratedMealPackageEntity))
-                .toList();
-        this.setTotalOptionPricePerPerson(availabilityGeneratedFoodOptionEntity.getTotalOptionPricePerPerson());
-    }
-
     public AvailabilityGeneratedFoodOptionData(FoodOptionEntity foodOptionEntity){
         this(new FoodOptionData(foodOptionEntity,foodOptionEntity.getIsActive()));
         this.availabilityGeneratedMealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
                 .map(mealPackageEntity-> new AvailabilityGeneratedMealPackageData(mealPackageEntity))
                 .toList();
         this.setTotalOptionPricePerPerson(foodOptionEntity.getTotalOptionPricePerPerson());
+        this.setIsActive(foodOptionEntity.getIsActive());
     }
 }

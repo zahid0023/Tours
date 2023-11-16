@@ -52,12 +52,6 @@ public class ESSubscribedTourData {
     @JsonProperty("tour_tag")
     @Field(name = "tour_tag")
     private String tourTag;
-    @JsonProperty("included_in_tour")
-    @Field(name = "included")
-    private List<String> included;
-    @JsonProperty("not_included_in_tour")
-    @Field(name = "not_included")
-    private List<String> notIncluded;
 
     @Field(name = "subscribed_tour_packages", type = FieldType.Nested, includeInParent = true)
     @JsonProperty("subscribed_tour_packages")
@@ -83,8 +77,6 @@ public class ESSubscribedTourData {
         this.tourReportingTime = subscribedTourEntity.getTourReportingTime();
         this.tourReportingPlace = subscribedTourEntity.getTourReportingPlace();
         this.tourTag = subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourTag();
-        this.included = new LinkedList<>();
-        this.notIncluded = new LinkedList<>();
         this.esTourPackageDataList = subscribedTourEntity.getTourPackageEntities().stream()
                 .map(tourPackageEntity -> new ESTourPackageData(tourPackageEntity))
                 .toList();

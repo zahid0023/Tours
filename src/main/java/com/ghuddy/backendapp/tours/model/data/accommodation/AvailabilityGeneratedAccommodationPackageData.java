@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 
 @Data
 public class AvailabilityGeneratedAccommodationPackageData {
+    @Schema(description = "The tour package/ tour package availability id")
+    @JsonProperty("tour_package_accommodation_package_id")
+    private Long tourPackageAccommodationPackageId;
     @Schema(description = "The name of the accommodation associated with this tour package accommodation package")
     @JsonProperty("tour_package_accommodation_name")
     private String tourPackageAccommodationName;
@@ -41,6 +44,7 @@ public class AvailabilityGeneratedAccommodationPackageData {
     private Integer nightNumber;
 
     public AvailabilityGeneratedAccommodationPackageData(AccommodationPackageData accommodationPackageData) {
+        this.tourPackageAccommodationPackageId = accommodationPackageData.getAccommodationPackageId();
         this.setTourPackageAccommodationName(accommodationPackageData.getTourPackageAccommodationName());
         this.setTourPackageRoomCategoryName(accommodationPackageData.getTourPackageRoomCategoryName());
         this.setTourPackageRoomTypeName(accommodationPackageData.getTourPackageRoomTypeName());

@@ -7,6 +7,15 @@ package com.ghuddy.backendapp.tours.enums;
  * */
 public enum ErrorCode {
 
+
+    // registration 4 digits starts with 0 for otp
+    OTP_NOT_MATCHED("0001"),
+    NO_ACTIVE_OTP_PRESENT("0002"),
+    MORE_THAN_FIVE_TIME("0003"),
+    LESS_THAN_FIVE_MINUTES("0004"),
+    OTP_ALREADY_VERIFIED("0005"),
+    USER_ALREADY_EXISTS("0006"),
+
     // Location Exceptions
     // Starts with 0
     LOCATION_NOT_FOUND("00001"),

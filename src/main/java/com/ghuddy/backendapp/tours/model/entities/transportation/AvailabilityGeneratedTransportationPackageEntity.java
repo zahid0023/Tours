@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.model.entities.transportation;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageAvailabilityEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.AvailabilityGeneratedTourPackageEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 @Table(name = "availability_generated_transportation_packages")
 public class AvailabilityGeneratedTransportationPackageEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tour_package_availability_id")
-    private TourPackageAvailabilityEntity tourPackageAvailabilityEntity;
+    @JoinColumn(name = "availability_generated_tour_package_id")
+    private AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transportation_package_id")
     private TransportationPackageEntity transportationPackageEntity;

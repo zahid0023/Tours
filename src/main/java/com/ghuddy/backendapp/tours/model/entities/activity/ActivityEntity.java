@@ -1,7 +1,7 @@
 package com.ghuddy.backendapp.tours.model.entities.activity;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
-import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryEntity;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryPackageEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +36,6 @@ public class ActivityEntity extends BaseEntity {
     private List<ActivityImageEntity> activityImageEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "activityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SpotEntryEntity> spotEntryEntities = new ArrayList<>();
+    private List<SpotEntryPackageEntity> spotEntryEntities = new ArrayList<>();
 
 }

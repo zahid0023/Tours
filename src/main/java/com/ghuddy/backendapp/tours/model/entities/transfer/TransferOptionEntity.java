@@ -28,9 +28,6 @@ public class TransferOptionEntity extends BaseEntity {
     @Column(name = "total_option_price")
     private BigDecimal perPersonTransferOptionPrice;
 
-    @OneToMany(mappedBy = "transferOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AvailabilityGeneratedTransferOptionEntity> availabilityGeneratedTransferOptionEntities = new ArrayList<>();
-
     @Column(name = "is_active")
     private Boolean isActive;
 

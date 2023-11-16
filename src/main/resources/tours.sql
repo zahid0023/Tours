@@ -662,7 +662,7 @@ create table if not exists public.spot_entry
     remark           text
 );
 
-alter table public.spot_entry
+alter table public.spot_entry_packages
     owner to postgres;
 
 create table if not exists public.tour_package_guide_options
@@ -724,7 +724,7 @@ create table if not exists public.tour_package_availability
     default_guide_option_id         bigint
         references public.tour_package_guide_options,
     default_spot_entry_id           bigint
-        references public.spot_entry,
+        references public.spot_entry_packages,
     tour_start_date                 date    not null,
     total_seats                     integer not null,
     bookable_seats                  integer not null
@@ -935,7 +935,7 @@ create table if not exists public.availability_generated_spot_entries
     updated_at                   timestamp,
     version                      integer,
     spot_entry_id                bigint         not null
-        references public.spot_entry,
+        references public.spot_entry_packages,
     tour_package_availability_id bigint         not null
         constraint availability_generated_spot_e_tour_package_availability_id_fkey
             references public.tour_package_availability,
@@ -946,96 +946,76 @@ create table if not exists public.availability_generated_spot_entries
 alter table public.availability_generated_spot_entries
     owner to postgres;
 
-create table if not exists public.availability_generated_tour_package_options_with_transportation
+create table if not exists public.availability_generated_tour_package_all_options
 (
-    id                                               bigint default nextval('availability_generated_tour_package_options_with_transpo_id_seq'::regclass) not null
-        constraint availability_generated_tour_package_options_with_transport_pkey
-            primary key,
+    id                                               bigserial
+        primary key,
     created_by                                       varchar(255),
     created_at                                       timestamp,
     deleted                                          boolean,
     last_modified_by                                 varchar(255),
     updated_at                                       timestamp,
     version                                          integer,
-    tour_package_availability_id                     bigint                                                                                              not null
-        constraint availability_generated_tour_p_tour_package_availability_id_fkey
-            references public.tour_package_availability,
+    availability_generated_tour_package_id           bigint
+        references public.availability_generated_tour_packages,
     availability_generated_accommodation_option_id   bigint
-        constraint availability_generated_tour_p_availability_generated_accom_fkey
-            references public.availability_generated_accommodation_options,
+        references public.availability_generated_accommodation_options,
     availability_generated_food_option_id            bigint
-        constraint availability_generated_tour_p_availability_generated_food__fkey
-            references public.availability_generated_food_options,
+        references public.availability_generated_food_options,
     availability_generated_transfer_option_id        bigint
-        constraint availability_generated_tour_p_availability_generated_trans_fkey
-            references public.availability_generated_transfer_options,
+        references public.availability_generated_transfer_options,
     availability_generated_transportation_package_id bigint
-        constraint availability_generated_tour__availability_generated_trans_fkey1
-            references public.availability_generated_transportation_packages,
+        references public.availability_generated_transportation_packages,
     availability_generated_guide_option_id           bigint
-        constraint availability_generated_tour_p_availability_generated_guide_fkey
-            references public.availability_generated_guide_options,
+        references public.availability_generated_guide_options,
     availability_generated_spot_entry_id             bigint
-        constraint availability_generated_tour_p_availability_generated_spot__fkey
-            references public.availability_generated_spot_entries,
-    rack_rate                                        numeric(10, 2)                                                                                      not null,
-    corporate_rate                                   numeric(10, 2),
-    corporate_rate_discount_percent                  numeric(10, 2),
-    ghuddy_commission_amount                         numeric(10, 2),
-    ghuddy_commission_percent                        numeric(10, 2),
-    shurjo_commission_percent                        numeric(10, 2),
-    ghuddy_website_black_price                       numeric(10, 2),
-    ghuddy_subsidy_amount                            numeric(10, 2),
-    ghuddy_subsidy_percent                           numeric(10, 2),
-    ghuddy_website_red_price                         numeric(10, 2),
-    total_discount_percent                           numeric(10, 2),
-    net_shurjo_commission_amount                     numeric(10, 2),
-    net_ghuddy_commission_amount                     numeric(10, 2),
-    net_ghuddy_commission_percent                    numeric(10, 2)
+        references public.availability_generated_spot_entries,
+    ghuddy_platform_calculated_option_price        numeric(10, 2) not null default 0,
+    merchant_subsidy_amount                        numeric(10, 2) not null default 0,
+    net_option_price_after_merchant_subsidy        numeric(10, 2) not null default 0,
+    ghuddy_platform_commission_amount              numeric(10, 2) not null default 0,
+    net_option_price_after_ghuddy_commission       numeric(10, 2) not null default 0,
+    ghuddy_website_black_price                     numeric(10, 2) not null default 0,
+    ghuddy_subsidy_amount                          numeric(10, 2) not null default 0,
+    net_option_price_after_ghuddy_subsidy          numeric(10, 2) not null default 0,
+    ghuddy_website_red_price                       numeric(10, 2) not null default 0,
+    payment_gateway_amount                         numeric(10, 2) not null default 0
 );
 
-alter table public.availability_generated_tour_package_options_with_transportation
-    owner to postgres;
 
-create table if not exists public.availability_generated_tour_package_options_wo_transportation
+
+create table if not exists public.availability_generated_tour_package_inclusive_options
 (
-    id                                             bigint default nextval('availability_generated_tour_package_options_wo_transport_id_seq'::regclass) not null
-        constraint availability_generated_tour_package_options_wo_transportat_pkey
-            primary key,
+    id                                             bigserial
+        primary key,
     created_by                                     varchar(255),
     created_at                                     timestamp,
     deleted                                        boolean,
     last_modified_by                               varchar(255),
     updated_at                                     timestamp,
     version                                        integer,
-    tour_package_availability_id                   bigint                                                                                              not null
-        constraint availability_generated_tour__tour_package_availability_id_fkey1
-            references public.tour_package_availability,
+    availability_generated_tour_package_id         bigint
+        references public.availability_generated_tour_packages not null ,
     availability_generated_accommodation_option_id bigint
-        constraint availability_generated_tour__availability_generated_accom_fkey1
-            references public.availability_generated_accommodation_options,
+        references public.availability_generated_accommodation_options,
     availability_generated_food_option_id          bigint
-        constraint availability_generated_tour__availability_generated_food__fkey1
-            references public.availability_generated_food_options,
+        references public.availability_generated_food_options,
     availability_generated_transfer_option_id      bigint
-        constraint availability_generated_tour__availability_generated_trans_fkey2
-            references public.availability_generated_transfer_options,
+        references public.availability_generated_transfer_options,
     availability_generated_guide_option_id         bigint
-        constraint availability_generated_tour__availability_generated_guide_fkey1
-            references public.availability_generated_guide_options,
+        references public.availability_generated_guide_options,
     availability_generated_spot_entry_id           bigint
-        constraint availability_generated_tour__availability_generated_spot__fkey1
-            references public.availability_generated_spot_entries,
-    ghuddy_platform_calculated_option_price        numeric(10, 2)                                                                                      not null,
-    merchant_subsidy_amount                        numeric(10, 2),
-    net_option_price_after_merchant_subsidy        numeric(10, 2),
-    ghuddy_platform_commission_amount              numeric(10, 2),
-    net_option_price_after_ghuddy_commission       numeric(10, 2),
-    ghuddy_website_black_price                     numeric(10, 2),
-    ghuddy_subsidy_amount                          numeric(10, 2),
-    net_option_price_after_ghuddy_subsidy          numeric(10, 2),
-    ghuddy_website_red_price                       numeric(10, 2),
-    payment_gateway_amount                         numeric(10, 2)
+        references public.availability_generated_spot_entries,
+    ghuddy_platform_calculated_option_price        numeric(10, 2) not null default 0,
+    merchant_subsidy_amount                        numeric(10, 2) not null default 0,
+    net_option_price_after_merchant_subsidy        numeric(10, 2) not null default 0,
+    ghuddy_platform_commission_amount              numeric(10, 2) not null default 0,
+    net_option_price_after_ghuddy_commission       numeric(10, 2) not null default 0,
+    ghuddy_website_black_price                     numeric(10, 2) not null default 0,
+    ghuddy_subsidy_amount                          numeric(10, 2) not null default 0,
+    net_option_price_after_ghuddy_subsidy          numeric(10, 2) not null default 0,
+    ghuddy_website_red_price                       numeric(10, 2) not null default 0,
+    payment_gateway_amount                         numeric(10, 2) not null default 0
 );
 
 alter table public.availability_generated_tour_package_options_wo_transportation

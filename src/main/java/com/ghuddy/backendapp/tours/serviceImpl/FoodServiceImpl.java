@@ -150,6 +150,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public FoodOptionCombinationCheckResponse getAllMealsCombination(FoodOptionCombinationCheckRequest foodOptionCombinationCheckRequest) throws EmptyListException, RuntimeException {
         List<MealPackageRequest> mealPackageRequestList = foodOptionCombinationCheckRequest.getMealPackageRequestList();
+        log.info(mealPackageRequestList.toString());
         HashMap<Integer, List<Long>> mealsProvidedInDays = foodOptionCombinationCheckRequest.getMealsProvidedInDays();
 
         Map<String, Set<Long>> idMaps = new HashMap<>();
@@ -174,6 +175,7 @@ public class FoodServiceImpl implements FoodService {
         // Use stream to group by mealTypeID
         Map<Long, List<MealPackageRequest>> groupedByMealType = mealPackageRequestList.stream()
                 .collect(Collectors.groupingBy(MealPackageRequest::getMealTypeID));
+        //log.info(groupedByMealType.toString());
 
         // Extract lists for each meal type
         List<MealPackageRequest> breakfastPackages = groupedByMealType.getOrDefault(breakfastId, List.of());

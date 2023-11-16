@@ -13,6 +13,6 @@ public class TransportationPackageRequestForAvailability extends OptionRequest {
     @JsonProperty("tour_package_transportation_package_id")
     private Long transportationPackageId;
     @Schema(description = "The transportation package price", required = true, example = "1200")
-    @JsonProperty("tour_package_transportation_price")
+    @JsonProperty("transportation_package_unit_price")
     private BigDecimal transportationPackagePrice;
 }

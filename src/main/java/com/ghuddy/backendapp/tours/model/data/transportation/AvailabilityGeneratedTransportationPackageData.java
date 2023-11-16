@@ -50,10 +50,12 @@ public class AvailabilityGeneratedTransportationPackageData extends OptionData {
     public AvailabilityGeneratedTransportationPackageData(AvailabilityGeneratedTransportationPackageEntity availabilityGeneratedTransportationPackageEntity) {
         this(new TransportationPackageData(availabilityGeneratedTransportationPackageEntity.getTransportationPackageEntity(),true));
         this.unitPrice = availabilityGeneratedTransportationPackageEntity.getTransportationPackagePrice();
+        this.setIsActive(availabilityGeneratedTransportationPackageEntity.getIsActive());
     }
 
     public AvailabilityGeneratedTransportationPackageData(TransportationPackageEntity transportationPackageEntity) {
-        this(new TransportationPackageData(transportationPackageEntity, true));
+        this(new TransportationPackageData(transportationPackageEntity, transportationPackageEntity.getIsActive()));
         this.unitPrice = transportationPackageEntity.getPerPersonTransportationPackagePrice();
+        this.setIsActive(transportationPackageEntity.getIsActive());
     }
 }

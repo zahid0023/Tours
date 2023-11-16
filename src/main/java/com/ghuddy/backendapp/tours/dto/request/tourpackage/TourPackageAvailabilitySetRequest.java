@@ -6,6 +6,7 @@ import com.ghuddy.backendapp.exception.AbstractException;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.guide.GuideOptionRequestForAvailability;
+import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryPackageRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequestForAvailability;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequestForAvailability;
@@ -29,24 +30,40 @@ public class TourPackageAvailabilitySetRequest extends BaseRequest {
     @Schema(description = "Total bookable seats in tour", required = true, example = "5")
     @JsonProperty("bookable_seats")
     private Integer bookableSeats;
+
+    @Schema(description = "Whether accommodation is inclusive in this available tour package or can be purchased")
+    @JsonProperty("tour_package_accommodation_is_inclusive")
+    private Boolean tourPackageAccommodationIsInclusive;
     @Schema(description = "The list of accommodation options offered in this tour package")
-    @JsonProperty("accommodation_options")
+    @JsonProperty("tour_package_accommodation_options")
     private List<AccommodationOptionRequestForAvailability> accommodationOptionRequestForAvailabilityList;
+    @Schema(description = "Whether food is inclusive in this available tour package or can be purchased")
+    @JsonProperty("tour_package_food_is_inclusive")
+    private Boolean tourPackageFoodIsInclusive;
     @Schema(description = "The list of food options offered in this tour package")
-    @JsonProperty("food_options")
+    @JsonProperty("tour_package_food_options")
     private List<FoodOptionRequestForAvailability> foodOptionRequestForAvailabilityList;
+    @Schema(description = "Whether transfer is inclusive in this available tour package or can be purchased")
+    @JsonProperty("tour_package_transfer_is_inclusive")
+    private Boolean tourPackageTransferIsInclusive;
     @Schema(description = "The list of transfer options offered in this tour package")
-    @JsonProperty("transfer_options")
+    @JsonProperty("tour_package_transfer_options")
     private List<TransferOptionRequestForAvailability> transferOptionRequestForAvailabilityList;
     @Schema(description = "The list of transportation packages offered in this tour package")
-    @JsonProperty("transportation_packages")
+    @JsonProperty("tour_package_transportation_packages")
     private List<TransportationPackageRequestForAvailability> transportationPackageRequestForAvailabilityList;
+    @Schema(description = "Whether guide is inclusive in this available tour package or can be purchased")
+    @JsonProperty("tour_package_guide_is_inclusive")
+    private Boolean tourPackageGuideIsInclusive;
     @Schema(description = "The list of guide options offered in this tour package")
-    @JsonProperty("guide_options")
+    @JsonProperty("tour_package_guide_options")
     private List<GuideOptionRequestForAvailability> guideOptionRequestForAvailabilityList;
+    @Schema(description = "Whether spot is inclusive in this available tour package or can be purchased")
+    @JsonProperty("tour_package_spot_entry_is_inclusive")
+    private Boolean tourPackageSpotEntryIsInclusive;
     @Schema(description = "The list of spot entries options offered in this tour package")
-    @JsonProperty("spot_entries")
-    private List<SpotEntryPackageRequestForAvailability> spotEntryPackageRequestForAvailabilityList;
+    @JsonProperty("tour_package_spot_entry_options")
+    private List<SpotEntryOptionRequestForAvailability> spotEntryOptionRequestForAvailabilityList;
 
     /**
      * @throws AbstractException

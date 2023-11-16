@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.data.guide;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.guide.AvailabilityGeneratedGuidePackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.guide.GuidePackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class GuidePackageData {
+public class AvailabilityGeneratedGuidePackageData {
     @Schema(description = "The guide package id")
     @JsonProperty("tour_package_guide_package_id")
     private Long guidePackageId;
@@ -22,7 +23,7 @@ public class GuidePackageData {
     @JsonProperty("total_guide_price_for_day")
     private BigDecimal totalGuidePriceForDay;
 
-    public GuidePackageData(GuidePackageEntity guidePackageEntity) {
+    public AvailabilityGeneratedGuidePackageData(GuidePackageEntity guidePackageEntity){
         this.guidePackageId = guidePackageEntity.getId();
         this.dayNumber = guidePackageEntity.getDayNumber();
         this.numberOfGuidesForDay = guidePackageEntity.getNumberOfGuideForDay();

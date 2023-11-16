@@ -11,6 +11,9 @@ import java.util.Map;
 
 @Data
 public class AvailabilityGeneratedMealPackageData {
+    @Schema(description = "The meal package id")
+    @JsonProperty("tour_package_meal_package_id")
+    private Long mealPackageId;
     @Schema(description = "The name of the meal package type")
     @JsonProperty("meal_type_name")
     private String mealTypeName;
@@ -24,6 +27,7 @@ public class AvailabilityGeneratedMealPackageData {
     private AvailabilityGeneratedMealPackageData(MealPackageData mealPackageData) {
         this.mealTypeName = mealPackageData.getMealTypeName();
         this.foodItems = mealPackageData.getFoodItems();
+        this.mealPackageId = mealPackageData.getMealPackageId();
     }
 
     public AvailabilityGeneratedMealPackageData(AvailabilityGeneratedMealPackageEntity availabilityGeneratedMealPackageEntity) {

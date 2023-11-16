@@ -11,6 +11,6 @@ import java.util.List;
 @Data
 public class TransferOptionRequestForAvailability extends OptionRequest {
     @Schema(description = "The list of transfer packages", required = true)
-    @JsonProperty("transfer_packages")
+    @JsonProperty("tour_package_transfer_packages")
     private List<TransferPackageRequestForAvailability> transferPackageRequestForAvailabilityList;
 }

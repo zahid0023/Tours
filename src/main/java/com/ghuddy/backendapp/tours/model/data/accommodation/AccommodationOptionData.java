@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class AccommodationOptionData extends OptionData {
 
+    @Schema(description = "The accommodation option")
+    @JsonProperty("accommodation_option_id")
     private Long accommodationOptionId;
     @Schema(description = "The accommodation packages belonging to this tour package")
     @JsonProperty("tour_package_accommodation_packages")

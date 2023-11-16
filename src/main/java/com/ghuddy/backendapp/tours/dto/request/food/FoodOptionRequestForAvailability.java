@@ -11,6 +11,6 @@ import java.util.List;
 @Data
 public class FoodOptionRequestForAvailability extends OptionRequest {
     @Schema(description = "The list of meal packages", required = true)
-    @JsonProperty("meal_packages")
+    @JsonProperty("tour_package_meal_packages")
     private List<MealPackageRequestForAvailability> mealPackageRequestForAvailabilityList;
 }

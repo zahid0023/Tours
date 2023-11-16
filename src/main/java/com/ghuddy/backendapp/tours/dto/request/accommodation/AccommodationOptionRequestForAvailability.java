@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 public class AccommodationOptionRequestForAvailability extends OptionRequest {
     @Schema(description = "The accommodation packages belonging to this available tour package", required = true)
-    @JsonProperty("accommodation_packages")
+    @JsonProperty("tour_package_accommodation_packages")
     private List<AccommodationPackageRequestForAvailability> accommodationPackageRequestForAvailabilityList;
 }

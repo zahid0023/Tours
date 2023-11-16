@@ -43,9 +43,6 @@ public class FoodOptionEntity extends BaseEntity {
     @Column(name = "total_option_price")
     private BigDecimal totalOptionPricePerPerson;
 
-    @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AvailabilityGeneratedFoodOptionEntity> availabilityGeneratedFoodOptionEntities = new ArrayList<>();
-
     @Column(name = "is_active")
     private Boolean isActive;
 

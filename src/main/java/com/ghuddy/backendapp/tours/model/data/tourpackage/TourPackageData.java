@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
 import com.ghuddy.backendapp.tours.model.data.guide.GuideOptionData;
-import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryData;
+import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryOptionData;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
 import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
@@ -52,7 +52,7 @@ public class TourPackageData {
     private List<GuideOptionData> guideOptionDataList;
     @Schema(description = "The list of spot entries belonging to this tour package")
     @JsonProperty("tour_package_sport_entries")
-    private List<SpotEntryData> spotEntryDataList;
+    private List<SpotEntryOptionData> spotEntryOptionDataLast;
 
     public TourPackageData(TourPackageEntity tourPackageEntity) {
         this.tourPackageTypeId = tourPackageEntity.getTourPackageType().getId();
@@ -61,22 +61,22 @@ public class TourPackageData {
         this.tourPackageName = tourPackageEntity.getTourPackageName();
         this.tourPackageDescription = tourPackageEntity.getDescription();
         this.accommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
-                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity,true))
+                .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity, true))
                 .toList();
         this.foodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity,true))
+                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, true))
                 .toList();
         this.transferOptionDataList = tourPackageEntity.getTransferOptionEntities().stream()
-                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity,true))
+                .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity, true))
                 .toList();
         this.transportationPackageDataList = tourPackageEntity.getTransportationPackageEntities().stream()
-                .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity,true))
+                .map(transportationPackageEntity -> new TransportationPackageData(transportationPackageEntity, true))
                 .toList();
         this.guideOptionDataList = tourPackageEntity.getGuideOptionEntityList().stream()
-                .map(guideOptionEntity -> new GuideOptionData(guideOptionEntity,true))
+                .map(guideOptionEntity -> new GuideOptionData(guideOptionEntity, true))
                 .toList();
-        this.spotEntryDataList = tourPackageEntity.getSpotEntryEntities().stream()
-                .map(spotEntryEntity -> new SpotEntryData(spotEntryEntity,true))
+        this.spotEntryOptionDataLast = tourPackageEntity.getTourPackageSpotEntryOptionEntities().stream()
+                .map(tourPackageSpotEntryOptionEntity -> new SpotEntryOptionData(tourPackageSpotEntryOptionEntity))
                 .toList();
 
     }
