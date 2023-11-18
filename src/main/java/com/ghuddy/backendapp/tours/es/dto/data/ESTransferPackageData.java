@@ -48,6 +48,5 @@ public class ESTransferPackageData {
         this.tripType = transferPackageEntity.getTripType();
         this.unitPrice = transferPackageEntity.getUnitPrice();
         this.suitableForPersons = transferPackageEntity.getSuitableForPersons();
-        //
     }
 }
