@@ -48,6 +48,7 @@ public class ESAccommodationPackageData {
 
     public ESAccommodationPackageData(AvailabilityGeneratedAccommodationPackageEntity availabilityGeneratedAccommodationPackageEntity) {
         AccommodationPackageEntity accommodationPackageEntity = availabilityGeneratedAccommodationPackageEntity.getAccommodationPackageEntity();
+        this.availableAccommodationPackageId = availabilityGeneratedAccommodationPackageEntity.getId();
         this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
         this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
         this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();

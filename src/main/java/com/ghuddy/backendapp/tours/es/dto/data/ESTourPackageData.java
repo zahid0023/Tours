@@ -31,7 +31,7 @@ import java.util.List;
 public class ESTourPackageData {
     @JsonProperty("subscribed_tour_id")
     private Long subscribedTourId; // for merchant reference
-    @JsonProperty("tour_package_available__tour_package_id")
+    @JsonProperty("tour_package_available_tour_package_id")
     private Long availableTourPackageId;
     @JsonProperty("tour_package_available_type_id")
     private Long tourPackageTypeId;

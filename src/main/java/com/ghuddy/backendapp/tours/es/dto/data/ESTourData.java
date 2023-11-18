@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@Document(indexName = "tour_details")
 public class ESTourData {
 
     @Id
@@ -53,8 +55,8 @@ public class ESTourData {
     @Field(name = "tour_tag")
     private String tourTag;
 
-    @Field(name = "subscribed_tour_packages", type = FieldType.Nested, includeInParent = true)
-    @JsonProperty("subscribed_tour_packages")
+    @Field(name = "available_tour_packages", type = FieldType.Nested, includeInParent = true)
+    @JsonProperty("available_tour_packages")
     private HashMap<Long, List<ESTourPackageData>> esTourPackageDataList;
 
     public ESTourData(SubscribedTourEntity subscribedTourEntity) {

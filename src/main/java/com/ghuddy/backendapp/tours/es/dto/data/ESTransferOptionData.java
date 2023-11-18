@@ -20,6 +20,7 @@ public class ESTransferOptionData {
     private List<ESTransferPackageData> transferPackageList;
 
     public ESTransferOptionData(AvailabilityGeneratedTransferOptionEntity availabilityGeneratedTransferOptionEntity) {
+        availableTransferOptionId = availabilityGeneratedTransferOptionEntity.getId();
         this.transferPackageList = availabilityGeneratedTransferOptionEntity.getAvailabilityGeneratedTransferPackageEntities().stream()
                 .map(availabilityGeneratedTransferPackageEntity -> new ESTransferPackageData(availabilityGeneratedTransferPackageEntity))
                 .toList();

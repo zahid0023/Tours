@@ -20,6 +20,7 @@ public class ESAccommodationOptionData  {
     private List<ESAccommodationPackageData> accommodationPackageList;
 
     public ESAccommodationOptionData(AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOptionEntity) {
+        this.availableAccommodationOptionId = availabilityGeneratedAccommodationOptionEntity.getId();
         this.accommodationPackageList = availabilityGeneratedAccommodationOptionEntity.getAvailabilityGeneratedAccommodationPackageEntities().stream()
                 .map(accommodationPackageEntity -> new ESAccommodationPackageData(accommodationPackageEntity))
                 .collect(Collectors.toList());
