@@ -54,4 +54,8 @@ public class AvailabilityGeneratedFoodOptionData extends OptionData {
         this.setTotalOptionPricePerPerson(foodOptionEntity.getTotalOptionPricePerPerson());
         this.setIsActive(foodOptionEntity.getIsActive());
     }
+
+    public AvailabilityGeneratedFoodOptionData(AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity) {
+
+    }
 }

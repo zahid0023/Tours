@@ -19,17 +19,22 @@ public class AvailabilityGeneratedTransferOptionData extends OptionData {
     @JsonProperty("tour_package_transfer_packages")
     List<AvailabilityGeneratedTransferPackageData> availabilityGeneratedTransferPackageDataList;
 
-    private AvailabilityGeneratedTransferOptionData(TransferOptionData transferOptionData) {
-        this.transferOptionId = transferOptionData.getTransferOptionId();
-
-    }
-
     public AvailabilityGeneratedTransferOptionData(TransferOptionEntity transferOptionEntity) {
-        this(new TransferOptionData(transferOptionEntity, transferOptionEntity.getIsActive()));
+        this.transferOptionId = transferOptionEntity.getId();
+        this.setIsActive(transferOptionEntity.getIsActive());
         this.availabilityGeneratedTransferPackageDataList = transferOptionEntity.getTransferPackageEntities().stream()
                 .map(transferPackageEntity -> new AvailabilityGeneratedTransferPackageData(transferPackageEntity))
                 .toList();
         this.setTotalOptionPricePerPerson(transferOptionEntity.getPerPersonTransferOptionPrice());
         this.setIsActive(transferOptionEntity.getIsActive());
+    }
+
+    public AvailabilityGeneratedTransferOptionData(AvailabilityGeneratedTransferOptionEntity availabilityGeneratedTransferOptionEntity) {
+        this.transferOptionId = availabilityGeneratedTransferOptionEntity.getId();
+        this.availabilityGeneratedTransferPackageDataList = availabilityGeneratedTransferOptionEntity.getAvailabilityGeneratedTransferPackageEntities().stream()
+                .map(availabilityGeneratedTransferPackageEntity -> new AvailabilityGeneratedTransferPackageData(availabilityGeneratedTransferPackageEntity))
+                .toList();
+        this.setTotalOptionPricePerPerson(availabilityGeneratedTransferOptionEntity.getTotalOptionPricePerPerson());
+        this.setIsActive(availabilityGeneratedTransferOptionEntity.getIsActive());
     }
 }

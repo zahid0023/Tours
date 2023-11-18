@@ -2,6 +2,7 @@ package com.ghuddy.backendapp.tours.model.data.spot.entry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.activity.ActivityData;
+import com.ghuddy.backendapp.tours.model.entities.spot.entry.AvailabilityGeneratedSpotEntryPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryPackageEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -28,5 +29,12 @@ public class AvailabilityGeneratedSpotEntryPackageData {
         this.activityData = new ActivityData(spotEntryPackageEntity.getActivityEntity());
         this.remark = spotEntryPackageEntity.getRemark();
         this.spotEntryPricePerPerson = spotEntryPackageEntity.getPricePerPerson();
+    }
+
+    public AvailabilityGeneratedSpotEntryPackageData(AvailabilityGeneratedSpotEntryPackageEntity availabilityGeneratedSpotEntryPackageEntity) {
+        this.spotEntryPackageId = availabilityGeneratedSpotEntryPackageEntity.getId();
+        this.activityData = new ActivityData(availabilityGeneratedSpotEntryPackageEntity.getSpotEntryPackageEntity().getActivityEntity());
+        this.remark = availabilityGeneratedSpotEntryPackageEntity.getSpotEntryPackageEntity().getRemark();
+        this.spotEntryPricePerPerson = availabilityGeneratedSpotEntryPackageEntity.getSpotEntryPricePerPerson();
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class ESSubscribedTourItineraryData {
+public class  ESSubscribedTourItineraryData {
     @JsonProperty("activity_id")
     @Field(name = "activity_id")
     private Long activityId;

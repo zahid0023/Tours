@@ -16,6 +16,9 @@ public class AvailabilityGeneratedMealPackageEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "meal_package_id")
     private MealPackageEntity mealPackageEntity;
+
+    @Transient
+    private Integer mealPackageAvailableInDay;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "availability_generated_food_option_id")
     private AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity;

@@ -37,10 +37,10 @@ public class SubscribedTourData {
         this.createdTourId =subscribedTourEntity.getTourEntity().getId();
         this.subscribedTourId = subscribedTourEntity.getId();
         this.subscribedTourName = subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName();
+        this.tourReportingTime = subscribedTourEntity.getTourReportingTime();
+        this.tourReportingPlace = subscribedTourEntity.getTourReportingPlace();
         this.subscribedTourActivityList = subscribedTourEntity.getSubscribedTourItineraryEntities().stream()
                 .map(subscribedTourItineraryEntity -> new SubscribedTourActivityData(subscribedTourItineraryEntity))
                 .collect(Collectors.toList());
-        this.tourReportingTime = subscribedTourEntity.getTourReportingTime();
-        this.tourReportingPlace = subscribedTourEntity.getTourReportingPlace();
     }
 }

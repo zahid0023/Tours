@@ -17,10 +17,10 @@ public class ESTourPackageServiceImpl implements ESTourPackageService {
      */
     @Override
     public List<ESTourPackageData> getTourPackagesBySubscribedTour(SubscribedTourEntity subscribedTourEntity, String requestId) {
-        List<TourPackageEntity> tourPackageEntityList = subscribedTourEntity.getTourPackageEntities();
-        List<ESTourPackageData> esTourPackageDataList = tourPackageEntityList.stream()
-                .map(tourPackageEntity -> new ESTourPackageData(tourPackageEntity))
-                .toList();
-        return esTourPackageDataList;
+       // List<TourPackageEntity> tourPackageEntityList = subscribedTourEntity.getTourPackageEntities();
+       // List<ESTourPackageData> esTourPackageDataList = tourPackageEntityList.stream()
+         //       .map(tourPackageEntity -> new ESTourPackageData(tourPackageEntity))
+           //     .toList();
+        return null;
     }
 }

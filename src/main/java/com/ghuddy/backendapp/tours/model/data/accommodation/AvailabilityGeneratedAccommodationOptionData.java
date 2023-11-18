@@ -30,4 +30,11 @@ public class AvailabilityGeneratedAccommodationOptionData extends OptionData {
         this.setTotalOptionPricePerPerson(accommodationOptionEntity.getTotalOptionPricePerPerson());
         this.setIsActive(accommodationOptionEntity.getIsActive());
     }
+
+    public AvailabilityGeneratedAccommodationOptionData(AvailabilityGeneratedAccommodationOptionEntity availabilityGeneratedAccommodationOptionEntity) {
+        this.accommodationOptionId = availabilityGeneratedAccommodationOptionEntity.getId();
+        this.availabilityGeneratedAccommodationPackageDataList = availabilityGeneratedAccommodationOptionEntity.getAvailabilityGeneratedAccommodationPackageEntities().stream()
+                .map(availabilityGeneratedAccommodationPackageEntity -> new AvailabilityGeneratedAccommodationPackageData(availabilityGeneratedAccommodationPackageEntity))
+                .toList();
+    }
 }

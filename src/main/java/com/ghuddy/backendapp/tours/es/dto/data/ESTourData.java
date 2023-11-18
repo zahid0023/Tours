@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalTime;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
-@Document(indexName = "subscribed_tours")
-public class ESSubscribedTourData {
+public class ESTourData {
+
     @Id
     @JsonProperty("tour_id")
     @Field(name = "tour_id")
@@ -55,14 +55,9 @@ public class ESSubscribedTourData {
 
     @Field(name = "subscribed_tour_packages", type = FieldType.Nested, includeInParent = true)
     @JsonProperty("subscribed_tour_packages")
-    private List<ESTourPackageData> esTourPackageDataList;
+    private HashMap<Long, List<ESTourPackageData>> esTourPackageDataList;
 
-    @Field(name = "subscribed_tour_itinerary", type = FieldType.Nested, includeInParent = true)
-    @JsonProperty("subscribed_tour_itinerary")
-    private List<ESSubscribedTourItineraryData> esSubscribedTourItineraryDataList;
-
-
-    public ESSubscribedTourData(SubscribedTourEntity subscribedTourEntity) {
+    public ESTourData(SubscribedTourEntity subscribedTourEntity) {
         this.tourId = subscribedTourEntity.getId();
         this.tourName = subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourName();
         this.shortAddress = subscribedTourEntity.getTourEntity().getAddedTourEntity().getShortAddress();
@@ -77,11 +72,15 @@ public class ESSubscribedTourData {
         this.tourReportingTime = subscribedTourEntity.getTourReportingTime();
         this.tourReportingPlace = subscribedTourEntity.getTourReportingPlace();
         this.tourTag = subscribedTourEntity.getTourEntity().getAddedTourEntity().getTourTag();
-        this.esTourPackageDataList = subscribedTourEntity.getTourPackageEntities().stream()
-                .map(tourPackageEntity -> new ESTourPackageData(tourPackageEntity))
-                .toList();
-        this.esSubscribedTourItineraryDataList = subscribedTourEntity.getSubscribedTourItineraryEntities().stream()
-                .map(subscribedTourItineraryEntity -> new ESSubscribedTourItineraryData(subscribedTourItineraryEntity))
-                .toList();
+        this.esTourPackageDataList = getAvailableTourPackages(subscribedTourEntity);
+    }
+
+    private HashMap<Long, List<ESTourPackageData>> getAvailableTourPackages(SubscribedTourEntity subscribedTourEntity) {
+        return subscribedTourEntity.getTourPackageEntities().stream()
+                .flatMap(tourPackageEntity ->
+                        tourPackageEntity.getAvailabilityGeneratedTourPackages().stream()
+                                .map(availabilityGeneratedTourPackageEntity ->
+                                        new ESTourPackageData(availabilityGeneratedTourPackageEntity)))
+                .collect(Collectors.groupingBy(ESTourPackageData::getTourPackageTypeId, HashMap::new, Collectors.toList()));
     }
 }

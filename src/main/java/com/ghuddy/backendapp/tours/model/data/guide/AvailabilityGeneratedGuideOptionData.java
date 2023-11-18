@@ -26,4 +26,13 @@ public class AvailabilityGeneratedGuideOptionData extends OptionData {
         this.setTotalOptionPricePerPerson(guideOptionEntity.getTotalOptionPrice());
         this.setIsActive(guideOptionEntity.getIsActive());
     }
+
+    public AvailabilityGeneratedGuideOptionData(AvailabilityGeneratedGuideOptionEntity availabilityGeneratedGuideOptionEntity) {
+        this.tourPackageGuideOptionId = availabilityGeneratedGuideOptionEntity.getId();
+        this.availabilityGeneratedGuidePackageDataList = availabilityGeneratedGuideOptionEntity.getAvailabilityGeneratedGuidePackageEntities().stream()
+                .map(availabilityGeneratedGuidePackageEntity -> new AvailabilityGeneratedGuidePackageData(availabilityGeneratedGuidePackageEntity))
+                .toList();
+        this.setTotalOptionPricePerPerson(availabilityGeneratedGuideOptionEntity.getTotalOptionPricePerPerson());
+        this.setIsActive(availabilityGeneratedGuideOptionEntity.getIsActive());
+    }
 }

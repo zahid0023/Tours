@@ -5,11 +5,12 @@ import com.ghuddy.backendapp.tours.dto.request.tour.TourCreateRequest;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourDetailsPageResponse;
 import com.ghuddy.backendapp.tours.dto.response.tour.TourListResponse;
+import com.ghuddy.backendapp.tours.model.data.tour.TourDetailsPageData;
+import com.ghuddy.backendapp.tours.model.data.tourpackage.TourPackageDetailsPageData;
 import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
 import com.ghuddy.backendapp.tours.model.data.tour.TourData;
-import com.ghuddy.backendapp.tours.model.data.tourpackage.AvailabilityGeneratedTourPackageData;
 import com.ghuddy.backendapp.tours.model.entities.tour.*;
 import com.ghuddy.backendapp.tours.repository.TourRepository;
 import com.ghuddy.backendapp.tours.service.AddedTourService;
@@ -20,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -121,12 +124,16 @@ public class TourServiceImpl implements TourService {
      */
     @Override
     public TourDetailsPageResponse getSubscribedTourDetails(SubscribedTourEntity subscribedTourEntity, String requestId) {
-        subscribedTourEntity.getTourPackageEntities().stream()
-                .map(tourPackageEntity -> tourPackageEntity.getAvailabilityGeneratedTourPackages().stream()
-                        .map(availabilityGeneratedTourPackageEntity -> {
-                            AvailabilityGeneratedTourPackageData availabilityGeneratedTourPackageData = new AvailabilityGeneratedTourPackageData();
-                        })
-                        .toList())
-                .toList();
+        HashMap<Long, List<TourPackageDetailsPageData>> tourPackageDetailsPageDataMap =
+                subscribedTourEntity.getTourPackageEntities().stream()
+                        .flatMap(tourPackageEntity ->
+                                tourPackageEntity.getAvailabilityGeneratedTourPackages().stream()
+                                        .map(availabilityGeneratedTourPackageEntity ->
+                                                new TourPackageDetailsPageData(subscribedTourEntity, availabilityGeneratedTourPackageEntity)))
+                        .collect(Collectors.groupingBy(TourPackageDetailsPageData::getTourPackageTypeId, HashMap::new, Collectors.toList()));
+
+        TourDetailsPageData tourDetailsPageData = new TourDetailsPageData(subscribedTourEntity);
+        tourDetailsPageData.setTourPackageDetailsPageDataList(tourPackageDetailsPageDataMap);
+        return new TourDetailsPageResponse(tourDetailsPageData);
     }
 }

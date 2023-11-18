@@ -29,4 +29,11 @@ public class AvailabilityGeneratedGuidePackageData {
         this.numberOfGuidesForDay = guidePackageEntity.getNumberOfGuideForDay();
         this.totalGuidePriceForDay = guidePackageEntity.getTotalGuidePriceForDay();
     }
+
+    public AvailabilityGeneratedGuidePackageData(AvailabilityGeneratedGuidePackageEntity availabilityGeneratedGuidePackageEntity) {
+        this.guidePackageId = availabilityGeneratedGuidePackageEntity.getId();
+        this.dayNumber = availabilityGeneratedGuidePackageEntity.getDayNumber();
+        this.numberOfGuidesForDay = availabilityGeneratedGuidePackageEntity.getNumberOfGuidesForDay();
+        this.totalGuidePriceForDay = availabilityGeneratedGuidePackageEntity.getTotalGuidePackagePrice();
+    }
 }
