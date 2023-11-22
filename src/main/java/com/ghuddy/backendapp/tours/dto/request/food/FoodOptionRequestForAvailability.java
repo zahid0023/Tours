@@ -6,11 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
 public class FoodOptionRequestForAvailability extends OptionRequest {
-    @Schema(description = "The list of meal packages", required = true)
-    @JsonProperty("tour_package_meal_packages")
-    private List<MealPackageRequestForAvailability> mealPackageRequestForAvailabilityList;
+    @Schema(description = "The day in which this option is available")
+    @JsonProperty("day_number")
+    private Integer dayNumber;
+    @Schema(description = "The meal packages belonging to this option", required = true)
+    @JsonProperty("tour_package_meal_type_wise_meal_packages")
+    private HashMap<Integer, List<Long>> mealTypeWiseMealPackages;
 }

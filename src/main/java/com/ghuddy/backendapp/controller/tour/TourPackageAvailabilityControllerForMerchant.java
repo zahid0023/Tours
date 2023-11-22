@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/merchant/")
+//@Api(tags = "Tour - Tour Package Availability Controller For Admin", description = "This controller is used to manage tour package availability by merchants.")
 public class TourPackageAvailabilityControllerForMerchant {
     private final TourPackageAvailabilityService tourPackageAvailabilityService;
     private final TourPackageService tourPackageService;
@@ -22,13 +23,13 @@ public class TourPackageAvailabilityControllerForMerchant {
         this.tourPackageService = tourPackageService;
     }
 
-    @RequestMapping(path = "/tour-package/availability/get/all/components/by/{tour-package-id}", method = RequestMethod.POST)
-    public ResponseEntity<?> getTourPackageAllComponents(@PathVariable("tour-package-id") Long tourPackageId, @RequestParam String requestId){
+    @RequestMapping(path = "/tour-package/availability/get/all/components/by/{tour-package-id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getTourPackageAllComponents(@PathVariable("tour-package-id") Long tourPackageId, @RequestParam String requestId) {
         try {
             TourPackageEntity tourPackageEntity = tourPackageService.getTourPackageEntityByPackageID(tourPackageId);
-            return new ResponseEntity<>(tourPackageAvailabilityService.getAllComponentOptionsByTourPackage(tourPackageEntity,requestId),HttpStatus.OK);
+            return new ResponseEntity<>(tourPackageAvailabilityService.getAllComponentOptionsByTourPackage(tourPackageEntity, requestId), HttpStatus.OK);
         } catch (TourPackageNotFoundException ex) {
-            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(),requestId),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), requestId), HttpStatus.NOT_FOUND);
         }
     }
 

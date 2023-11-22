@@ -7,7 +7,7 @@ import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourPackageNotFoundException;
 import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import com.ghuddy.backendapp.tours.service.AccommodationService;
-import com.ghuddy.backendapp.tours.service.TourPackageService;
+import com.ghuddy.backendapp.tours.service.TourPackageService;;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
-// @Api(tags = "Tour - Accommodation Controller For Merchant", description = "This controller is used to manage tour accommodation by merchants.")
+//@Api(tags = "Tour - Accommodation Controller For Merchant", description = "This controller is used to manage tour accommodation by merchants.")
 public class AccommodationControllerForMerchant {
     private final AccommodationService accommodationService;
     private final TourPackageService tourPackageService;

@@ -26,7 +26,7 @@ public class AvailabilityGeneratedFoodOptionEntity extends BaseEntity {
     private List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntities = new ArrayList<>();
     @NotNull
     @Column(name = "total_option_price_per_person", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalOptionPricePerPerson;
+    private BigDecimal totalOptionPricePerPerson = BigDecimal.ZERO;
 
     @Column(name = "is_active")
     private Boolean isActive;

@@ -188,36 +188,42 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
                 .collect(Collectors.toList());
     }
 
-    private List<AvailabilityGeneratedFoodOptionEntity> setFoods(AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity, List<FoodOptionRequestForAvailability> foodOptionRequestForAvailabilityList) {
-        Set<Long> mealPackageIds = foodOptionRequestForAvailabilityList.stream()
-                .flatMap(foodOptionRequestForAvailability ->
-                        foodOptionRequestForAvailability.getMealPackageRequestForAvailabilityList().stream()
-                                .map(mealPackageRequestForAvailability -> mealPackageRequestForAvailability.getMealPackageId())
-                )
+    private List<AvailabilityGeneratedFoodOptionEntity> setFoods(AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity, List<FoodOptionRequestForAvailability> foodOptions) {
+        Set<Long> mealPackageIds = foodOptions.stream()
+                .flatMap(foodOptionRequest ->
+                        foodOptionRequest.getMealTypeWiseMealPackages().values().stream()
+                                .flatMap(List::stream))
                 .collect(Collectors.toSet());
-        Map<Long, MealPackageEntity> mealPackageEntityMap = foodService.getMealPackageEntitiesByIds(mealPackageIds);
 
-        return foodOptionRequestForAvailabilityList.stream()
-                .map(foodOptionRequestForAvailability -> {
-                    AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity = new AvailabilityGeneratedFoodOptionEntity();
-                    availabilityGeneratedFoodOptionEntity.setAvailabilityGeneratedTourPackageEntity(availabilityGeneratedTourPackageEntity);
-                    availabilityGeneratedFoodOptionEntity.setTotalOptionPricePerPerson(BigDecimal.ZERO);
-                    List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntityList = foodOptionRequestForAvailability.getMealPackageRequestForAvailabilityList().stream()
-                            .map(mealPackageRequestForAvailability -> {
-                                AvailabilityGeneratedMealPackageEntity availabilityGeneratedMealPackageEntity = new AvailabilityGeneratedMealPackageEntity();
-                                availabilityGeneratedMealPackageEntity.setAvailabilityGeneratedFoodOptionEntity(availabilityGeneratedFoodOptionEntity);
-                                MealPackageEntity mealPackageEntity = mealPackageEntityMap.get(mealPackageRequestForAvailability.getMealPackageId());
-                                availabilityGeneratedMealPackageEntity.setMealPackageEntity(mealPackageEntity);
-                                BigDecimal perPersonMealPackagePrice = mealPackageRequestForAvailability.getMealPackagePrice();
-                                availabilityGeneratedMealPackageEntity.setMealPackagePrice(perPersonMealPackagePrice);
-                                availabilityGeneratedFoodOptionEntity.setTotalOptionPricePerPerson(availabilityGeneratedFoodOptionEntity.getTotalOptionPricePerPerson().add(perPersonMealPackagePrice));
-                                return availabilityGeneratedMealPackageEntity;
-                            })
-                            .toList();
-                    availabilityGeneratedFoodOptionEntity.setAvailabilityGeneratedMealPackageEntities(availabilityGeneratedMealPackageEntityList);
-                    return availabilityGeneratedFoodOptionEntity;
-                })
-                .collect(Collectors.toList());
+        Map<Long, MealPackageEntity> mealPackageEntityMap = foodService.getMealPackageEntitiesByIds(mealPackageIds);
+        List<AvailabilityGeneratedFoodOptionEntity> availabilityGeneratedFoodOptionEntityList = new LinkedList<>();
+
+        foodOptions.stream()
+                .forEach(foodOptionRequestForAvailability -> {
+                    List<List<?>> lists = new LinkedList<>();
+                    foodOptionRequestForAvailability.getMealTypeWiseMealPackages().entrySet().stream()
+                            .forEach(integerListEntry -> {
+                                List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntityList = integerListEntry.getValue().stream()
+                                        .map(mealPackageId -> {
+                                            AvailabilityGeneratedMealPackageEntity availabilityGeneratedMealPackageEntity = new AvailabilityGeneratedMealPackageEntity();
+                                            availabilityGeneratedMealPackageEntity.setMealPackageEntity(mealPackageEntityMap.get(mealPackageId));
+                                            availabilityGeneratedMealPackageEntity.setMealPackageAvailableInDay(foodOptionRequestForAvailability.getDayNumber());
+                                            return availabilityGeneratedMealPackageEntity;
+                                        })
+                                        .toList();
+                                lists.add(availabilityGeneratedMealPackageEntityList);
+                            });
+                    List<List<?>> combinations = CombinationGenerator.generateCombinations(lists);
+                    combinations.forEach(combination -> {
+                        AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity = new AvailabilityGeneratedFoodOptionEntity();
+                        List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntityList = (List<AvailabilityGeneratedMealPackageEntity>) combination;
+                        availabilityGeneratedMealPackageEntityList = availabilityGeneratedMealPackageEntityList.stream().peek(availabilityGeneratedMealPackageEntity -> availabilityGeneratedMealPackageEntity.setAvailabilityGeneratedFoodOptionEntity(availabilityGeneratedFoodOptionEntity)).toList();
+                        availabilityGeneratedFoodOptionEntity.setAvailabilityGeneratedMealPackageEntities(availabilityGeneratedMealPackageEntityList);
+                        availabilityGeneratedFoodOptionEntity.setAvailabilityGeneratedTourPackageEntity(availabilityGeneratedTourPackageEntity);
+                        availabilityGeneratedFoodOptionEntityList.add(availabilityGeneratedFoodOptionEntity);
+                    });
+                });
+        return availabilityGeneratedFoodOptionEntityList;
     }
 
     private List<AvailabilityGeneratedTransferOptionEntity> setTransfers(AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity, List<TransferOptionRequestForAvailability> transferOptionRequestForAvailabilityList) {
@@ -402,7 +408,7 @@ public class TourPackageAvailabilityServiceImpl implements TourPackageAvailabili
                         } else if (component.getClass().isAssignableFrom(AvailabilityGeneratedFoodOptionEntity.class)) {
                             AvailabilityGeneratedFoodOptionEntity foodOptionEntity = (AvailabilityGeneratedFoodOptionEntity) component;
                             allOptionsCombinationEntity.setAvailabilityGeneratedFoodOptionEntity(foodOptionEntity);
-                            allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice().add(foodOptionEntity.getTotalOptionPricePerPerson()));
+                            allOptionsCombinationEntity.setGhuddyPlatformCalculatedOptionPrice(allOptionsCombinationEntity.getGhuddyPlatformCalculatedOptionPrice().add(BigDecimal.ZERO));
 
                         } else if (component.getClass().isAssignableFrom(AvailabilityGeneratedTransferOptionEntity.class)) {
                             AvailabilityGeneratedTransferOptionEntity transferOptionEntity = (AvailabilityGeneratedTransferOptionEntity) component;

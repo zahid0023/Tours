@@ -41,9 +41,9 @@ public class FoodOptionData extends OptionData {
     public FoodOptionData(FoodOptionEntity foodOptionEntity, Boolean isActive) {
         super(isActive, foodOptionEntity.getTotalOptionPricePerPerson());
         this.foodOptionId = foodOptionEntity.getId();
-        this.mealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
-                .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
-                .collect(Collectors.toList());
+        //this.mealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
+               // .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
+                //.collect(Collectors.toList());
         this.numberOfMeals = foodOptionEntity.getNumberOfMeals();
         this.numberOfBreakFast = foodOptionEntity.getNumberOfBreakfast();
         this.numberOfLunch = foodOptionEntity.getNumberOfLunch();

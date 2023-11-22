@@ -5,6 +5,7 @@ import com.ghuddy.backendapp.tours.dto.data.TourPackageAllComponentData;
 import com.ghuddy.backendapp.tours.dto.data.DefaultCombinationData;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.*;
 import com.ghuddy.backendapp.tours.dto.request.transfer.TransferOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.transporation.TransportationPackageRequest;
@@ -23,6 +24,7 @@ import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
 import com.ghuddy.backendapp.tours.model.data.transportation.TransportationPackageData;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
+import com.ghuddy.backendapp.tours.model.entities.food.MealPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.guide.GuideOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.spot.entry.SpotEntryOptionEntity;
@@ -178,9 +180,9 @@ public class TourPackageServiceImpl implements TourPackageService {
                         tourPackageEntity.setAccommodationOptionEntities(accommodationOptionEntityList);
                     }
 
-                    if (tourPackageRequest.getFoodOptionRequestList() != null && !tourPackageRequest.getFoodOptionRequestList().isEmpty()) {
-                        List<FoodOptionEntity> foodOptionEntityList = foodService.setTourPackageFoodOptions(tourPackageEntity, tourPackageRequest.getFoodOptionRequestList());
-                        tourPackageEntity.setFoodOptionEntities(foodOptionEntityList);
+                    if (tourPackageRequest.getMealPackageRequestList()!=null&&!tourPackageRequest.getMealPackageRequestList().isEmpty()){
+                        List<MealPackageEntity> mealPackageRequestList = foodService.setTourPackageMealPackages(tourPackageEntity,tourPackageRequest.getMealPackageRequestList());
+                        tourPackageEntity.setMealPackageEntities(mealPackageRequestList);
                     }
 
                     if (tourPackageRequest.getTransferOptionRequestList() != null && !tourPackageRequest.getTransferOptionRequestList().isEmpty()) {
@@ -255,10 +257,6 @@ public class TourPackageServiceImpl implements TourPackageService {
                             AccommodationOptionEntity accommodationOptionEntity = accommodationService.setTourPackageAccommodations(tourPackageEntity, List.of(accommodationOptionRequest)).get(0);
                             accommodationOptionEntity.setTourPackageEntity(tourPackageEntity);
                             tourPackageOptionEntity.setAccommodationOptionEntity(accommodationOptionEntity);
-                        } else if (component.getClass().isAssignableFrom(FoodOptionRequest.class)) {
-                            FoodOptionRequest foodOptionRequest = (FoodOptionRequest) component;
-                            FoodOptionEntity foodOptionEntity = foodService.setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
-                            tourPackageOptionEntity.setFoodOptionEntity(foodOptionEntity);
                         } else if (component.getClass().isAssignableFrom(TransferOptionRequest.class)) {
                             TransferOptionRequest transferOptionRequest = (TransferOptionRequest) component;
                             TransferOptionEntity transferOptionEntity = transferService.setTourPackageTransferOptions(tourPackageEntity, List.of(transferOptionRequest)).get(0);

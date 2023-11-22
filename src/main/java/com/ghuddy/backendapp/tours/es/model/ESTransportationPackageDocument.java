@@ -1,0 +1,42 @@
+package com.ghuddy.backendapp.tours.es.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.enums.TripType;
+import com.ghuddy.backendapp.tours.model.entities.transportation.AvailabilityGeneratedTransportationPackageEntity;
+import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationPackageEntity;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+public class ESTransportationPackageDocument {
+    @Field(name = "tour_package_available_transportation_package_id", type = FieldType.Long)
+    private Long availableTransportationPackageId;
+    @Field(name = "tour_package_available_transportation_route_name", type = FieldType.Text)
+    private String transportationRouteName;
+    @Field(name = "tour_package_available_transportation_mode_name", type = FieldType.Text)
+    private String transportationModeName;
+    @Field(name = "tour_package_available_transportation_brand_name", type = FieldType.Text)
+    private String transportationBrandName;
+    @Field(name = "tour_package_available_transportation_provide_name", type = FieldType.Text)
+    private String transportationProviderName;
+    @Field(name = "trip_type", type = FieldType.Keyword)
+    private TripType tripType;
+    @Field(name = "is_ac", type = FieldType.Boolean)
+    private boolean isAc;
+
+    public ESTransportationPackageDocument(AvailabilityGeneratedTransportationPackageEntity availabilityGeneratedTransportationPackageEntity) {
+        TransportationPackageEntity transportationPackageEntity = availabilityGeneratedTransportationPackageEntity.getTransportationPackageEntity();
+        this.availableTransportationPackageId = availabilityGeneratedTransportationPackageEntity.getId();
+        this.transportationRouteName = transportationPackageEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + transportationPackageEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
+        this.transportationModeName = transportationPackageEntity.getTransportationModeEntity().getModeName();
+        this.transportationBrandName = transportationPackageEntity.getTransportationBrandEntity().getBrandName();
+        this.transportationProviderName = transportationPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
+        this.tripType = transportationPackageEntity.getTripType();
+        this.isAc = transportationPackageEntity.getIsAc();
+    }
+}

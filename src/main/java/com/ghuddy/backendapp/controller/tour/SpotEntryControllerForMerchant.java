@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/merchant")
+//@Api(tags = "Tour - Spot Entry Controller For Admin", description = "This controller is used to manage tour spot entries by merchants.")
 public class SpotEntryControllerForMerchant {
     private final TourPackageService tourPackageService;
     private final SpotEntryService spotEntryService;

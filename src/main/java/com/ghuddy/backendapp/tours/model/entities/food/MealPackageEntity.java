@@ -1,6 +1,7 @@
 package com.ghuddy.backendapp.tours.model.entities.food;
 
 import com.ghuddy.backendapp.model.db.BaseEntity;
+import com.ghuddy.backendapp.tours.model.entities.tourpackage.TourPackageEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -35,13 +36,12 @@ public class MealPackageEntity extends BaseEntity {
     @Column(name = "per_meal_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal perMealPrice;
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "food_option_id")
-    private FoodOptionEntity foodOptionEntity;
-
     @OneToMany(mappedBy = "mealPackageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailabilityGeneratedMealPackageEntity> availabilityGeneratedMealPackageEntities = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tour_package_id")
+    private TourPackageEntity tourPackageEntity;
 
     @Override
     public boolean equals(Object o) {

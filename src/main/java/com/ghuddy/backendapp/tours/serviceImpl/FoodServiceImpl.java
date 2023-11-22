@@ -9,6 +9,7 @@ import com.ghuddy.backendapp.tours.enums.ErrorCode;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.data.food.FoodItemData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
+import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
 import com.ghuddy.backendapp.tours.model.data.food.MealTypeData;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodItemEntity;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodOptionEntity;
@@ -144,15 +145,43 @@ public class FoodServiceImpl implements FoodService {
 
 
     /**
-     * @param foodOptionCombinationCheckRequest
+     * @param tourPackageEntity
+     * @param mealPackageRequest
      * @return
      */
     @Override
-    public FoodOptionCombinationCheckResponse getAllMealsCombination(FoodOptionCombinationCheckRequest foodOptionCombinationCheckRequest) throws EmptyListException, RuntimeException {
-        List<MealPackageRequest> mealPackageRequestList = foodOptionCombinationCheckRequest.getMealPackageRequestList();
-        log.info(mealPackageRequestList.toString());
-        HashMap<Integer, List<Long>> mealsProvidedInDays = foodOptionCombinationCheckRequest.getMealsProvidedInDays();
+    public InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId) {
+        MealPackageEntity mealPackageEntity = setTourPackageMealPackages(tourPackageEntity, List.of(mealPackageRequest)).get(0);
+        mealPackageEntity = mealPackageRepository.save(mealPackageEntity);
+        MealPackageData mealPackageData = new MealPackageData(mealPackageEntity);
+        return new InsertAcknowledgeResponse(mealPackageData, requestId);
+    }
 
+    /**
+     * @param tourPackageEntity
+     * @param mealPackageRequestList
+     * @return
+     */
+    @Override
+    public MealPackageAddListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList, String requestId) {
+        List<MealPackageEntity> mealPackageEntityList = setTourPackageMealPackages(tourPackageEntity, mealPackageRequestList);
+        mealPackageEntityList = mealPackageRepository.saveAll(mealPackageEntityList);
+        List<MealPackageData> mealPackageDataList = mealPackageEntityList.stream()
+                .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
+                .toList();
+        // Using stream to organize MealPackageData objects into a HashMap based on meal type IDs
+        Map<Long, List<MealPackageData>> mealPackages = mealPackageDataList.stream()
+                .collect(Collectors.groupingBy(MealPackageData::getMealTypeId));
+        return new MealPackageAddListResponse(mealPackages, requestId);
+    }
+
+    /**
+     * @param tourPackageEntity
+     * @param mealPackageRequestList
+     * @return
+     */
+    @Override
+    public List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList) {
         Map<String, Set<Long>> idMaps = new HashMap<>();
         mealPackageRequestList.forEach(mealPackageRequest -> {
             idMaps.computeIfAbsent("mealType", key -> new HashSet<>())
@@ -164,148 +193,18 @@ public class FoodServiceImpl implements FoodService {
         Map<Long, MealTypeEntity> mealTypeEntityMap = getMealTypeEntitiesByIDs(idMaps.get("mealType"));
         Map<Long, FoodItemEntity> foodItemEntityMap = getFoodItemEntitiesByIDs(idMaps.get("foodItem"));
 
-        HashMap<String, Long> idMealTypeMap = new HashMap<>();
-        mealTypeEntityMap.entrySet().forEach(longMealTypeEntityEntry -> idMealTypeMap.put(longMealTypeEntityEntry.getValue().getMealTypeName().toLowerCase(), longMealTypeEntityEntry.getKey()));
-
-        Long breakfastId = idMealTypeMap.getOrDefault("breakfast", Long.valueOf(0));
-        Long lunchId = idMealTypeMap.getOrDefault("lunch", Long.valueOf(0));
-        Long dinnerId = idMealTypeMap.getOrDefault("dinner", Long.valueOf(0));
-
-
-        // Use stream to group by mealTypeID
-        Map<Long, List<MealPackageRequest>> groupedByMealType = mealPackageRequestList.stream()
-                .collect(Collectors.groupingBy(MealPackageRequest::getMealTypeID));
-        //log.info(groupedByMealType.toString());
-
-        // Extract lists for each meal type
-        List<MealPackageRequest> breakfastPackages = groupedByMealType.getOrDefault(breakfastId, List.of());
-        List<MealPackageRequest> lunchPackages = groupedByMealType.getOrDefault(lunchId, List.of());
-        List<MealPackageRequest> dinnerPackages = groupedByMealType.getOrDefault(dinnerId, List.of());
-
-        List<FoodOptionResponse> foodOptionResponseList = new LinkedList<>();
-
-        mealsProvidedInDays.entrySet().forEach(integerListEntry -> {
-            List<Long> mealTypeIDs = integerListEntry.getValue();
-
-            List<List<MealPackageRequest>> foodPackages = new LinkedList<>();
-
-            if (mealTypeIDs.contains(breakfastId) && breakfastPackages.isEmpty())
-                throw new RuntimeException("Please add at least one breakfast package");
-            else if (mealTypeIDs.contains(breakfastId)) foodPackages.add(breakfastPackages);
-
-            if (mealTypeIDs.contains(lunchId) && lunchPackages.isEmpty())
-                throw new RuntimeException("Please add at least one lunch package");
-            else if (mealTypeIDs.contains(lunchId)) foodPackages.add(lunchPackages);
-
-            if (mealTypeIDs.contains(dinnerId) && dinnerPackages.isEmpty())
-                throw new RuntimeException("Please add at least one dinner package");
-            else if (mealTypeIDs.contains(dinnerId)) foodPackages.add(dinnerPackages);
-
-            List<List<MealPackageRequest>> options = CombinationGenerator.generateMealPackagesCombination(foodPackages);
-            log.info(options.toString());
-
-            options.forEach(option -> {
-                List<MealPackageResponse> mealPackageResponseList = option.stream()
-                        .map(mealPackageRequest -> {
-                            MealPackageResponse mealPackageResponse = new MealPackageResponse();
-                            mealPackageResponse.setMealTypeID(mealPackageRequest.getMealTypeID());
-                            mealPackageResponse.setFoodItemDataList(
-                                    mealPackageRequest.getFoodItemIDs().stream()
-                                            .map(id -> new FoodItemData(foodItemEntityMap.get(id)))
-                                            .toList());
-                            mealPackageResponse.setPerMealPackagePrice(mealPackageRequest.getPerMealPackagePrice());
-                            return mealPackageResponse;
-                        }).toList();
-                foodOptionResponseList.add(new FoodOptionResponse(mealPackageResponseList, integerListEntry.getKey()));
-            });
-
-        });
-
-        return new FoodOptionCombinationCheckResponse(foodOptionResponseList, idMealTypeMap);
-    }
-
-    /**
-     * @param tourPackageEntity
-     * @param foodOptionRequest
-     * @return
-     */
-    @Override
-    public InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException {
-        FoodOptionEntity foodOptionEntity = setTourPackageFoodOptions(tourPackageEntity, List.of(foodOptionRequest)).get(0);
-        foodOptionEntity = foodOptionRepository.save(foodOptionEntity);
-        FoodOptionData foodOptionData = new FoodOptionData(foodOptionEntity, foodOptionEntity.getIsActive());
-        return new InsertAcknowledgeResponse(foodOptionData, requestId);
-    }
-
-    @Transactional
-    @Override
-    public InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptions, String requestId) throws EmptyListException {
-        List<FoodOptionEntity> foodOptionEntities = setTourPackageFoodOptions(tourPackageEntity, foodOptions);
-        foodOptionEntities = foodOptionRepository.saveAll(foodOptionEntities);
-        List<FoodOptionData> foodOptionDataList = foodOptionEntities.stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, foodOptionEntity.getIsActive()))
+        return mealPackageRequestList.stream()
+                .map(mealPackageRequest -> {
+                    MealPackageEntity mealPackageEntity = new MealPackageEntity();
+                    mealPackageEntity.setMealTypeEntity(mealTypeEntityMap.get(mealPackageRequest.getMealTypeID()));
+                    mealPackageEntity.setPerMealPrice(mealPackageRequest.getPerMealPackagePrice());
+                    mealPackageEntity.setFoodItemEntities(mealPackageRequest.getFoodItemIDs().stream()
+                            .map(foodItemId -> foodItemEntityMap.get(foodItemId))
+                            .toList());
+                    return mealPackageEntity;
+                })
                 .toList();
-
-        return new InsertAcknowledgeListResponse(foodOptionDataList, requestId);
     }
-
-    @Override
-    public List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptions) {
-
-        Map<String, Set<Long>> idMaps = new HashMap<>();
-        foodOptions.forEach(foodOptionRequest -> {
-            foodOptionRequest.getMealPackageRequestList().forEach(mealPackageRequest -> {
-                idMaps.computeIfAbsent("mealType", key -> new HashSet<>())
-                        .add(mealPackageRequest.getMealTypeID());
-                idMaps.computeIfAbsent("foodItem", key -> new HashSet<>())
-                        .addAll(mealPackageRequest.getFoodItemIDs());
-            });
-        });
-
-        Map<Long, MealTypeEntity> mealTypeEntityMap = getMealTypeEntitiesByIDs(idMaps.get("mealType"));
-        Map<Long, FoodItemEntity> foodItemEntityMap = getFoodItemEntitiesByIDs(idMaps.get("foodItem"));
-
-        List<FoodOptionEntity> foodOptionEntityList = foodOptions.stream()
-                .map(foodOptionRequest -> {
-                    FoodOptionEntity foodOptionEntity = new FoodOptionEntity();
-                    // foodOptionEntity.setTourPackageEntity(tourPackageEntity);
-                    List<MealPackageEntity> mealPackageEntityList = foodOptionRequest.getMealPackageRequestList().stream()
-                            .map(mealPackageRequest -> {
-                                MealPackageEntity mealPackageEntity = new MealPackageEntity();
-                                mealPackageEntity.setFoodOptionEntity(foodOptionEntity);
-                                mealPackageEntity.setMealTypeEntity(mealTypeEntityMap.get(mealPackageRequest.getMealTypeID()));
-                                mealPackageEntity.setPerMealPrice(mealPackageRequest.getPerMealPackagePrice());
-                                String mealTypeName = mealTypeEntityMap.get(mealPackageRequest.getMealTypeID()).getMealTypeName().toLowerCase();
-
-                                if (mealTypeName.equals("breakfast")) {
-                                    foodOptionEntity.setNumberOfBreakfast(1);
-                                }
-                                if (mealTypeName.equals("lunch")) {
-                                    foodOptionEntity.setNumberOfLunch(1);
-                                }
-                                if (mealTypeName.equals("dinner")) {
-                                    foodOptionEntity.setNumberOfDinner(1);
-                                }
-
-                                List<FoodItemEntity> foodItemEntityList = mealPackageRequest.getFoodItemIDs().stream()
-                                        .map(id -> foodItemEntityMap.get(id))
-                                        .toList();
-                                mealPackageEntity.setFoodItemEntities(foodItemEntityList);
-                                return mealPackageEntity;
-                            })
-                            .collect(Collectors.toList());
-                    foodOptionEntity.setMealPackageEntities(mealPackageEntityList);
-                    foodOptionEntity.setNumberOfMeals(foodOptionEntity.getNumberOfBreakfast() + foodOptionEntity.getNumberOfLunch() + foodOptionEntity.getNumberOfDinner());
-                    foodOptionEntity.setTotalOptionPricePerPerson(tourPackagePriceService.perPersonFoodOptionPrice(foodOptionRequest));
-                    foodOptionEntity.setDayNumber(foodOptionRequest.getDayNumber());
-                    foodOptionEntity.setIsActive(true);
-                    foodOptionEntity.setTourPackageEntity(tourPackageEntity);
-                    return foodOptionEntity;
-                }).collect(Collectors.toList());
-
-        return foodOptionEntityList;
-    }
-
 
     @Override
     public MealTypeEntity getMealTypeEntityByID(Long mealTypeID) {
@@ -344,4 +243,5 @@ public class FoodServiceImpl implements FoodService {
     public Map<Long, MealPackageEntity> getMealPackageEntitiesByIds(Set<Long> mealPackageIds) {
         return EntityUtil.findEntitiesByIds(mealPackageIds, mealPackageRepository, MealPackageEntity::getId, "MealPackageEntity");
     }
+
 }

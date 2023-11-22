@@ -3,6 +3,7 @@ package com.ghuddy.backendapp.tours.model.data.tourpackage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.data.accommodation.AccommodationOptionData;
 import com.ghuddy.backendapp.tours.model.data.food.FoodOptionData;
+import com.ghuddy.backendapp.tours.model.data.food.MealPackageData;
 import com.ghuddy.backendapp.tours.model.data.guide.GuideOptionData;
 import com.ghuddy.backendapp.tours.model.data.spot.entry.SpotEntryOptionData;
 import com.ghuddy.backendapp.tours.model.data.transfer.TransferOptionData;
@@ -36,8 +37,8 @@ public class TourPackageData {
     private List<AccommodationOptionData> accommodationOptionDataList;
 
     @Schema(description = "The list of food options belonging to this tour package")
-    @JsonProperty("tour_package_food_options")
-    private List<FoodOptionData> foodOptionDataList;
+    @JsonProperty("tour_package_meal_packages")
+    private List<MealPackageData> mealPackageDataList;
 
     @Schema(description = "The list of transfer options belonging to this tour package")
     @JsonProperty("tour_package_transfer_options")
@@ -63,8 +64,8 @@ public class TourPackageData {
         this.accommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
                 .map(accommodationOptionEntity -> new AccommodationOptionData(accommodationOptionEntity, true))
                 .toList();
-        this.foodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
-                .map(foodOptionEntity -> new FoodOptionData(foodOptionEntity, true))
+        this.mealPackageDataList = tourPackageEntity.getMealPackageEntities().stream()
+                .map(mealPackageEntity -> new MealPackageData(mealPackageEntity))
                 .toList();
         this.transferOptionDataList = tourPackageEntity.getTransferOptionEntities().stream()
                 .map(transferOptionEntity -> new TransferOptionData(transferOptionEntity, true))

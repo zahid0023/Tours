@@ -5,6 +5,7 @@ import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeListResponse;
 import com.ghuddy.backendapp.tours.dto.response.InsertAcknowledgeResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodItemListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.FoodOptionCombinationCheckResponse;
+import com.ghuddy.backendapp.tours.dto.response.food.MealPackageAddListResponse;
 import com.ghuddy.backendapp.tours.dto.response.food.MealTypeListResponse;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.model.entities.food.FoodItemEntity;
@@ -24,6 +25,7 @@ public interface FoodService {
     InsertAcknowledgeListResponse addFoodItems(FoodItemListAddRequest foodItemListAddRequest);
 
     FoodItemEntity getFoodItemEntityByID(Long foodItemID);
+
     Map<Long, FoodItemEntity> getFoodItemEntitiesByIDs(Set<Long> foodItemIDs);
 
     FoodItemListResponse getAllFoodItems() throws EmptyListException;
@@ -44,15 +46,9 @@ public interface FoodService {
     MealTypeListResponse getAllMealTypesPaginated(Integer pageSize, Integer pageNumber) throws EmptyListException;
 
     // meal package
-
-    FoodOptionCombinationCheckResponse getAllMealsCombination(FoodOptionCombinationCheckRequest foodOptionCombinationCheckRequest) throws EmptyListException;
-
-    InsertAcknowledgeResponse addTourPackageFoodOption(TourPackageEntity tourPackageEntity, FoodOptionRequest foodOptionRequest, String requestId) throws EmptyListException;
-
-    InsertAcknowledgeListResponse addTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList, String requestId) throws EmptyListException;
-
-    List<FoodOptionEntity> setTourPackageFoodOptions(TourPackageEntity tourPackageEntity, List<FoodOptionRequest> foodOptionRequestList);
+    InsertAcknowledgeResponse addTourPackageMealPackage(TourPackageEntity tourPackageEntity, MealPackageRequest mealPackageRequest, String requestId);
+    MealPackageAddListResponse addTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList, String requestId);
+    List<MealPackageEntity> setTourPackageMealPackages(TourPackageEntity tourPackageEntity, List<MealPackageRequest> mealPackageRequestList);
     Map<Long, MealPackageEntity> getMealPackageEntitiesByIds(Set<Long> mealPackageIds);
-
 
 }

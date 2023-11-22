@@ -4,7 +4,6 @@ import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;
 import com.ghuddy.backendapp.tours.es.service.ESTourService;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.service.TourService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/open")
+//@Api(tags = "Tour - Tour Controller For User", description = "This controller is used to manage tour by users.")
 public class TourControllerForUser {
     private final ESTourService esTourService;
     private final TourService tourService;

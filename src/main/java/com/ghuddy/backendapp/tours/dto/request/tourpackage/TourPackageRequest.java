@@ -3,6 +3,7 @@ package com.ghuddy.backendapp.tours.dto.request.tourpackage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.dto.request.accommodation.AccommodationOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.food.FoodOptionRequest;
+import com.ghuddy.backendapp.tours.dto.request.food.MealPackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.guide.GuideOptionRequest;
 import com.ghuddy.backendapp.tours.dto.request.guide.GuidePackageRequest;
 import com.ghuddy.backendapp.tours.dto.request.spot.entry.SpotEntryRequest;
@@ -26,8 +27,8 @@ public class TourPackageRequest {
     @JsonProperty("tour_package_accommodation_options")
     private List<AccommodationOptionRequest> accommodationOptionRequestList;
     @Schema(description = "The list of the food options belonging to this tour package.")
-    @JsonProperty("tour_package_food_options")
-    private List<FoodOptionRequest> foodOptionRequestList;
+    @JsonProperty("tour_package_meal_packages")
+    private List<MealPackageRequest> mealPackageRequestList;
     @Schema(description = "The list of transfer options belonging to this tour package")
     @JsonProperty("tour_package_transfer_options")
     private List<TransferOptionRequest> transferOptionRequestList;
