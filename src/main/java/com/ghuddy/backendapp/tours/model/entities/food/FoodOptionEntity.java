@@ -22,9 +22,6 @@ public class FoodOptionEntity extends BaseEntity {
     @JoinColumn(name = "tour_package_id")
     private TourPackageEntity tourPackageEntity;
 
-    @OneToMany(mappedBy = "foodOptionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MealPackageEntity> mealPackageEntities = new ArrayList<>();
-
     @Column(name = "day_number")
     private Integer dayNumber;
 

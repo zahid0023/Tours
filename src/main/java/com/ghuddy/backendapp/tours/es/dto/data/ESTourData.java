@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -14,48 +12,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@Document(indexName = "tour_details")
-public class ESTourData {
+public class ESTourData { // only those tours will be indexed that have availability generated tour packages i.e. merchant subscribed the tour and created and made available the tour packages
 
-    @Id
     @JsonProperty("tour_id")
-    @Field(name = "tour_id")
     private Long tourId;
     @JsonProperty("tour_name")
-    @Field(name = "tour_name")
     private String tourName;
     @JsonProperty("short_address")
-    @Field(name = "short_address")
     private String shortAddress;
     @JsonProperty("number_of_reviews")
-    @Field(name = "number_of_reviews")
     private Integer numberOfReviews;
     @JsonProperty("rating_in_stars")
-    @Field(name = "rating_in_stars")
     private Double ratingInStars;
     @JsonProperty("tour_thumb_image_url")
-    @Field(name = "tour_thumb_image_url")
     private String tourThumbImageUrl;
     @JsonProperty("tour_specialities")
-    @Field(name = "tour_specialities", type = FieldType.Nested, includeInParent = true)
     private List<ESTourSpecialityData> esTourSpecialityDataList;
     @JsonProperty("tour_title")
-    @Field(name = "tour_title")
     private String tourTitle;
     @JsonProperty("tour_description")
-    @Field("tour_description")
     private String tourDescription;
     @JsonProperty("tour_reporting_time")
-    @Field(name = "tour_reporting_time")
     private LocalTime tourReportingTime;
     @JsonProperty("tour_reporting_place")
-    @Field(name = "tour_reporting_place")
     private String tourReportingPlace;
     @JsonProperty("tour_tag")
-    @Field(name = "tour_tag")
     private String tourTag;
-
-    @Field(name = "available_tour_packages", type = FieldType.Nested, includeInParent = true)
     @JsonProperty("available_tour_packages")
     private HashMap<Long, List<ESTourPackageData>> esTourPackageDataList;
 

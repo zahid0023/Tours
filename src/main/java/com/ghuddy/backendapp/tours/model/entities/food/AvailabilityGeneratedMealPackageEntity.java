@@ -17,12 +17,12 @@ public class AvailabilityGeneratedMealPackageEntity extends BaseEntity {
     @JoinColumn(name = "meal_package_id")
     private MealPackageEntity mealPackageEntity;
 
-    @Transient
+    @Column(name = "day_number")
     private Integer mealPackageAvailableInDay;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "availability_generated_food_option_id")
     private AvailabilityGeneratedFoodOptionEntity availabilityGeneratedFoodOptionEntity;
     @NotNull
     @Column(name = "meal_package_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal mealPackagePrice;
+    private BigDecimal mealPackagePrice = BigDecimal.ZERO;
 }

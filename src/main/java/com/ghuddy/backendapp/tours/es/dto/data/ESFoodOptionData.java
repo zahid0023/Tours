@@ -29,9 +29,9 @@ public class ESFoodOptionData extends ESOptionData {
     private Integer numberOfDinner;
 
     public ESFoodOptionData(FoodOptionEntity foodOptionEntity) {
-        this.mealPackageList = foodOptionEntity.getMealPackageEntities().stream()
-                .map(mealPackageEntity -> new ESMealPackageData(mealPackageEntity))
-                .toList();
+  //      this.mealPackageList = foodOptionEntity.getMealPackageEntities().stream()
+        // .map(mealPackageEntity -> new ESMealPackageData(mealPackageEntity))
+            //    .toList();
         this.dayNumber = foodOptionEntity.getDayNumber();
         this.numberOfMeals = foodOptionEntity.getNumberOfMeals();
         this.numberOfBreakFast = foodOptionEntity.getNumberOfBreakfast();

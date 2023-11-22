@@ -1,0 +1,28 @@
+package com.ghuddy.backendapp.tours.es.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.activity.ActivityImageEntity;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+@Getter
+@Setter
+public class ESImageDocument {
+    @Field(name = "image_id", type = FieldType.Long)
+    private Long imageId;
+    @Field(name = "image_file_name", type = FieldType.Text)
+    private String imageFileName;
+    @Field(name = "image_url", type = FieldType.Text)
+    private String imageUrl;
+    @Field(name = "image_caption", type = FieldType.Text)
+    private String imageCaption;
+
+    public ESImageDocument(ActivityImageEntity activityImageEntity) {
+        this.imageId = activityImageEntity.getId();
+        this.imageFileName = activityImageEntity.getFileName();
+        this.imageUrl = activityImageEntity.getImageUrl();
+        this.imageCaption = activityImageEntity.getCaption();
+    }
+}

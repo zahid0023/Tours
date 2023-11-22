@@ -1,0 +1,28 @@
+package com.ghuddy.backendapp.tours.es.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.model.entities.tour.TourSpecialityEntity;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+@Getter
+@Setter
+public class ESTourSpecialityDocument {
+    @Field(name = "tour_speciality_id", type = FieldType.Long)
+    private Long tourSpecialityId;
+    @Field(name = "tour_speciality_title", type = FieldType.Text)
+    private String tourSpecialityTitle;
+    @Field(name = "tour_speciality_description", type = FieldType.Text)
+    private String tourSpecialityDescription;
+    @Field(name = "tour_speciality_icon_url", type = FieldType.Text)
+    private String tourSpecialityIconUrl;
+
+    public ESTourSpecialityDocument(TourSpecialityEntity tourSpecialityEntity) {
+        this.tourSpecialityId = tourSpecialityEntity.getId();
+        this.tourSpecialityTitle = tourSpecialityEntity.getTitle();
+        this.tourSpecialityDescription = tourSpecialityEntity.getDescription();
+        this.tourSpecialityIconUrl = tourSpecialityEntity.getIconUrl();
+    }
+}

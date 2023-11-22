@@ -42,7 +42,7 @@ public class TourPackageOptionCheckRequest extends BaseRequest {
 
     public TourPackageOptionCheckRequest(TourPackageRequest tourPackageRequest, Integer numberOfTravellers) {
         this.tourPackageTypeId = tourPackageRequest.getTourPackageTypeID();
-        this.foodOptionRequestList = tourPackageRequest.getFoodOptionRequestList();
+        //this.foodOptionRequestList = tourPackageRequest.getFoodOptionRequestList();
         this.accommodationOptionRequestList = tourPackageRequest.getAccommodationOptionRequestList();
         this.transferOptionRequestList = tourPackageRequest.getTransferOptionRequestList();
         this.transportationPackages = tourPackageRequest.getTransportationPackages();

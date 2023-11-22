@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.controller.tour;
 
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAddRequest;
-import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageAvailabilitySetRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageListAddRequest;
 import com.ghuddy.backendapp.tours.dto.request.tourpackage.TourPackageOptionCheckRequest;
 import com.ghuddy.backendapp.tours.dto.response.ErrorResponse;

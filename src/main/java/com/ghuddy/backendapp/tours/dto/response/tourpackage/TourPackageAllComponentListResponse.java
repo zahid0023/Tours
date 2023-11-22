@@ -44,9 +44,9 @@ public class TourPackageAllComponentListResponse extends BaseResponse {
         this.availabilityGeneratedAccommodationOptionDataList = tourPackageEntity.getAccommodationOptionEntities().stream()
                 .map(accommodationOptionEntity -> new AvailabilityGeneratedAccommodationOptionData(accommodationOptionEntity))
                 .toList();
-        this.availabilityGeneratedFoodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
-                .map(foodOptionEntity -> new AvailabilityGeneratedFoodOptionData(foodOptionEntity))
-                .toList();
+        //this.availabilityGeneratedFoodOptionDataList = tourPackageEntity.getFoodOptionEntities().stream()
+                //.map(foodOptionEntity -> new AvailabilityGeneratedFoodOptionData(foodOptionEntity))
+                //.toList();
         this.availabilityGeneratedTransferOptionDataList = tourPackageEntity.getTransferOptionEntities().stream()
                 .map(transferOptionEntity -> new AvailabilityGeneratedTransferOptionData(transferOptionEntity))
                 .toList();

@@ -27,7 +27,7 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
     @Override
     public BigDecimal perPersonDefaultPackagePrice(TourPackageRequest tourPackageRequest, Integer numberOfTravellers) {
         List<AccommodationOptionRequest> accommodationOptionRequestList = tourPackageRequest.getAccommodationOptionRequestList();
-        List<FoodOptionRequest> foodOptionRequestList = tourPackageRequest.getFoodOptionRequestList();
+        // List<FoodOptionRequest> foodOptionRequestList = tourPackageRequest.getFoodOptionRequestList();
         List<TransferOptionRequest> transferOptionRequestList = tourPackageRequest.getTransferOptionRequestList();
         BigDecimal totalPackagePrice = BigDecimal.ZERO;
         if (accommodationOptionRequestList != null)
@@ -36,11 +36,11 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
                     .map(accommodationOptionRequest -> perPersonAccommodationOptionPrice(accommodationOptionRequest))
                     .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-        if (foodOptionRequestList != null)
-            totalPackagePrice.add(foodOptionRequestList.stream()
+        // if (foodOptionRequestList != null)
+            //totalPackagePrice.add(foodOptionRequestList.stream()
                     //.filter(FoodOptionRequest::getIsDefault)
-                    .map(foodOptionRequest -> perPersonFoodOptionPrice(foodOptionRequest))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+                    //.map(foodOptionRequest -> perPersonFoodOptionPrice(foodOptionRequest))
+                    //.reduce(BigDecimal.ZERO, BigDecimal::add));
 
         if (transferOptionRequestList != null) {
             totalPackagePrice.add(transferOptionRequestList.stream()
@@ -64,9 +64,10 @@ public class TourPackagePriceServiceImpl implements TourPackagePriceService {
      */
     @Override
     public BigDecimal perPersonFoodOptionPrice(FoodOptionRequest foodOptionRequest) {
-        return foodOptionRequest.getMealPackageRequestList().stream()
-                .map(MealPackageRequest::getPerMealPackagePrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //return foodOptionRequest.getMealPackageRequestList().stream()
+                //.map(MealPackageRequest::getPerMealPackagePrice)
+                //.reduce(BigDecimal.ZERO, BigDecimal::add);
+        return null;
     }
 
     /**

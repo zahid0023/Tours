@@ -48,9 +48,9 @@ public class AvailabilityGeneratedFoodOptionData extends OptionData {
 
     public AvailabilityGeneratedFoodOptionData(FoodOptionEntity foodOptionEntity){
         this(new FoodOptionData(foodOptionEntity,foodOptionEntity.getIsActive()));
-        this.availabilityGeneratedMealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
-                .map(mealPackageEntity-> new AvailabilityGeneratedMealPackageData(mealPackageEntity))
-                .toList();
+        //this.availabilityGeneratedMealPackageDataList = foodOptionEntity.getMealPackageEntities().stream()
+               // .map(mealPackageEntity-> new AvailabilityGeneratedMealPackageData(mealPackageEntity))
+                //.toList();
         this.setTotalOptionPricePerPerson(foodOptionEntity.getTotalOptionPricePerPerson());
         this.setIsActive(foodOptionEntity.getIsActive());
     }
