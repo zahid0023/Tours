@@ -1,4 +1,4 @@
-package com.ghuddy.backendapp.tours.es.model;
+package com.ghuddy.backendapp.tours.es.model.entities;
 
 import com.ghuddy.backendapp.tours.model.entities.transfer.AvailabilityGeneratedTransferOptionEntity;
 import lombok.Getter;

@@ -2,8 +2,9 @@ package com.ghuddy.backendapp.tours.es.serviceImpl;
 
 import com.ghuddy.backendapp.tours.es.dto.data.ESTourData;
 import com.ghuddy.backendapp.tours.es.dto.response.ESSubscribedTourResponse;
-import com.ghuddy.backendapp.tours.es.model.ESTourDocument;
+import com.ghuddy.backendapp.tours.es.model.entities.ESTourDocument;
 import com.ghuddy.backendapp.tours.es.repository.ESTourDetailsRepository;
+import com.ghuddy.backendapp.tours.es.service.ESTourPackageService;
 import com.ghuddy.backendapp.tours.es.service.ESTourService;
 import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
@@ -18,13 +19,16 @@ public class ESTourServiceImpl implements ESTourService {
     private final TourSubscriptionService tourSubscriptionService;
     private final TourService tourService;
     private final ESTourDetailsRepository esTourDetailsRepository;
+    private final ESTourPackageService esTourPackageService;
 
     public ESTourServiceImpl(TourSubscriptionService tourSubscriptionService,
                              TourService tourService,
-                             ESTourDetailsRepository esTourDetailsRepository) {
+                             ESTourDetailsRepository esTourDetailsRepository,
+                             ESTourPackageService esTourPackageService) {
         this.tourSubscriptionService = tourSubscriptionService;
         this.tourService = tourService;
         this.esTourDetailsRepository = esTourDetailsRepository;
+        this.esTourPackageService = esTourPackageService;
     }
 
     /**
@@ -50,6 +54,9 @@ public class ESTourServiceImpl implements ESTourService {
         TourEntity tourEntity = tourService.getCreatedTourEntityById(createdTourId);
         ESTourDocument esTourDocument = new ESTourDocument(tourEntity);
         esTourDetailsRepository.save(esTourDocument);
+        esTourPackageService.indexAvailableTourPackages(tourEntity, requestId);
+        esTourPackageService.indexAvailableTourPackagesOptionsCombinations(tourEntity, requestId);
         return true;
     }
+
 }

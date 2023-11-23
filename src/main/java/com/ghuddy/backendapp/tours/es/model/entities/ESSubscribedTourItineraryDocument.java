@@ -1,7 +1,5 @@
-package com.ghuddy.backendapp.tours.es.model;
+package com.ghuddy.backendapp.tours.es.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.es.dto.data.ESImageData;
 import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourItineraryEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +7,6 @@ import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 

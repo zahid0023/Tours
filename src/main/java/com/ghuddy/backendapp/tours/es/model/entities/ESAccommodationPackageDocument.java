@@ -1,4 +1,4 @@
-package com.ghuddy.backendapp.tours.es.model;
+package com.ghuddy.backendapp.tours.es.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationPackageEntity;

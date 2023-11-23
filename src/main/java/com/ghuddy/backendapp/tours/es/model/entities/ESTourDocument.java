@@ -1,18 +1,13 @@
-package com.ghuddy.backendapp.tours.es.model;
+package com.ghuddy.backendapp.tours.es.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.es.dto.data.ESTourPackageData;
-import com.ghuddy.backendapp.tours.es.dto.data.ESTourSpecialityData;
-import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Document(indexName = "tour_details")
@@ -58,9 +53,6 @@ public class ESTourDocument { // only those tours will be indexed that have avai
     @Field(name = "tour_tag", type = FieldType.Text)
     private String tourTag;
 
-    @Field(name = "available_tour_packages", type = FieldType.Nested, includeInParent = true)
-    private List<ESTourPackageDocument> esTourPackageDataList;
-
     public ESTourDocument(TourEntity tourEntity) {
         this.tourId = tourEntity.getId();
         this.tourName = tourEntity.getAddedTourEntity().getTourName();
@@ -74,16 +66,6 @@ public class ESTourDocument { // only those tours will be indexed that have avai
         this.tourTitle = tourEntity.getTitle();
         this.tourDescription = tourEntity.getDescription();
         this.tourTag = tourEntity.getAddedTourEntity().getTourTag();
-        this.esTourPackageDataList = getAvailableTourPackages(tourEntity);
-    }
-
-    private List<ESTourPackageDocument> getAvailableTourPackages(TourEntity tourEntity) {
-        return tourEntity.getSubscribedTourEntities().stream()
-                .flatMap(subscribedTourEntity -> subscribedTourEntity.getTourPackageEntities().stream()
-                        .flatMap(tourPackageEntity -> tourPackageEntity.getAvailabilityGeneratedTourPackages().stream()
-                                .map(availabilityGeneratedTourPackageEntity ->
-                                        new ESTourPackageDocument(availabilityGeneratedTourPackageEntity))))
-                .collect(Collectors.toList());
     }
 
 }

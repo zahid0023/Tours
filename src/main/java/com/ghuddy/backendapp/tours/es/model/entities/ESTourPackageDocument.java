@@ -1,4 +1,4 @@
-package com.ghuddy.backendapp.tours.es.model;
+package com.ghuddy.backendapp.tours.es.model.entities;
 
 import com.ghuddy.backendapp.tours.es.dto.data.*;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AvailabilityGeneratedAccommodationOptionEntity;
@@ -9,22 +9,27 @@ import com.ghuddy.backendapp.tours.model.entities.transfer.AvailabilityGenerated
 import com.ghuddy.backendapp.tours.model.entities.transportation.AvailabilityGeneratedTransportationPackageEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
 @Setter
+@Document(indexName = "available_tour_packages")
 public class ESTourPackageDocument {
+    @Id
+    @Field(name = "available_tour_package_id", type = FieldType.Long)
+    private Long availableTourPackageId;
     @Field(name = "subscribed_tour_id", type = FieldType.Long)
     private Long subscribedTourId; // for merchant reference
-    @Field(name = "tour_package_available_tour_package_id", type = FieldType.Long)
-    private Long availableTourPackageId;
+    @Field(name = "tour_id", type = FieldType.Long) // for tour reference
+    private Long tourId;
     @Field(name = "tour_package_available_type_id", type = FieldType.Long)
     private Long tourPackageTypeId;
     @Field(name = "tour_package_name", type = FieldType.Keyword)
@@ -57,13 +62,15 @@ public class ESTourPackageDocument {
     private List<ESTransferOptionDocument> esTransferOptionDocumentList;
     @Field(name = "tour_package_available_transportation_options", type = FieldType.Nested, includeInParent = true)
     private List<ESTransportationPackageDocument> esTransportationPackageDocumentList;
+
     @Field(name = "tour_package_available_itinerary", type = FieldType.Nested, includeInParent = true)
     private List<ESSubscribedTourItineraryDocument> esSubscribedTourItineraryDocumentList;
 
     public ESTourPackageDocument(AvailabilityGeneratedTourPackageEntity availabilityGeneratedTourPackageEntity) {
-        SubscribedTourEntity subscribedTourEntity = availabilityGeneratedTourPackageEntity.getTourPackageEntity().getSubscribedTourEntity();
-        this.subscribedTourId = subscribedTourEntity.getId();
         this.availableTourPackageId = availabilityGeneratedTourPackageEntity.getId();
+        SubscribedTourEntity subscribedTourEntity = availabilityGeneratedTourPackageEntity.getTourPackageEntity().getSubscribedTourEntity();
+        this.tourId = subscribedTourEntity.getTourEntity().getId();
+        this.subscribedTourId = subscribedTourEntity.getId();
         this.tourPackageTypeId = availabilityGeneratedTourPackageEntity.getTourPackageEntity().getTourPackageType().getId();
         this.tourPackageName = availabilityGeneratedTourPackageEntity.getTourPackageEntity().getTourPackageName();
         this.tourStartDate = availabilityGeneratedTourPackageEntity.getTourStartDate();
