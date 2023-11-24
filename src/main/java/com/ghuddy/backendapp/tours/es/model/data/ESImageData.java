@@ -1,6 +1,7 @@
-package com.ghuddy.backendapp.tours.es.dto.data;
+package com.ghuddy.backendapp.tours.es.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.es.model.entities.ESImageDocument;
 import com.ghuddy.backendapp.tours.model.entities.activity.ActivityImageEntity;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -20,10 +21,10 @@ public class ESImageData {
     @Field(name = "image_caption")
     private String imageCaption;
 
-    public ESImageData(ActivityImageEntity activityImageEntity) {
-        this.imageId = activityImageEntity.getId();
-        this.imageFileName = activityImageEntity.getFileName();
-        this.imageUrl = activityImageEntity.getImageUrl();
-        this.imageCaption = activityImageEntity.getCaption();
+    public ESImageData(ESImageDocument esImageDocument) {
+        this.imageId = esImageDocument.getImageId();
+        this.imageFileName = esImageDocument.getImageFileName();
+        this.imageUrl = esImageDocument.getImageUrl();
+        this.imageCaption = esImageDocument.getImageCaption();
     }
 }

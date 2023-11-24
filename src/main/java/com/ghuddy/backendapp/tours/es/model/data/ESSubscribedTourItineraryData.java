@@ -1,7 +1,7 @@
-package com.ghuddy.backendapp.tours.es.dto.data;
+package com.ghuddy.backendapp.tours.es.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourItineraryEntity;
+import com.ghuddy.backendapp.tours.es.model.entities.ESSubscribedTourItineraryDocument;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Field;
 
@@ -32,14 +32,14 @@ public class  ESSubscribedTourItineraryData {
     @Field(name = "activity_images")
     private List<ESImageData> esImageDataList;
 
-    public ESSubscribedTourItineraryData(SubscribedTourItineraryEntity subscribedTourItineraryEntity) {
-        this.activityId = subscribedTourItineraryEntity.getActivityEntity().getId();
-        this.activityName = subscribedTourItineraryEntity.getActivityEntity().getActivityName();
-        this.shortAddress = subscribedTourItineraryEntity.getActivityEntity().getShortLocation();
-        this.dayNumber = subscribedTourItineraryEntity.getActivityDayNumber();
-        this.startTime = subscribedTourItineraryEntity.getActivityStartTime();
-        this.endTime = subscribedTourItineraryEntity.getActivityEndTime();
-        this.esImageDataList = subscribedTourItineraryEntity.getActivityEntity().getActivityImageEntities().stream()
+    public ESSubscribedTourItineraryData(ESSubscribedTourItineraryDocument esSubscribedTourItineraryDocument) {
+        this.activityId = esSubscribedTourItineraryDocument.getActivityId();
+        this.activityName = esSubscribedTourItineraryDocument.getActivityName();
+        this.shortAddress = esSubscribedTourItineraryDocument.getShortAddress();
+        this.dayNumber = esSubscribedTourItineraryDocument.getDayNumber();
+        this.startTime = LocalTime.parse(esSubscribedTourItineraryDocument.getStartTime());
+        this.endTime = LocalTime.parse(esSubscribedTourItineraryDocument.getEndTime());
+        this.esImageDataList = esSubscribedTourItineraryDocument.getEsImageDataList().stream()
                 .map(activityImageEntity -> new ESImageData(activityImageEntity))
                 .toList();
     }

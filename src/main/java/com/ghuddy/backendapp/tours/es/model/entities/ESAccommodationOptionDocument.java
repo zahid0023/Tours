@@ -2,6 +2,7 @@ package com.ghuddy.backendapp.tours.es.model.entities;
 
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AvailabilityGeneratedAccommodationOptionEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ESAccommodationOptionDocument {
     @Field(name = "tour_package_available_accommodation_option_id", type = FieldType.Long)
     private Long availableAccommodationOptionId;

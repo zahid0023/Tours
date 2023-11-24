@@ -3,6 +3,7 @@ package com.ghuddy.backendapp.tours.es.model.entities;
 import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageAllOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.AvailabilityGeneratedTourPackageInclusiveOptionEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -11,6 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 @Document(indexName = "available_tour_package_component_options_combination")
 public class ESTourComponentOptionCombinationDocument {
     @Id

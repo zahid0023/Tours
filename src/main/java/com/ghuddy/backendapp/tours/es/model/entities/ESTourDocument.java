@@ -3,6 +3,7 @@ package com.ghuddy.backendapp.tours.es.model.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Data
 @Document(indexName = "tour_details")
+@NoArgsConstructor
 public class ESTourDocument { // only those tours will be indexed that have availability generated tour packages i.e. merchant subscribed the tour and created and made available the tour packages
 
     @Id

@@ -4,6 +4,7 @@ import com.ghuddy.backendapp.tours.enums.TripType;
 import com.ghuddy.backendapp.tours.model.entities.transfer.AvailabilityGeneratedTransferPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.transfer.TransferPackageEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ESTransferPackageDocument {
     @Field(name = "tour_package_available_transfer_package_id", type = FieldType.Long)
     private Long availableTransferPackageId;

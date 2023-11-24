@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import java.util.List;
 
 @Data
-public class ESFoodOptionData extends ESOptionData {
+public class ESFoodOptionData {
     @JsonProperty("meal_packages")
     @Field(name = "meal_packages")
     private List<ESMealPackageData> mealPackageList;

@@ -8,6 +8,7 @@ import com.ghuddy.backendapp.tours.model.entities.tourpackage.AvailabilityGenera
 import com.ghuddy.backendapp.tours.model.entities.transfer.AvailabilityGeneratedTransferOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.transportation.AvailabilityGeneratedTransportationPackageEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Document(indexName = "available_tour_packages")
 public class ESTourPackageDocument {
     @Id

@@ -1,7 +1,8 @@
-package com.ghuddy.backendapp.tours.es.dto.data;
+package com.ghuddy.backendapp.tours.es.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ghuddy.backendapp.tours.enums.TripType;
+import com.ghuddy.backendapp.tours.es.model.entities.ESTransportationPackageDocument;
 import com.ghuddy.backendapp.tours.model.entities.transportation.AvailabilityGeneratedTransportationPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.transportation.TransportationPackageEntity;
 import lombok.Data;
@@ -32,19 +33,14 @@ public class ESTransportationPackageData {
     @JsonProperty("is_ac")
     @Field(name = "is_ac")
     private boolean isAc;
-    @JsonProperty("tour_package_available_transportation_package_unit_price")
-    @Field(name = "tour_package_available_transportation_package_unit_price")
-    private BigDecimal unitPrice;
 
-    public ESTransportationPackageData(AvailabilityGeneratedTransportationPackageEntity availabilityGeneratedTransportationPackageEntity) {
-        TransportationPackageEntity transportationPackageEntity = availabilityGeneratedTransportationPackageEntity.getTransportationPackageEntity();
-        this.availableTransportationPackageId = availabilityGeneratedTransportationPackageEntity.getId();
-        this.transportationRouteName = transportationPackageEntity.getTransportationRouteEntity().getSourceLocation().getPlaceName() + " - " + transportationPackageEntity.getTransportationRouteEntity().getDestinationLocation().getPlaceName();
-        this.transportationModeName = transportationPackageEntity.getTransportationModeEntity().getModeName();
-        this.transportationBrandName = transportationPackageEntity.getTransportationBrandEntity().getBrandName();
-        this.transportationProviderName = transportationPackageEntity.getTransportationProviderEntity().getTransportationProviderName();
-        this.tripType = transportationPackageEntity.getTripType();
-        this.isAc = transportationPackageEntity.getIsAc();
-        this.unitPrice = transportationPackageEntity.getPerPersonTransportationPackagePrice();
+    public ESTransportationPackageData(ESTransportationPackageDocument esTransportationPackageDocument) {
+        this.availableTransportationPackageId = esTransportationPackageDocument.getAvailableTransportationPackageId();
+        this.transportationRouteName = esTransportationPackageDocument.getTransportationRouteName();
+        this.transportationModeName = esTransportationPackageDocument.getTransportationModeName();
+        this.transportationBrandName = esTransportationPackageDocument.getTransportationBrandName();
+        this.transportationProviderName = esTransportationPackageDocument.getTransportationProviderName();
+        this.tripType = esTransportationPackageDocument.getTripType();
+        this.isAc = esTransportationPackageDocument.isAc();
     }
 }

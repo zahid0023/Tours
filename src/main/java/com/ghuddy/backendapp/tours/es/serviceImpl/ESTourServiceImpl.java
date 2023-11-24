@@ -1,14 +1,13 @@
 package com.ghuddy.backendapp.tours.es.serviceImpl;
 
-import com.ghuddy.backendapp.tours.es.dto.data.ESTourData;
-import com.ghuddy.backendapp.tours.es.dto.response.ESSubscribedTourResponse;
+import com.ghuddy.backendapp.tours.enums.ErrorCode;
+import com.ghuddy.backendapp.tours.es.dto.response.ESTourResponse;
+import com.ghuddy.backendapp.tours.es.model.data.ESTourData;
 import com.ghuddy.backendapp.tours.es.model.entities.ESTourDocument;
 import com.ghuddy.backendapp.tours.es.repository.ESTourDetailsRepository;
 import com.ghuddy.backendapp.tours.es.service.ESTourPackageService;
 import com.ghuddy.backendapp.tours.es.service.ESTourService;
-import com.ghuddy.backendapp.tours.exception.EmptyListException;
 import com.ghuddy.backendapp.tours.exception.TourNotFoundException;
-import com.ghuddy.backendapp.tours.model.entities.tour.SubscribedTourEntity;
 import com.ghuddy.backendapp.tours.model.entities.tour.TourEntity;
 import com.ghuddy.backendapp.tours.service.TourService;
 import com.ghuddy.backendapp.tours.service.TourSubscriptionService;
@@ -31,18 +30,6 @@ public class ESTourServiceImpl implements ESTourService {
         this.esTourPackageService = esTourPackageService;
     }
 
-    /**
-     * @param subscribedTourId
-     * @param requestId
-     * @return
-     * @throws TourNotFoundException
-     */
-    @Override
-    public ESSubscribedTourResponse getAllAvailableTourPackages(Long subscribedTourId, String requestId) throws TourNotFoundException, EmptyListException {
-        SubscribedTourEntity subscribedTourEntity = tourSubscriptionService.getSubscribedTourEntityById(subscribedTourId);
-        ESTourData esTourData = new ESTourData(subscribedTourEntity);
-        return new ESSubscribedTourResponse(esTourData);
-    }
 
     /**
      * @param createdTourId
@@ -59,4 +46,27 @@ public class ESTourServiceImpl implements ESTourService {
         return true;
     }
 
+
+    /**
+     * @param tourId
+     * @param requestId
+     * @return
+     */
+    @Override
+    public ESTourResponse getTour(Long tourId, String requestId) throws TourNotFoundException {
+        ESTourDocument esTourDocument = getTourById(tourId,requestId);
+        ESTourData esTourData = new ESTourData(esTourDocument);
+        return new ESTourResponse(esTourData);
+    }
+
+    /**
+     * @param tourId
+     * @param requestId
+     * @return
+     * @throws TourNotFoundException
+     */
+    @Override
+    public ESTourDocument getTourById(Long tourId, String requestId) throws TourNotFoundException {
+        return esTourDetailsRepository.findById(tourId).orElseThrow(() -> new TourNotFoundException(ErrorCode.TOUR_NOT_FOUND));
+    }
 }

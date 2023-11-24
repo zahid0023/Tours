@@ -1,7 +1,6 @@
 package com.ghuddy.backendapp.tours.es.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ghuddy.backendapp.tours.es.dto.data.ESTourSpecialityData;
 import com.ghuddy.backendapp.tours.es.model.entities.ESTourDocument;
 import lombok.Data;
 
@@ -34,6 +33,7 @@ public class ESTourData {
     private String tourReportingPlace;
     @JsonProperty("tour_tag")
     private String tourTag;
+
     public ESTourData(ESTourDocument esTourDocument){
         this.tourId = esTourDocument.getTourId();
         this.tourName = esTourDocument.getTourName();
@@ -42,7 +42,7 @@ public class ESTourData {
         this.ratingInStars = esTourDocument.getRatingInStars();
         this.tourThumbImageUrl = esTourDocument.getTourThumbImageUrl();
         this.esTourSpecialityDataList = esTourDocument.getEsTourSpecialityDocumentList().stream()
-                .map(esTourSpecialityDocument -> new com.ghuddy.backendapp.tours.es.model.data.ESTourSpecialityData())
+                .map(esTourSpecialityDocument -> new ESTourSpecialityData(esTourSpecialityDocument))
                 .toList();
         this.tourTitle = esTourDocument.getTourTitle();
         this.tourDescription = esTourDocument.getTourDescription();

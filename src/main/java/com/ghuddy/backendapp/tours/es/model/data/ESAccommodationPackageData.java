@@ -1,6 +1,7 @@
-package com.ghuddy.backendapp.tours.es.dto.data;
+package com.ghuddy.backendapp.tours.es.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ghuddy.backendapp.tours.es.model.entities.ESAccommodationPackageDocument;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AccommodationPackageEntity;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AvailabilityGeneratedAccommodationOptionEntity;
 import com.ghuddy.backendapp.tours.model.entities.accommodation.AvailabilityGeneratedAccommodationPackageEntity;
@@ -38,25 +39,19 @@ public class ESAccommodationPackageData {
     @JsonProperty("bed_configuration")
     @Field(name = "bed_configuration")
     private String bedConfiguration;
-
-    @JsonProperty("per_night_room_price")
-    @Field("per_night_room_price")
-    private BigDecimal perNightRoomPrice;
     @JsonProperty("night_number")
     @Field(name = "night_number")
     private Integer nightNumber;
 
-    public ESAccommodationPackageData(AvailabilityGeneratedAccommodationPackageEntity availabilityGeneratedAccommodationPackageEntity) {
-        AccommodationPackageEntity accommodationPackageEntity = availabilityGeneratedAccommodationPackageEntity.getAccommodationPackageEntity();
-        this.availableAccommodationPackageId = availabilityGeneratedAccommodationPackageEntity.getId();
-        this.tourPackageAccommodationName = accommodationPackageEntity.getTourAccommodationEntity().getAccommodationName();
-        this.tourPackageRoomCategoryName = accommodationPackageEntity.getTourRoomCategoryEntity().getRoomCategoryName();
-        this.tourPackageRoomTypeName = accommodationPackageEntity.getTourRoomTypeEntity().getRoomTypeName();
-        this.isShareable = accommodationPackageEntity.getIsShareable();
-        this.suitableForPersons = accommodationPackageEntity.getSuitableForPersons();
-        this.bedCount = accommodationPackageEntity.getBedCount();
-        this.bedConfiguration = accommodationPackageEntity.getBedConfiguration();
-        this.perNightRoomPrice = availabilityGeneratedAccommodationPackageEntity.getAccommodationPackagePrice();
-        this.nightNumber = accommodationPackageEntity.getNightNumber();
+    public ESAccommodationPackageData(ESAccommodationPackageDocument esAccommodationPackageDocument) {
+        this.availableAccommodationPackageId = esAccommodationPackageDocument.getAvailableAccommodationPackageId();
+        this.tourPackageAccommodationName = esAccommodationPackageDocument.getTourPackageAccommodationName();
+        this.tourPackageRoomCategoryName = esAccommodationPackageDocument.getTourPackageRoomCategoryName();
+        this.tourPackageRoomTypeName = esAccommodationPackageDocument.getTourPackageRoomTypeName();
+        this.isShareable = esAccommodationPackageDocument.isShareable();
+        this.suitableForPersons = esAccommodationPackageDocument.getSuitableForPersons();
+        this.bedCount = esAccommodationPackageDocument.getBedCount();
+        this.bedConfiguration = esAccommodationPackageDocument.getBedConfiguration();
+        this.nightNumber = getNightNumber();
     }
 }
